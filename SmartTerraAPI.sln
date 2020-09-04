@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30406.217
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTerraAPI", "SmartTerraAPI\SmartTerraAPI.csproj", "{DFDBAA25-C797-4610-A860-F14AE76DA628}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DFDBAA25-C797-4610-A860-F14AE76DA628}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFDBAA25-C797-4610-A860-F14AE76DA628}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFDBAA25-C797-4610-A860-F14AE76DA628}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFDBAA25-C797-4610-A860-F14AE76DA628}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C5A50FED-4258-41F5-AD35-4FEBD4C3B708}
+	EndGlobalSection
+EndGlobal
