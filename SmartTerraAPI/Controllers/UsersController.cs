@@ -81,15 +81,12 @@ namespace SmartTerraAPI.Controllers
             _context.Modes.Add(mode);
             user.Modes = modes;*/
             //IEnumerable<Mode> modes = _context.Users.Include(n => n.Modes).Where(user => user.Id == userId).SelectMany(user => user.Modes);
-            //mode.User = user;
             //modes.ToList().Add(mode);
-            //user.Modes = modes;
-            //++mode.Id;
             //var modes = _context.Users.Include(n => n.Modes).Where(user => user.Id == userId).SelectMany(user => user.Modes).ToList();
             //user.Modes = modes;
 
             await _context.Modes.AddAsync(mode);
-            var user = _context.Users.Include(n => n.Modes).Where(user => user.Id == userId).FirstOrDefault();
+            var user = await _context.Users.Include(n => n.Modes).Where(user => user.Id == userId).FirstOrDefaultAsync();
             mode.User = user;
             _context.Users.Update(user);
             _context.Entry(user).State = EntityState.Modified;
@@ -130,31 +127,44 @@ namespace SmartTerraAPI.Controllers
             return _context.Modes.Any(e => e.Id == id);
         }
 
-        // DELETE: api/users/modes
-        [HttpDelete("modes")]
-        public async Task<ActionResult<Mode>> DeleteModes()
+        // DELETE: api/users/{userId}/modes
+        [HttpDelete("{userId}/modes")]
+        public async Task<ActionResult<Mode>> DeleteModes([FromRoute] int userId)
         {
-            _context.Modes.RemoveRange(_context.Modes);
-            _context.SaveChanges();
+            var user = await _context.Users.Include(n => n.Modes).Where(user => user.Id == userId).FirstOrDefaultAsync();
+            if (user.Modes == null)
+            {
+                return NotFound();
+            }
+            _context.Modes.RemoveRange(user.Modes);
+
+            foreach (Mode mode in user.Modes) 
+            {
+                user.Modes.ToList().Remove(mode);
+            }
+                
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetModes", null);
+            return Ok(user.Modes);
         }
 
-        // DELETE: api/users/modes/1
-        [HttpDelete("modes/{id}")]
-        public async Task<ActionResult<Mode>> DeleteMode(int id)
+        // DELETE: api/users/{userId}/modes/1
+        [HttpDelete("{userId}/modes/{id}")]
+        public async Task<ActionResult<Mode>> DeleteMode([FromRoute] int userId, int id)
         {
+            var user = await _context.Users.Include(n => n.Modes).Where(user => user.Id == userId).FirstOrDefaultAsync();
+            //var modes = await _context.Users.Include(n => n.Modes).Where(user => user.Id == userId).SelectMany(user => user.Modes).ToListAsync();
+
             var mode = await _context.Modes.FindAsync(id);
             if (mode == null)
             {
                 return NotFound();
             }
-
+            //modes.Remove(mode);
             _context.Modes.Remove(mode);
             await _context.SaveChangesAsync();
 
-            return mode;
+            return Ok(user.Modes);
         }
     }
 }
