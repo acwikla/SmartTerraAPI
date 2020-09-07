@@ -76,33 +76,33 @@ namespace SmartTerraAPI.Controllers
         [HttpPost("{userId}/modes")]
         public async Task<Mode> PostMode([FromRoute] int userId, Mode mode)
         {
-            /*var user = _context.Users.Include(n => n.Modes).Where(user => user.Id == userId).FirstOrDefault();
-            mode.User = user;
-            _context.Modes.Add(mode);
-            user.Modes = modes;*/
-            //IEnumerable<Mode> modes = _context.Users.Include(n => n.Modes).Where(user => user.Id == userId).SelectMany(user => user.Modes);
-            //modes.ToList().Add(mode);
             //var modes = _context.Users.Include(n => n.Modes).Where(user => user.Id == userId).SelectMany(user => user.Modes).ToList();
-            //user.Modes = modes;
+            //modes.ToList().Add(mode);
 
             await _context.Modes.AddAsync(mode);
             var user = await _context.Users.Include(n => n.Modes).Where(user => user.Id == userId).FirstOrDefaultAsync();
             mode.User = user;
-            _context.Users.Update(user);
-            _context.Entry(user).State = EntityState.Modified;
+            //await _context.Users.Update(user);
+            //_context.Entry(user).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return mode;
         }
         
-        //PUT: api/users/modes/1
-        [HttpPut("modes/{id}")]
-        public async Task<ActionResult<Mode>> PutMode([FromRoute] int id,[FromBody]Mode mode)
+        //PUT: api/users/{userId}/modes/1
+        [HttpPut("{userId}/modes/{id}")]
+        public async Task<ActionResult<IEnumerable<Mode>>> PutMode([FromRoute] int userId, [FromBody] Mode mode, [FromRoute] int id)
         {
-            if(id != mode.Id)
+            /*if(id != mode.Id)
             {
                 return BadRequest();
-            }
-            _context.Entry(mode).State = EntityState.Modified;
+            }*/
+
+            mode.Id = id;
+            ///var modeTochange = _context.Modes.Where(User => User.Id == userId).ToList().Select(m => m.Id == id);
+            _context.Modes.Update(mode);
+            var user = await _context.Users.Include(n => n.Modes).Where(user => user.Id == userId).FirstOrDefaultAsync();
+            mode.User = user;
+            //_context.Entry(user).State = EntityState.Modified;
 
             try
             {
@@ -120,7 +120,7 @@ namespace SmartTerraAPI.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok(user.Modes);
         }
         private bool ModeExists(int id)
         {
