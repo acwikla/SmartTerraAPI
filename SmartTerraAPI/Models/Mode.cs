@@ -10,7 +10,7 @@ namespace SmartTerraAPI.Models
     public class Mode
     {
         [Required]
-        [StringLength(60, MinimumLength = 3)]
+        [StringLength(60, MinimumLength = 1)]
         public string Title { get; set; }
         
         public int Id { get; set; }

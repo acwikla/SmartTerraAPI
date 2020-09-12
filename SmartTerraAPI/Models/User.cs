@@ -10,8 +10,6 @@ namespace SmartTerraAPI.Models
     {
         public int Id { get; set; }
         //public Mode[] Modes { get; set; }
-        //public IEnumerable<Mode> Modes = new List<Mode>();
-        //public IEnumerable<int> ModesIdList = new List<int>();
         public virtual IEnumerable <Mode> Modes { get; set; }
 
         [Required]
@@ -23,6 +21,7 @@ namespace SmartTerraAPI.Models
         public string Password { get; set; }
 
         [Required]
+        [EmailAddress]
         [StringLength(30)]
         public string Email { get; set; }
     }

@@ -76,9 +76,6 @@ namespace SmartTerraAPI.Controllers
         [HttpPost("{userId}/modes")]
         public async Task<Mode> PostMode([FromRoute] int userId, Mode mode)
         {
-            //var modes = _context.Users.Include(n => n.Modes).Where(user => user.Id == userId).SelectMany(user => user.Modes).ToList();
-            //modes.ToList().Add(mode);
-
             await _context.Modes.AddAsync(mode);
             var user = await _context.Users.Include(n => n.Modes).Where(user => user.Id == userId).FirstOrDefaultAsync();
             mode.User = user;
@@ -97,27 +94,31 @@ namespace SmartTerraAPI.Controllers
                 return BadRequest();
             }*/
 
-            mode.Id = id;
-            ///var modeTochange = _context.Modes.Where(User => User.Id == userId).ToList().Select(m => m.Id == id);
-            _context.Modes.Update(mode);
             var user = await _context.Users.Include(n => n.Modes).Where(user => user.Id == userId).FirstOrDefaultAsync();
             mode.User = user;
-            //_context.Entry(user).State = EntityState.Modified;
+
+            var modeToUpdate = await _context.Modes.FindAsync(id);
+            
+            if (modeToUpdate == null)
+            {
+                return NotFound();
+            }
+
+            modeToUpdate.Title = mode.Title;
+            modeToUpdate.Id = id;
+            modeToUpdate.Temperature = mode.Temperature;
+            modeToUpdate.Humidity = mode.Humidity;
+            modeToUpdate.HeatIndex = mode.HeatIndex;
+            modeToUpdate.Brightness = mode.Brightness;
+            modeToUpdate.User = mode.User;
 
             try
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException) when (!ModeExists(id))
             {
-                if (!ModeExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
             return Ok(user.Modes);
