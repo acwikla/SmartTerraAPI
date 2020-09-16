@@ -35,7 +35,7 @@ namespace SmartTerraAPI.Controllers
 
                 if (user != null && userNameAndPassword[1] == user.Password)
                 {
-                    var claimData = new[] { new Claim(ClaimTypes.Name, "username") };
+                    var claimData = new[] { new Claim(ClaimTypes.Name, userNameAndPassword[0]) };
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("dxfcdgasdfghjkljhugtfdsghjkuyjtrgedfsxcvbnmjhkhuyjthcvbnhjgfcbvbhnyj"));
                     var signInCred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
                     var token = new JwtSecurityToken(

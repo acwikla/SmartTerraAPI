@@ -12,6 +12,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using SmartTerraAPI.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace SmartTerraAPI
 {
@@ -27,6 +30,18 @@ namespace SmartTerraAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = "mysite.com",
+                    ValidAudience = "mysite.com",
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("dxfcdgasdfghjkljhugtfdsghjkuyjtrgedfsxcvbnmjhkhuyjthcvbnhjgfcbvbhnyj"))
+                };
+            });
             services.AddDbContext<SmartTerraDBContext>(opt => opt.UseInMemoryDatabase("SmartTerraDBContext"));
             services.AddControllers();
         }
@@ -42,6 +57,8 @@ namespace SmartTerraAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

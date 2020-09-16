@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using SmartTerraAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SmartTerraAPI.Controllers
 {
@@ -35,6 +36,7 @@ namespace SmartTerraAPI.Controllers
             await _context.SaveChangesAsync();
             return Ok(user);
         }
+        [Authorize]
         //GET: api/users/{userId}
         [HttpGet("{userId}")]
         public User GetUser([FromRoute] int userId)
@@ -45,6 +47,7 @@ namespace SmartTerraAPI.Controllers
             return user;
         }
 
+        [Authorize]
         //GET: api/users/{userId}/modes
         [HttpGet("{userId}/modes")]
         public IEnumerable<Mode> GetModes([FromRoute] int userId)
@@ -54,6 +57,7 @@ namespace SmartTerraAPI.Controllers
             return modes;
         }
 
+        [Authorize]
         //GET: api/users/{userId}/modes/{id}
         [HttpGet("{userId}/modes/{id}")]
         public async Task<ActionResult<Mode>> GetMode([FromRoute] int userId, [FromRoute] int id)
@@ -72,6 +76,7 @@ namespace SmartTerraAPI.Controllers
             return Ok(mode);
         }
 
+        [Authorize]
         //POST: api/users/{userId}/modes
         [HttpPost("{userId}/modes")]
         public async Task<Mode> PostMode([FromRoute] int userId, Mode mode)
@@ -84,7 +89,8 @@ namespace SmartTerraAPI.Controllers
             await _context.SaveChangesAsync();
             return mode;
         }
-        
+
+        [Authorize]
         //PUT: api/users/{userId}/modes/1
         [HttpPut("{userId}/modes/{id}")]
         public async Task<ActionResult<IEnumerable<Mode>>> PutMode([FromRoute] int userId, [FromBody] Mode mode, [FromRoute] int id)
@@ -124,6 +130,7 @@ namespace SmartTerraAPI.Controllers
             return _context.Modes.Any(e => e.Id == id);
         }
 
+        [Authorize]
         // DELETE: api/users/{userId}/modes
         [HttpDelete("{userId}/modes")]
         public async Task<ActionResult<Mode>> DeleteModes([FromRoute] int userId)
@@ -145,6 +152,7 @@ namespace SmartTerraAPI.Controllers
             return Ok(user.Modes);
         }
 
+        [Authorize]
         // DELETE: api/users/{userId}/modes/1
         [HttpDelete("{userId}/modes/{id}")]
         public async Task<ActionResult<Mode>> DeleteMode([FromRoute] int userId, int id)
