@@ -89,10 +89,6 @@ namespace SmartTerraAPI.Controllers
         [HttpPut("{userId}/modes/{id}")]
         public async Task<ActionResult<IEnumerable<Mode>>> PutMode([FromRoute] int userId, [FromBody] Mode mode, [FromRoute] int id)
         {
-            /*if(id != mode.Id)
-            {
-                return BadRequest();
-            }*/
 
             var user = await _context.Users.Include(n => n.Modes).Where(user => user.Id == userId).FirstOrDefaultAsync();
             mode.User = user;
