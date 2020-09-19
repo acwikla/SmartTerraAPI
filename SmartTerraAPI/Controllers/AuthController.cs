@@ -30,36 +30,24 @@ namespace SmartTerraAPI.Controllers
             _config = config;
         }
 
-        [HttpGet("login")]
-        public IActionResult Login (string login, string password)
+        [HttpPost("login")]
+        public async Task<IActionResult> Login ([FromBody] User userToLogin)
         {
-            User _login = new User();
-            _login.Login = login;
-            _login.Password = password;
 
             IActionResult response = Unauthorized();
 
-            var user = AuthenticateUser(_login);
-            if(user != null)
+            var user = await _context.Users.Include(n => n.Modes).Where(user => user.Login == userToLogin.Login || user.Email == userToLogin.Login).FirstOrDefaultAsync();
+
+            if (user != null)
             {
-                var tokenString = GenerateJSONWebToken(user);
-                response = Ok(new { token = tokenString });
+                if (userToLogin.Password == user.Password)
+                {
+                
+                    var tokenString = GenerateJSONWebToken(user);
+                    response = Ok(new { token = tokenString });
+                }
             }
             return response;
-        }
-
-        private User AuthenticateUser(User _login)
-        {
-            User userToLogin = null;
-            //var user = await _context.Users.Include(n => n.Modes).Where(user => user.Login == _login.Login || user.Email == _login.Email).FirstOrDefaultAsync();
-
-            if (_login.Login== "user1" &&_login.Password == "bubu")
-            {
-                userToLogin = new User() ;
-                userToLogin.Login = _login.Login;
-                userToLogin.Password = _login.Password;
-            }
-            return userToLogin;
         }
 
         private string GenerateJSONWebToken(User userInfo)
