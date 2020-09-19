@@ -36,6 +36,7 @@ namespace SmartTerraAPI.Controllers
             await _context.SaveChangesAsync();
             return Ok(user);
         }
+
         [Authorize]
         //GET: api/users/{userId}
         [HttpGet("{userId}")]
