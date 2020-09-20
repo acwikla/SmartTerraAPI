@@ -33,6 +33,11 @@ namespace SmartTerraAPI.Controllers
         [HttpPost("signup")]
         public async Task<IActionResult> Signup([FromBody] User userToSignUp)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             if (EmailExist(userToSignUp.Email))
             {
                 return BadRequest("User with that email already exists.");
@@ -60,7 +65,6 @@ namespace SmartTerraAPI.Controllers
             {
                 if (userToLogin.Password == user.Password)
                 {
-                
                     var tokenString = GenerateJSONWebToken(user);
                     response = Ok(new { token = tokenString });
                 }

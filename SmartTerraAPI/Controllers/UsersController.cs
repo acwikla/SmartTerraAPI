@@ -21,22 +21,6 @@ namespace SmartTerraAPI.Controllers
             _context = context;
         }
 
-        //POST: api/users
-        [HttpPost]
-        public async Task<ActionResult<IEnumerable<User>>> PostUser(User user)
-        {
-            if (!ModelState.IsValid) 
-            {
-                return BadRequest(ModelState);
-            }
-
-            user.Modes = new List<Mode>();
-
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-            return Ok(user);
-        }
-
         [Authorize]
         //GET: api/users/{userId}
         [HttpGet("{userId}")]
