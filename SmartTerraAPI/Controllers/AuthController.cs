@@ -53,7 +53,7 @@ namespace SmartTerraAPI.Controllers
         }
 
 
-            [HttpPost("login")]
+        [HttpPost("login")]
         public async Task<IActionResult> Login ([FromBody] User userToLogin)
         {
 
@@ -79,7 +79,7 @@ namespace SmartTerraAPI.Controllers
             var claims = new[]
             {
                 new Claim (JwtRegisteredClaimNames.Sub, userInfo.Login ),
-                new Claim (JwtRegisteredClaimNames.Email, userInfo.Password ),
+                new Claim (JwtRegisteredClaimNames.Email, userInfo.Email ),
                 new Claim (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 

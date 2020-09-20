@@ -52,7 +52,7 @@ namespace SmartTerraAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = _context.Users.Include(n => n.Modes).Where(user => user.Id == userId).FirstOrDefault();
+            var user = await _context.Users.Include(n => n.Modes).Where(user => user.Id == userId).FirstOrDefaultAsync();
             var mode = user.Modes.Where(mode => mode.Id == id);
             if ( mode == null)
             {
