@@ -30,7 +30,25 @@ namespace SmartTerraAPI.Controllers
             _config = config;
         }
 
-        [HttpPost("login")]
+        [HttpPost("signup")]
+        public async Task<IActionResult> Signup([FromBody] User userToSignUp)
+        {
+            if (EmailExist(userToSignUp.Email))
+            {
+                return BadRequest("User with that email already exists.");
+            }
+
+            User newUser = new User();
+            newUser = userToSignUp;
+            newUser.Modes = new List<Mode>();
+
+            await _context.Users.AddAsync(newUser);
+            await _context.SaveChangesAsync();
+            return Ok(newUser);
+        }
+
+
+            [HttpPost("login")]
         public async Task<IActionResult> Login ([FromBody] User userToLogin)
         {
 
@@ -80,6 +98,11 @@ namespace SmartTerraAPI.Controllers
             IList<Claim> claim = identity.Claims.ToList();
             var userName = claim[0].Value;
             return "Welcome: " + userName;
+        }
+
+        private bool EmailExist(string email)
+        {
+            return _context.Users.Any(e => e.Email == email);
         }
     }
 }
