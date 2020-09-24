@@ -156,5 +156,6 @@ namespace SmartTerraAPI.Controllers
 
             return Ok(user.Modes);
         }
+
     }
 }

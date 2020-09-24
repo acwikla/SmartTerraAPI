@@ -15,15 +15,15 @@ namespace SmartTerraAPI.Models
         [JsonIgnore]
         public User User { get; set; }
 
-        public bool Brightness { get; set; }
+        public bool ManageLEDStrip { get; set; }
 
         [RequiredIf("Brightness", "true")]
         [Range(0, 255)]
-        public string BrightnessColour { get; set; } //hexnumber
+        public string LEDBrightnessColour { get; set; } //hexnumber
 
         [RequiredIf("Brightness", "true")]
         [Range(0, 100)]
-        public bool BrightnessLevel { get; set; }
+        public bool LEDBrightness { get; set; }
 
         public bool Raining { get; set; }
 
