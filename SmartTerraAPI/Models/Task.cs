@@ -17,11 +17,10 @@ namespace SmartTerraAPI.Models
 
         public bool ManageLEDStrip { get; set; }
 
-        [RequiredIf("Brightness", "true")]
-        [Range(0, 255)]
+        [RequiredIf("ManageLEDStrip", "true")]
         public string LEDBrightnessColour { get; set; } //hexnumber
 
-        [RequiredIf("Brightness", "true")]
+        [RequiredIf("ManageLEDStrip", "true")]
         [Range(0, 100)]
         public bool LEDBrightness { get; set; }
 
