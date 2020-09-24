@@ -9,8 +9,10 @@ namespace SmartTerraAPI.Models
     public class User
     {
         public int Id { get; set; }
-        //public Mode[] Modes { get; set; }
+
         public virtual IEnumerable <Mode> Modes { get; set; }
+
+        public Task Tasks { get; set; }
 
         [Required]
         [StringLength(30)]

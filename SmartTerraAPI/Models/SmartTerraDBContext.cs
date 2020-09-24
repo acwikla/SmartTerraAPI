@@ -15,6 +15,7 @@ namespace SmartTerraAPI.Models
 
         public DbSet<SmartTerraAPI.Models.Mode> Modes { get; set; }
         public DbSet<SmartTerraAPI.Models.User> Users { get; set; }
+        public DbSet<SmartTerraAPI.Models.Task> Tasks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,8 +23,14 @@ namespace SmartTerraAPI.Models
                 .HasMany(c => c.Modes)
                 .WithOne(e => e.User);//.HasForeignKey(c => c.Id);
 
+            modelBuilder.Entity<User>()
+                .HasOne(c => c.Tasks)
+                .WithOne(e => e.User);
+
             modelBuilder.Entity<User>().HasKey(c => c.Id);
             modelBuilder.Entity<Mode>().HasKey(c => c.Id);
+            modelBuilder.Entity<Task>().HasKey(c => c.Id);
+
         }
     }
 }
