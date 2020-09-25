@@ -21,6 +21,7 @@ namespace SmartTerraAPI.Controllers
             _context = context;
         }
 
+        //Modes:
         [Authorize]
         //GET: api/users/{userId}
         [HttpGet("{userId}")]
@@ -155,6 +156,55 @@ namespace SmartTerraAPI.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(user.Modes);
+        }
+
+        //Task:
+        //GET: api/users/{userId}/task
+        [Authorize]
+        [HttpGet("{userId}/task")]
+        public async Task<ActionResult> GetTask([FromRoute] int userId)
+        {
+            var user = await _context.Users.Include(n => n.Tasks).Where(user => user.Id == userId).FirstOrDefaultAsync();
+            if (user.Tasks == null)
+            {
+                return BadRequest("No task has been added.");
+            }
+            return Ok(user.Tasks);
+        }
+
+        //POST: api/users/{userId}/task
+        [Authorize]
+        [HttpPost("{userId}/task")]
+        public async Task<TaskModel> PostTask([FromRoute] int userId, TaskModel task)
+        {
+            await _context.Tasks.AddAsync(task);
+            var user = await _context.Users.Include(n => n.Tasks).Where(user => user.Id == userId).FirstOrDefaultAsync();
+            task.UserId = user.Id;
+            await _context.SaveChangesAsync();
+            return user.Tasks;
+        }
+
+        //PUT: api/users/{userId}/task
+        [Authorize]
+        [HttpPut("{userId}/task")]
+        public async Task<ActionResult<IEnumerable<TaskModel>>> PutMode([FromRoute] int userId, [FromBody] TaskModel task)
+        {
+
+            var user = await _context.Users.Include(n => n.Tasks).Where(user => user.Id == userId).FirstOrDefaultAsync();
+
+            var taskToUpdate = user.Tasks;
+            if (taskToUpdate == null)
+            {
+                return NotFound();
+            }
+
+            taskToUpdate.ManageLEDStrip = task.ManageLEDStrip;
+            taskToUpdate.LEDColor = task.LEDColor;
+            taskToUpdate.LEDBrightness = task.LEDBrightness;
+            taskToUpdate.Raining = task.Raining;
+
+            await _context.SaveChangesAsync();
+            return Ok(user.Tasks);
         }
 
     }

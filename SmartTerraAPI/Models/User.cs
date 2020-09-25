@@ -12,7 +12,7 @@ namespace SmartTerraAPI.Models
 
         public virtual IEnumerable <Mode> Modes { get; set; }
 
-        public Task Tasks { get; set; }
+        public TaskModel Tasks { get; set; }
 
         [Required]
         [StringLength(30)]
