@@ -20,7 +20,6 @@ namespace SmartTerraAPI.Models
 
         [Required]
         [Range(0, 100)]
-        //[RegularExpression(@"^\d+$")] //^[0-9]*$
         public double Temperature { get; set; }
 
         [Required]
@@ -29,8 +28,14 @@ namespace SmartTerraAPI.Models
 
         public double HeatIndex { get; set; }
 
+        [Required] 
+        [RegularExpression(@"^([01]?[0-9]|2[0-3]):[0-5][0-9]$", ErrorMessage = "Invalid twilight hour.")]
+        //[DataType(DataType.Time)]
+        public string TwilightHour { get; set; }
+
         [Required]
-        [Range(0, 100)]
-        public double Brightness { get; set; }
+        [RegularExpression(@"^([01]?[0-9]|2[0-3]):[0-5][0-9]$", ErrorMessage = "Invalid hour of drawn.")]
+        //[DataType(DataType.Time)]
+        public string HourOfDawn { get; set; }
     }
 }

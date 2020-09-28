@@ -19,12 +19,11 @@ namespace SmartTerraAPI.Models
         public string Login { get; set; }
 
         [Required]
-        [StringLength(30)]
+        [StringLength(30, MinimumLength = 6, ErrorMessage = "Password must have at least 6 characters.")]
         public string Password { get; set; }
 
         [Required]
-        [EmailAddress]
-        [StringLength(30)]
+        [EmailAddress(ErrorMessage ="Invalid email adress.")]
         public string Email { get; set; }
     }
 }
