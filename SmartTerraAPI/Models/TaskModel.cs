@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using FoolproofWebApi;
 
 namespace SmartTerraAPI.Models
 {
@@ -11,8 +12,8 @@ namespace SmartTerraAPI.Models
     {
         public int Id { get; set; }
 
-        public int UserId { get; set; }
-
+        public User User { get; set; }
+        public int UserForeignKey { get; set; } //UserId
         public bool ManageLEDStrip { get; set; }
 
         //[RequiredIf("ManageLEDStrip", Operator.EqualTo, true, ErrorMessage = "Please enter LED color.")]

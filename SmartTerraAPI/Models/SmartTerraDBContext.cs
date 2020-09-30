@@ -23,6 +23,11 @@ namespace SmartTerraAPI.Models
                 .HasMany(c => c.Modes)
                 .WithOne(e => e.User);//.HasForeignKey(c => c.Id);
 
+            modelBuilder.Entity<User>()
+                .HasOne(c => c.Tasks)
+                .WithOne(e => e.User)
+                .HasForeignKey<TaskModel>(c => c.UserForeignKey);
+
             modelBuilder.Entity<User>().HasKey(c => c.Id);
             modelBuilder.Entity<Mode>().HasKey(c => c.Id);
             modelBuilder.Entity<TaskModel>().HasKey(c => c.Id);
