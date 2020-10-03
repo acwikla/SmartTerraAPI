@@ -35,8 +35,10 @@ namespace SmartTerraAPI
                 //cors oznacza ze fron i backend sa na roznych serwerach(portach), inaczej będą sie blokowaly(chyba)
                 options.AddPolicy("CorsPolicy", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowCredentials().Build());
             });
-            services.AddDbContext<SmartTerraDBContext>(opt => opt.UseInMemoryDatabase("SmartTerraDBContext"));
+            
             services.AddControllers();
+
+            services.AddDbContext<SmartAPIDbContext>(opt => opt.UseInMemoryDatabase("smartApiDb"));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

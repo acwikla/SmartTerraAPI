@@ -10,20 +10,19 @@ namespace SmartTerraAPI.Models
     {
         public int Id { get; set; }
 
-        public virtual IEnumerable <Mode> Modes { get; set; }
-
-        public TaskModel Tasks { get; set; }
-
         [Required]
         [StringLength(30)]
         public string Login { get; set; }
 
         [Required]
         [StringLength(30, MinimumLength = 6, ErrorMessage = "Password must have at least 6 characters.")]
+        //TODO:hasło powinno byc zaszyfrowane (do zrobienia na później)
         public string Password { get; set; }
 
         [Required]
         [EmailAddress(ErrorMessage ="Invalid email adress.")]
         public string Email { get; set; }
+
+        public virtual ICollection<Device> Devices { get; set; }
     }
 }
