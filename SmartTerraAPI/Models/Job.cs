@@ -15,6 +15,9 @@ namespace SmartTerraAPI.Models
         public string Name { get; set; }
 
         [Required]
+        public string Type { get; set; }                    // Type of the job (LED, PUMP, ...)
+
+        [Required]
         public string Body { get; set; }
         
         public string Description { get; set; }

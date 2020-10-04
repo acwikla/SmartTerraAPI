@@ -23,8 +23,6 @@ namespace SmartTerraAPI.Models
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
-            builder.Entity<DeviceJob>().HasKey(i => new { i.DeviceId, i.JobId });
         }
 
         public DbSet<SmartTerraAPI.Models.Device> Devices { get; set; }

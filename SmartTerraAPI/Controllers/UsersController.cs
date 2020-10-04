@@ -118,19 +118,33 @@ namespace SmartTerraAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/User
+        // POST: api/Users
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        public async Task<ActionResult<UserInsertDTO>> PostUser(UserInsertDTO user)
         {
             if (EmailExists(user.Email))
             {
                 return BadRequest("User with this email already exists.");
             }
 
-            await _context.Users.AddAsync(user);
+            var newUser = new User()
+            {
+                Login = user.Login,
+                Email = user.Email,
+                Password = user.Password
+            };
+
+            await _context.Users.AddAsync(newUser);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+            var insertedUser = new UserDTO()
+            {
+                Id = newUser.Id,
+                Login = user.Login,
+                Email = user.Email,
+            };
+
+            return CreatedAtAction("GetUser", new { id = insertedUser.Id }, insertedUser);
         }
 
         // DELETE: api/User/5
