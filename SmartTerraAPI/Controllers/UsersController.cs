@@ -120,7 +120,7 @@ namespace SmartTerraAPI.Controllers
 
         // POST: api/Users
         [HttpPost]
-        public async Task<ActionResult<UserInsertDTO>> PostUser(UserInsertDTO user)
+        public async Task<ActionResult<UserRegisterDTO>> PostUser(UserRegisterDTO user)
         {
             if (EmailExists(user.Email))
             {

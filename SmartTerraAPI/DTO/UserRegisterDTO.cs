@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace SmartTerraAPI.DTO
 {
-    public class UserInsertDTO : UserDTO
+    public class UserRegisterDTO
     {
-        public int Id { get; set; }
-
         [Required]
         [StringLength(30)]
         public string Login { get; set; }
