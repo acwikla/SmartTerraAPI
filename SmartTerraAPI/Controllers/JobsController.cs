@@ -13,9 +13,9 @@ namespace SmartTerraAPI.Controllers
     [ApiController]
     public class JobsController : ControllerBase
     {
-        private readonly SmartAPIDbContext _context;
+        private readonly SmartTerraDbContext _context;
 
-        public JobsController(SmartAPIDbContext context)
+        public JobsController(SmartTerraDbContext context)
         {
             _context = context;
         }

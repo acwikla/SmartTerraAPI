@@ -14,9 +14,9 @@ namespace SmartTerraAPI.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly SmartAPIDbContext _context;
+        private readonly SmartTerraDbContext _context;
 
-        public UsersController(SmartAPIDbContext context)
+        public UsersController(SmartTerraDbContext context)
         {
             _context = context;
         }

@@ -13,9 +13,9 @@ namespace SmartTerraAPI.Controllers
     [ApiController]
     public class DevicesController : ControllerBase
     {
-        private readonly SmartAPIDbContext _context;
+        private readonly SmartTerraDbContext _context;
 
-        public DevicesController(SmartAPIDbContext context)
+        public DevicesController(SmartTerraDbContext context)
         {
             _context = context;
         }

@@ -38,7 +38,7 @@ namespace SmartTerraAPI
             
             services.AddControllers();
 
-            services.AddDbContext<SmartAPIDbContext>(opt => opt.UseInMemoryDatabase("smartApiDb"));
+            services.AddDbContext<SmartTerraDbContext>(opt => opt.UseInMemoryDatabase("smartApiDb"));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

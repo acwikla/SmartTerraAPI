@@ -13,9 +13,9 @@ namespace SmartTerraAPI.Controllers
     [ApiController]
     public class ModesController : ControllerBase
     {
-        private readonly SmartAPIDbContext _context;
+        private readonly SmartTerraDbContext _context;
 
-        public ModesController(SmartAPIDbContext context)
+        public ModesController(SmartTerraDbContext context)
         {
             _context = context;
         }

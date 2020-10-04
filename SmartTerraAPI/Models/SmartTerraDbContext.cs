@@ -7,14 +7,14 @@ using SmartTerraAPI.Models;
 
 namespace SmartTerraAPI.Models
 {
-    public class SmartAPIDbContext : DbContext
+    public class SmartTerraDbContext : DbContext
     {
-        public SmartAPIDbContext()
+        public SmartTerraDbContext()
         {
 
         }
 
-        public SmartAPIDbContext(DbContextOptions options)
+        public SmartTerraDbContext(DbContextOptions options)
             : base(options)
         {
             
