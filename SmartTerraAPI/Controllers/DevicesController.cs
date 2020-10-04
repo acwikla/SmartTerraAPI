@@ -11,48 +11,48 @@ namespace SmartTerraAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ModesController : ControllerBase
+    public class DevicesController : ControllerBase
     {
         private readonly SmartAPIDbContext _context;
 
-        public ModesController(SmartAPIDbContext context)
+        public DevicesController(SmartAPIDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Mode
+        // GET: api/Device
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Mode>>> GetMode()
+        public async Task<ActionResult<IEnumerable<Device>>> GetDevice()
         {
-            return await _context.Modes.ToListAsync();
+            return await _context.Devices.ToListAsync();
         }
 
-        // GET: api/Mode/5
+        // GET: api/Device/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Mode>> GetMode(int id)
+        public async Task<ActionResult<Device>> GetDevice(int id)
         {
-            var mode = await _context.Modes.FindAsync(id);
+            var device = await _context.Devices.FindAsync(id);
 
-            if (mode == null)
+            if (device == null)
             {
                 return NotFound();
             }
 
-            return mode;
+            return device;
         }
 
-        // PUT: api/Mode/5
+        // PUT: api/Device/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMode(int id, Mode mode)
+        public async Task<IActionResult> PutDevice(int id, Device device)
         {
-            if (id != mode.Id)
+            if (id != device.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(mode).State = EntityState.Modified;
+            _context.Entry(device).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace SmartTerraAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ModeExists(id))
+                if (!DeviceExists(id))
                 {
                     return NotFound();
                 }
@@ -73,37 +73,37 @@ namespace SmartTerraAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Mode
+        // POST: api/Device
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Mode>> PostMode(Mode mode)
+        public async Task<ActionResult<Device>> PostDevice(Device device)
         {
-            _context.Modes.Add(mode);
+            _context.Devices.Add(device);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetMode", new { id = mode.Id }, mode);
+            return CreatedAtAction("GetDevice", new { id = device.Id }, device);
         }
 
-        // DELETE: api/Mode/5
+        // DELETE: api/Device/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Mode>> DeleteMode(int id)
+        public async Task<ActionResult<Device>> DeleteDevice(int id)
         {
-            var mode = await _context.Modes.FindAsync(id);
-            if (mode == null)
+            var device = await _context.Devices.FindAsync(id);
+            if (device == null)
             {
                 return NotFound();
             }
 
-            _context.Modes.Remove(mode);
+            _context.Devices.Remove(device);
             await _context.SaveChangesAsync();
 
-            return mode;
+            return device;
         }
 
-        private bool ModeExists(int id)
+        private bool DeviceExists(int id)
         {
-            return _context.Modes.Any(e => e.Id == id);
+            return _context.Devices.Any(e => e.Id == id);
         }
     }
 }

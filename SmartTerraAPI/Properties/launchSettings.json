@@ -12,7 +12,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "api/users/modes",
+      "launchUrl": "api/users",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -20,7 +20,7 @@
     "SmartTerraAPI": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/users/modes",
+      "launchUrl": "api/users",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

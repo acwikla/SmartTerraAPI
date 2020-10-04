@@ -11,48 +11,48 @@ namespace SmartTerraAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ModesController : ControllerBase
+    public class JobsController : ControllerBase
     {
         private readonly SmartAPIDbContext _context;
 
-        public ModesController(SmartAPIDbContext context)
+        public JobsController(SmartAPIDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Mode
+        // GET: api/Job
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Mode>>> GetMode()
+        public async Task<ActionResult<IEnumerable<Job>>> GetJob()
         {
-            return await _context.Modes.ToListAsync();
+            return await _context.Jobs.ToListAsync();
         }
 
-        // GET: api/Mode/5
+        // GET: api/Job/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Mode>> GetMode(int id)
+        public async Task<ActionResult<Job>> GetJob(int id)
         {
-            var mode = await _context.Modes.FindAsync(id);
+            var job = await _context.Jobs.FindAsync(id);
 
-            if (mode == null)
+            if (job == null)
             {
                 return NotFound();
             }
 
-            return mode;
+            return job;
         }
 
-        // PUT: api/Mode/5
+        // PUT: api/Job/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMode(int id, Mode mode)
+        public async Task<IActionResult> PutJob(int id, Job job)
         {
-            if (id != mode.Id)
+            if (id != job.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(mode).State = EntityState.Modified;
+            _context.Entry(job).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace SmartTerraAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ModeExists(id))
+                if (!JobExists(id))
                 {
                     return NotFound();
                 }
@@ -73,37 +73,37 @@ namespace SmartTerraAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Mode
+        // POST: api/Job
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Mode>> PostMode(Mode mode)
+        public async Task<ActionResult<Job>> PostJob(Job job)
         {
-            _context.Modes.Add(mode);
+            _context.Jobs.Add(job);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetMode", new { id = mode.Id }, mode);
+            return CreatedAtAction("GetJob", new { id = job.Id }, job);
         }
 
-        // DELETE: api/Mode/5
+        // DELETE: api/Job/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Mode>> DeleteMode(int id)
+        public async Task<ActionResult<Job>> DeleteJob(int id)
         {
-            var mode = await _context.Modes.FindAsync(id);
-            if (mode == null)
+            var job = await _context.Jobs.FindAsync(id);
+            if (job == null)
             {
                 return NotFound();
             }
 
-            _context.Modes.Remove(mode);
+            _context.Jobs.Remove(job);
             await _context.SaveChangesAsync();
 
-            return mode;
+            return job;
         }
 
-        private bool ModeExists(int id)
+        private bool JobExists(int id)
         {
-            return _context.Modes.Any(e => e.Id == id);
+            return _context.Jobs.Any(e => e.Id == id);
         }
     }
 }

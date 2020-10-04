@@ -26,5 +26,15 @@ namespace SmartTerraAPI.Models
 
             builder.Entity<DeviceJob>().HasKey(i => new { i.DeviceId, i.JobId });
         }
+
+        public DbSet<SmartTerraAPI.Models.Device> Devices { get; set; }
+
+        public DbSet<SmartTerraAPI.Models.Job> Jobs { get; set; }
+
+        public DbSet<SmartTerraAPI.Models.Mode> Modes { get; set; }
+
+        public DbSet<SmartTerraAPI.Models.User> Users { get; set; }
+
+        public DbSet<SmartTerraAPI.Models.DeviceJob> DeviceJob { get; set; }
     }
 }
