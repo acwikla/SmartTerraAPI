@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SmartTerraAPI.DTO;
 using SmartTerraAPI.Models;
 
 namespace SmartTerraAPI.Controllers
@@ -20,16 +21,30 @@ namespace SmartTerraAPI.Controllers
             _context = context;
         }
 
-        // GET: api/Job
+        // GET: api/Jobs
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Job>>> GetJob()
+        public async Task<ActionResult<IEnumerable<JobDTO>>> GetJob()
         {
-            return await _context.Jobs.ToListAsync();
+            var jobs = await _context.Jobs.ToListAsync();
+            List<JobDTO> jobsDTO = new List<JobDTO>();
+            foreach (Job j in jobs)
+            {
+                var jobDTO = new JobDTO
+                {
+                    Id = j.Id,
+                    Name = j.Name,
+                    Type = j.Type,
+                    Body = j.Body,
+                    Description = j.Description
+                };
+                jobsDTO.Add(jobDTO);
+            }
+            return Ok(jobsDTO);
         }
 
-        // GET: api/Job/5
+        // GET: api/Jobs/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Job>> GetJob(int id)
+        public async Task<ActionResult<JobDTO>> GetJob(int id)
         {
             var job = await _context.Jobs.FindAsync(id);
 
@@ -38,12 +53,18 @@ namespace SmartTerraAPI.Controllers
                 return NotFound();
             }
 
-            return job;
+            var jobDTO = new JobDTO
+            {
+                Id = job.Id,
+                Name = job.Name,
+                Type = job.Type,
+                Body = job.Body,
+                Description = job.Description
+            };
+            return Ok(jobDTO);
         }
 
         // PUT: api/Job/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutJob(int id, Job job)
         {
@@ -73,19 +94,28 @@ namespace SmartTerraAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Job
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // POST: api/Jobs
         [HttpPost]
-        public async Task<ActionResult<Job>> PostJob(Job job)
+        public async Task<ActionResult<JobDTO>> PostJob(Job job)
         {
-            _context.Jobs.Add(job);
-            await _context.SaveChangesAsync();
+            //TODO: add DeviceJobs from url data (device id...)
 
-            return CreatedAtAction("GetJob", new { id = job.Id }, job);
+            await _context.Jobs.AddAsync(job);
+
+            var jobDTO = new JobDTO
+            {
+                Id = job.Id,
+                Name = job.Name,
+                Type = job.Type,
+                Body = job.Body,
+                Description = job.Description
+            };
+
+            await _context.SaveChangesAsync();
+            return CreatedAtAction("GetJob", new { id = jobDTO.Id }, jobDTO);
         }
 
-        // DELETE: api/Job/5
+        // DELETE: api/Jobs/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Job>> DeleteJob(int id)
         {

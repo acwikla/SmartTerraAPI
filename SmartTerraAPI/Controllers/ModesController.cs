@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SmartTerraAPI.DTO;
 using SmartTerraAPI.Models;
 
 namespace SmartTerraAPI.Controllers
@@ -20,16 +21,32 @@ namespace SmartTerraAPI.Controllers
             _context = context;
         }
 
-        // GET: api/Mode
+        // GET: api/Modes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Mode>>> GetMode()
+        public async Task<ActionResult<IEnumerable<ModeDTO>>> GetMode()
         {
-            return await _context.Modes.ToListAsync();
+            var modes = await _context.Modes.ToListAsync();
+            List<ModeDTO> modesDTO = new List<ModeDTO>();
+            foreach (Mode m in modes)
+            {
+                var modeDTO = new ModeDTO
+                {
+                    Id = m.Id,
+                    Name = m.Name,
+                    Temperature = m.Temperature,
+                    Humidity = m.Humidity,
+                    TwilightHour = m.TwilightHour,
+                    HourOfDawn = m.HourOfDawn
+
+                };
+                modesDTO.Add(modeDTO);
+            }
+            return Ok(modesDTO);
         }
 
-        // GET: api/Mode/5
+        // GET: api/Modes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Mode>> GetMode(int id)
+        public async Task<ActionResult<ModeDTO>> GetMode(int id)
         {
             var mode = await _context.Modes.FindAsync(id);
 
@@ -38,12 +55,20 @@ namespace SmartTerraAPI.Controllers
                 return NotFound();
             }
 
-            return mode;
+            var modeDTO = new ModeDTO
+            {
+                Id = mode.Id,
+                Name = mode.Name,
+                Temperature = mode.Temperature,
+                Humidity = mode.Humidity,
+                TwilightHour = mode.TwilightHour,
+                HourOfDawn = mode.HourOfDawn
+            };
+
+            return Ok(modeDTO);
         }
 
-        // PUT: api/Mode/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // PUT: api/Modes/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMode(int id, Mode mode)
         {
@@ -73,19 +98,31 @@ namespace SmartTerraAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Mode
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // POST: api/Modes
         [HttpPost]
-        public async Task<ActionResult<Mode>> PostMode(Mode mode)
+        public async Task<ActionResult<ModeDTO>> PostMode(ModeDTO modeDTO)
+        //ModeDTO because Device and DeviceId is required in Mode class
         {
-            _context.Modes.Add(mode);
-            await _context.SaveChangesAsync();
+            //TODO:  check if name at users modes exist
 
-            return CreatedAtAction("GetMode", new { id = mode.Id }, mode);
+            var mode = new Mode
+            {
+                Id = modeDTO.Id,
+                Name = modeDTO.Name,
+                Temperature = modeDTO.Temperature,
+                Humidity = modeDTO.Humidity,
+                TwilightHour = modeDTO.TwilightHour,
+                HourOfDawn = modeDTO.HourOfDawn,
+                Device= null,//TODO: add DeviceId and Device form url
+                DeviceId= 0
+            }; 
+
+            await _context.Modes.AddAsync(mode);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction("GetMode", new { id = modeDTO.Id }, modeDTO);
         }
 
-        // DELETE: api/Mode/5
+        // DELETE: api/Modes/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Mode>> DeleteMode(int id)
         {

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SmartTerraAPI.DTO;
 using SmartTerraAPI.Models;
 
 namespace SmartTerraAPI.Controllers
@@ -20,16 +21,28 @@ namespace SmartTerraAPI.Controllers
             _context = context;
         }
 
-        // GET: api/Device
+        // GET: api/Devices
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Device>>> GetDevice()
+        public async Task<ActionResult<IEnumerable<DeviceDTO>>> GetDevice()
         {
-            return await _context.Devices.ToListAsync();
+            var devices = await _context.Devices.ToListAsync();
+            List<DeviceDTO> devicesDTO = new List<DeviceDTO>();
+            foreach (Device d in devices)
+            {
+                var deviceDTO = new DeviceDTO
+                {
+                    Id = d.Id,
+                    Name = d.Name,
+                    Mode = d.Mode
+                };
+                devicesDTO.Add(deviceDTO);
+            }
+            return Ok(devicesDTO);
         }
 
-        // GET: api/Device/5
+        // GET: api/Devices/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Device>> GetDevice(int id)
+        public async Task<ActionResult<DeviceDTO>> GetDevice(int id)
         {
             var device = await _context.Devices.FindAsync(id);
 
@@ -38,12 +51,17 @@ namespace SmartTerraAPI.Controllers
                 return NotFound();
             }
 
-            return device;
+            var deviceDTO = new DeviceDTO
+            {
+                Id = device.Id,
+                Name = device.Name,
+                Mode = device.Mode
+            };
+
+            return Ok(deviceDTO);
         }
 
-        // PUT: api/Device/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // PUT: api/Devices/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDevice(int id, Device device)
         {
@@ -73,19 +91,25 @@ namespace SmartTerraAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Device
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // POST: api/Devices
         [HttpPost]
-        public async Task<ActionResult<Device>> PostDevice(Device device)
+        public async Task<ActionResult<DeviceDTO>> PostDevice(Device device)
         {
+            //TODO: add DeviceJobs from url data
             _context.Devices.Add(device);
-            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetDevice", new { id = device.Id }, device);
+            var deviceDTO = new DeviceDTO
+            {
+                Id = device.Id,
+                Name = device.Name,
+                Mode = device.Mode
+            };
+
+            await _context.SaveChangesAsync();
+            return CreatedAtAction("GetDevice", new { id = deviceDTO.Id }, deviceDTO);
         }
 
-        // DELETE: api/Device/5
+        // DELETE: api/Devices/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Device>> DeleteDevice(int id)
         {

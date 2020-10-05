@@ -88,7 +88,7 @@ namespace SmartTerraAPI.Controllers
             return Ok(userDevicesDTO);
         }
 
-        // PUT: api/User/5
+        // PUT: api/Users/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(int id, User user)
         {
@@ -147,7 +147,7 @@ namespace SmartTerraAPI.Controllers
             return CreatedAtAction("GetUser", new { id = insertedUser.Id }, insertedUser);
         }
 
-        // DELETE: api/User/5
+        // DELETE: api/Users/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<User>> DeleteUser(int id)
         {
