@@ -29,7 +29,7 @@ namespace SmartTerraAPI.Controllers
             List<ModeDTO> modesDTO = new List<ModeDTO>();
             foreach (Mode m in modes)
             {
-                var modeDTO = new ModeDTO
+                var modeDTO = new ModeDTO()
                 {
                     Id = m.Id,
                     Name = m.Name,
@@ -55,7 +55,7 @@ namespace SmartTerraAPI.Controllers
                 return NotFound();
             }
 
-            var modeDTO = new ModeDTO
+            var modeDTO = new ModeDTO()
             {
                 Id = mode.Id,
                 Name = mode.Name,
@@ -100,25 +100,35 @@ namespace SmartTerraAPI.Controllers
 
         // POST: api/Modes
         [HttpPost]
-        public async Task<ActionResult<ModeDTO>> PostMode(ModeDTO modeDTO)
+        public async Task<ActionResult<ModeDTO>> PostMode(ModeDTO mode)
         //ModeDTO because Device and DeviceId is required in Mode class
+        //user cannot(should not) send Device object from body (I think)
         {
             //TODO:  check if name at users modes exist
 
-            var mode = new Mode
+            var newMode = new Mode()
             {
-                Id = modeDTO.Id,
-                Name = modeDTO.Name,
-                Temperature = modeDTO.Temperature,
-                Humidity = modeDTO.Humidity,
-                TwilightHour = modeDTO.TwilightHour,
-                HourOfDawn = modeDTO.HourOfDawn,
-                Device= null,//TODO: add DeviceId and Device form url
-                DeviceId= 0
-            }; 
-
-            await _context.Modes.AddAsync(mode);
+                Name = mode.Name,
+                Temperature = mode.Temperature,
+                Humidity = mode.Humidity,
+                TwilightHour = mode.TwilightHour,
+                HourOfDawn = mode.HourOfDawn,
+                Device= null,//TODO: add(find) DeviceId and Device form url
+                DeviceId = 0
+            };
+            await _context.Modes.AddAsync(newMode);
             await _context.SaveChangesAsync();
+
+            var modeDTO = new ModeDTO()
+            {
+                Id = newMode.Id,
+                Name = mode.Name,
+                Temperature = mode.Temperature,
+                Humidity = mode.Humidity,
+                TwilightHour = mode.TwilightHour,
+                HourOfDawn = mode.HourOfDawn
+            };
+
             return CreatedAtAction("GetMode", new { id = modeDTO.Id }, modeDTO);
         }
 

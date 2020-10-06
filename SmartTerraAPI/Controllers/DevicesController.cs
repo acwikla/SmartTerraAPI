@@ -29,7 +29,7 @@ namespace SmartTerraAPI.Controllers
             List<DeviceDTO> devicesDTO = new List<DeviceDTO>();
             foreach (Device d in devices)
             {
-                var deviceDTO = new DeviceDTO
+                var deviceDTO = new DeviceDTO()
                 {
                     Id = d.Id,
                     Name = d.Name,
@@ -51,7 +51,7 @@ namespace SmartTerraAPI.Controllers
                 return NotFound();
             }
 
-            var deviceDTO = new DeviceDTO
+            var deviceDTO = new DeviceDTO()
             {
                 Id = device.Id,
                 Name = device.Name,
@@ -93,19 +93,25 @@ namespace SmartTerraAPI.Controllers
 
         // POST: api/Devices
         [HttpPost]
-        public async Task<ActionResult<DeviceDTO>> PostDevice(Device device)
+        public async Task<ActionResult<DeviceDTO>> PostDevice(DeviceDTO device)
         {
-            //TODO: add DeviceJobs from url data
-            _context.Devices.Add(device);
-
-            var deviceDTO = new DeviceDTO
+            var newDevice = new Device()
             {
-                Id = device.Id,
+                Name = device.Name,
+                Mode = device.Mode,
+                User = null //TODO: add(find) User from url (??)
+            };
+
+            await _context.Devices.AddAsync(newDevice);
+            await _context.SaveChangesAsync();
+
+            var deviceDTO = new DeviceDTO()
+            {
+                Id = newDevice.Id,
                 Name = device.Name,
                 Mode = device.Mode
             };
 
-            await _context.SaveChangesAsync();
             return CreatedAtAction("GetDevice", new { id = deviceDTO.Id }, deviceDTO);
         }
 

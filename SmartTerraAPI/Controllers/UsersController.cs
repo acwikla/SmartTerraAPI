@@ -29,7 +29,7 @@ namespace SmartTerraAPI.Controllers
             List <UserDTO> usersDTO = new List<UserDTO>();
             foreach (User u in users)
             {
-                var userDTO= new UserDTO
+                var userDTO= new UserDTO()
                 {
                     Id = u.Id,
                     Login = u.Login,
@@ -51,7 +51,7 @@ namespace SmartTerraAPI.Controllers
                 return NotFound();
             }
 
-            var userDTO = new UserDTO
+            var userDTO = new UserDTO()
             {
                 Id = user.Id,
                 Login = user.Login,
@@ -76,7 +76,7 @@ namespace SmartTerraAPI.Controllers
             DeviceDTO userDeviceDTO;
             foreach (Device d in userDevices)
             {
-                userDeviceDTO = new DeviceDTO
+                userDeviceDTO = new DeviceDTO()
                 {
                     Id = d.Id,
                     Name = d.Name,

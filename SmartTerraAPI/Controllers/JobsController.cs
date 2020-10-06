@@ -29,7 +29,7 @@ namespace SmartTerraAPI.Controllers
             List<JobDTO> jobsDTO = new List<JobDTO>();
             foreach (Job j in jobs)
             {
-                var jobDTO = new JobDTO
+                var jobDTO = new JobDTO()
                 {
                     Id = j.Id,
                     Name = j.Name,
@@ -53,7 +53,7 @@ namespace SmartTerraAPI.Controllers
                 return NotFound();
             }
 
-            var jobDTO = new JobDTO
+            var jobDTO = new JobDTO()
             {
                 Id = job.Id,
                 Name = job.Name,
@@ -98,20 +98,25 @@ namespace SmartTerraAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<JobDTO>> PostJob(Job job)
         {
-            //TODO: add DeviceJobs from url data (device id...)
-
-            await _context.Jobs.AddAsync(job);
-
-            var jobDTO = new JobDTO
+            var newJob = new Job()
             {
-                Id = job.Id,
+                Name = job.Name,
+                Type = job.Type,
+                Body = job.Body,
+                Description = job.Description
+            };
+            await _context.Jobs.AddAsync(newJob);
+            await _context.SaveChangesAsync();
+
+            var jobDTO = new JobDTO()
+            {
+                Id = newJob.Id,
                 Name = job.Name,
                 Type = job.Type,
                 Body = job.Body,
                 Description = job.Description
             };
 
-            await _context.SaveChangesAsync();
             return CreatedAtAction("GetJob", new { id = jobDTO.Id }, jobDTO);
         }
 
