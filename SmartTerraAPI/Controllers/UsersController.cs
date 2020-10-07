@@ -92,7 +92,7 @@ namespace SmartTerraAPI.Controllers
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user)
+        public async Task<IActionResult> PutUser(int id, UserDTO user)
         {
             if (id != user.Id)
             {

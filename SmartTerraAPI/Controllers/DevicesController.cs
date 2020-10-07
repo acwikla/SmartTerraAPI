@@ -65,7 +65,7 @@ namespace SmartTerraAPI.Controllers
 
         // PUT: api/Devices/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDevice(int id, Device device)
+        public async Task<IActionResult> PutDevice(int id, DeviceDTO device)
         {
             if (id != device.Id)
             {

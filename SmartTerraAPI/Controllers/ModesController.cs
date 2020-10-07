@@ -72,7 +72,7 @@ namespace SmartTerraAPI.Controllers
 
         // PUT: api/Modes/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMode(int id, Mode mode)
+        public async Task<IActionResult> PutMode(int id, ModeDTO mode)
         {
                 if (id != mode.Id)
                 {
