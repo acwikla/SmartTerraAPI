@@ -27,6 +27,7 @@ namespace SmartTerraAPI.Controllers
         {
             var users = await _context.Users.ToListAsync();
             List <UserDTO> usersDTO = new List<UserDTO>();
+
             foreach (User u in users)
             {
                 var userDTO= new UserDTO()
@@ -37,6 +38,7 @@ namespace SmartTerraAPI.Controllers
                 };
                 usersDTO.Add(userDTO);
             }
+
             return Ok(usersDTO);
         }
 

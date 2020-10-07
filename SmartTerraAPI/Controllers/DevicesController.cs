@@ -27,6 +27,7 @@ namespace SmartTerraAPI.Controllers
         {
             var devices = await _context.Devices.ToListAsync();
             List<DeviceDTO> devicesDTO = new List<DeviceDTO>();
+
             foreach (Device d in devices)
             {
                 var deviceDTO = new DeviceDTO()
@@ -37,6 +38,7 @@ namespace SmartTerraAPI.Controllers
                 };
                 devicesDTO.Add(deviceDTO);
             }
+
             return Ok(devicesDTO);
         }
 
@@ -99,7 +101,7 @@ namespace SmartTerraAPI.Controllers
             {
                 Name = device.Name,
                 Mode = device.Mode,
-                User = null //TODO: add(find) User from url (??)
+                User = null //TODO: add(find) User from url
             };
 
             await _context.Devices.AddAsync(newDevice);

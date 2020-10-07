@@ -27,6 +27,7 @@ namespace SmartTerraAPI.Controllers
         {
             var jobs = await _context.Jobs.ToListAsync();
             List<JobDTO> jobsDTO = new List<JobDTO>();
+
             foreach (Job j in jobs)
             {
                 var jobDTO = new JobDTO()
@@ -39,6 +40,7 @@ namespace SmartTerraAPI.Controllers
                 };
                 jobsDTO.Add(jobDTO);
             }
+
             return Ok(jobsDTO);
         }
 
@@ -96,7 +98,7 @@ namespace SmartTerraAPI.Controllers
 
         // POST: api/Jobs
         [HttpPost]
-        public async Task<ActionResult<JobDTO>> PostJob(Job job)
+        public async Task<ActionResult<JobDTO>> PostJob(JobDTO job)
         {
             var newJob = new Job()
             {
@@ -105,6 +107,7 @@ namespace SmartTerraAPI.Controllers
                 Body = job.Body,
                 Description = job.Description
             };
+
             await _context.Jobs.AddAsync(newJob);
             await _context.SaveChangesAsync();
 

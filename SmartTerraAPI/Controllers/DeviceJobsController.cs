@@ -27,6 +27,7 @@ namespace SmartTerraAPI.Controllers
         {
             var deviceJobs = await _context.DeviceJobs.ToListAsync();
             List<DeviceJobDTO> deviceJobsDTO = new List<DeviceJobDTO>();
+
             foreach (DeviceJob d in deviceJobs)
             {
                 var deviceJobDTO = new DeviceJobDTO()
@@ -108,6 +109,7 @@ namespace SmartTerraAPI.Controllers
                 Device = null,//TODO: add(find) Device and Job from url & set DeviceJobs attribute for Job and Device 
                 Job = null
             };
+
             await _context.DeviceJobs.AddAsync(newDeviceJob);
             await _context.SaveChangesAsync();
 

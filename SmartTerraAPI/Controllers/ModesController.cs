@@ -27,6 +27,7 @@ namespace SmartTerraAPI.Controllers
         {
             var modes = await _context.Modes.ToListAsync();
             List<ModeDTO> modesDTO = new List<ModeDTO>();
+
             foreach (Mode m in modes)
             {
                 var modeDTO = new ModeDTO()
@@ -41,6 +42,7 @@ namespace SmartTerraAPI.Controllers
                 };
                 modesDTO.Add(modeDTO);
             }
+
             return Ok(modesDTO);
         }
 
@@ -72,10 +74,10 @@ namespace SmartTerraAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMode(int id, Mode mode)
         {
-            if (id != mode.Id)
-            {
-                return BadRequest();
-            }
+                if (id != mode.Id)
+                {
+                    return BadRequest();
+                }
 
             _context.Entry(mode).State = EntityState.Modified;
 
@@ -101,7 +103,7 @@ namespace SmartTerraAPI.Controllers
         // POST: api/Modes
         [HttpPost]
         public async Task<ActionResult<ModeDTO>> PostMode(ModeDTO mode)
-        //ModeDTO because Device and DeviceId is required in Mode class
+        //ModeDTO because Device and DeviceId are required in Mode class
         //user cannot(should not) send Device object from body (I think)
         {
             //TODO:  check if name at users modes exist
@@ -116,6 +118,7 @@ namespace SmartTerraAPI.Controllers
                 Device= null,//TODO: add(find) DeviceId and Device form url
                 DeviceId = 0
             };
+
             await _context.Modes.AddAsync(newMode);
             await _context.SaveChangesAsync();
 
