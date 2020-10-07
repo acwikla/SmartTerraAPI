@@ -68,7 +68,7 @@ namespace SmartTerraAPI.Controllers
 
         // PUT: api/Job/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutJob(int id, JobDTO job)
+        public async Task<IActionResult> PutJob(int id, Job job)
         {
             if (id != job.Id)
             {

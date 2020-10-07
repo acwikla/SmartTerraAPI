@@ -92,8 +92,9 @@ namespace SmartTerraAPI.Controllers
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, UserDTO user)
+        public async Task<IActionResult> PutUser(int id, User user)
         {
+            //TODO: add DTO classes to the context
             if (id != user.Id)
             {
                 return BadRequest();
