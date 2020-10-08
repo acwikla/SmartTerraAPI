@@ -54,7 +54,7 @@ namespace SmartTerraAPI.Controllers
 
             if (mode == null)
             {
-                return NotFound();
+                return NotFound("Mode does not exist.");
             }
 
             var modeDTO = new ModeDTO()
@@ -72,14 +72,28 @@ namespace SmartTerraAPI.Controllers
 
         // PUT: api/Modes/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMode(int id, Mode mode)
+        public async Task<IActionResult> PutMode(int id, ModeDTO mode)
         {
-                if (id != mode.Id)
-                {
-                    return BadRequest();
-                }
+            /*if (id != mode.Id)
+            {
+                return BadRequest();
+            }*/
 
-            _context.Entry(mode).State = EntityState.Modified;
+            var modeToUpdate = await _context.Modes.FindAsync(id);
+
+            if (modeToUpdate == null)
+            {
+                return NotFound("Mode does not exist.");
+            }
+
+            modeToUpdate.Name = mode.Name;
+            modeToUpdate.Temperature = mode.Temperature;
+            modeToUpdate.Humidity = mode.Humidity;
+            modeToUpdate.TwilightHour = mode.TwilightHour;
+            modeToUpdate.HourOfDawn = mode.HourOfDawn;
+            //TODO: update device
+
+            _context.Entry(modeToUpdate).State = EntityState.Modified;
 
             try
             {

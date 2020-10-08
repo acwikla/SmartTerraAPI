@@ -22,6 +22,7 @@ namespace SmartTerraAPI.DTO
         [DefaultValue(false)]
         public bool Done { get; set; }
 
+        //TODO: change Device type to DeviceDTO type...(?)
         public Device Device { get; set; }
 
         public Job Job { get; set; }

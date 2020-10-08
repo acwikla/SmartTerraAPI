@@ -53,7 +53,7 @@ namespace SmartTerraAPI.Controllers
 
             if (deviceJob == null)
             {
-                return NotFound();
+                return NotFound("DeviceJob does not exist.");
             }
 
             var deviceJobDTO = new DeviceJobDTO()
@@ -71,14 +71,25 @@ namespace SmartTerraAPI.Controllers
 
         // PUT: api/DeviceJobs/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDeviceJob(int id, DeviceJob deviceJob)
+        public async Task<IActionResult> PutDeviceJob(int id, DeviceJobDTO deviceJob)
         {
-            if (id != deviceJob.Id)
+            /*if (id != deviceJob.Id)
             {
                 return BadRequest();
+            }*/
+            var deviceJobToUpdate = await _context.DeviceJobs.FindAsync(id);
+
+            if (deviceJobToUpdate == null)
+            {
+                return NotFound("DeviceJob does not exist.");
             }
 
-            _context.Entry(deviceJob).State = EntityState.Modified;
+            deviceJobToUpdate.ExecutionTime = deviceJob.ExecutionTime;
+            deviceJobToUpdate.CreatedDate = deviceJob.CreatedDate;
+            deviceJobToUpdate.Done = deviceJob.Done;
+            //TODO: update device & job
+
+            _context.Entry(deviceJobToUpdate).State = EntityState.Modified;
 
             try
             {

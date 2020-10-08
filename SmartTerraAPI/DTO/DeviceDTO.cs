@@ -14,6 +14,7 @@ namespace SmartTerraAPI.DTO
         [Required]
         public string Name { get; set; }
 
+        //TODO: change Mode type to ModeDTO type(?)
         public Mode Mode { get; set; }
     }
 }

@@ -50,7 +50,7 @@ namespace SmartTerraAPI.Controllers
 
             if (user == null)
             {
-                return NotFound();
+                return NotFound("User does not exist.");
             }
 
             var userDTO = new UserDTO()
@@ -92,15 +92,25 @@ namespace SmartTerraAPI.Controllers
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user)
+        public async Task<IActionResult> PutUser(int id, UserRegisterDTO user)
         {
-            //TODO: add DTO classes to the context
-            if (id != user.Id)
+            /*if (id != user.Id)
             {
                 return BadRequest();
+            }*/
+
+            var userToUpdate = await _context.Users.FindAsync(id);
+
+            if (userToUpdate == null)
+            {
+                return NotFound("User does not exist.");
             }
 
-            _context.Entry(user).State = EntityState.Modified;
+            userToUpdate.Login = user.Login;
+            userToUpdate.Email = user.Email;
+            userToUpdate.Password = user.Password;
+
+            _context.Entry(userToUpdate).State = EntityState.Modified;
 
             try
             {

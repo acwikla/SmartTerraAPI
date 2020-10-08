@@ -52,7 +52,7 @@ namespace SmartTerraAPI.Controllers
 
             if (job == null)
             {
-                return NotFound();
+                return NotFound("Job does not exist.");
             }
 
             var jobDTO = new JobDTO()
@@ -70,12 +70,24 @@ namespace SmartTerraAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutJob(int id, Job job)
         {
-            if (id != job.Id)
+            /*if (id != job.Id)
             {
                 return BadRequest();
+            }*/
+            var jobToUpdate = await _context.Jobs.FindAsync(id);
+
+            if(jobToUpdate == null)
+            {
+                return NotFound("Job does not exist.");
             }
 
-            _context.Entry(job).State = EntityState.Modified;
+            jobToUpdate.Name = job.Name;
+            jobToUpdate.Type = job.Type;
+            jobToUpdate.Body = job.Body;
+            jobToUpdate.Description = job.Description;
+            //TODO: update deviceJobs
+
+            _context.Entry(jobToUpdate).State = EntityState.Modified;
 
             try
             {
