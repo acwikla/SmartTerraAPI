@@ -173,7 +173,7 @@ namespace SmartTerraAPI.Controllers
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
 
-            return user;
+            return Ok("User successfully deleted.");
         }
 
         private bool UserExists(int id)

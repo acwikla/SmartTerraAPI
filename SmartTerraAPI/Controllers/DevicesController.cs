@@ -140,7 +140,7 @@ namespace SmartTerraAPI.Controllers
             _context.Devices.Remove(device);
             await _context.SaveChangesAsync();
 
-            return device;
+            return Ok("Device successfully deleted.");
         }
 
         private bool DeviceExists(int id)

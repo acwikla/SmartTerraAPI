@@ -150,7 +150,7 @@ namespace SmartTerraAPI.Controllers
             _context.DeviceJobs.Remove(deviceJob);
             await _context.SaveChangesAsync();
 
-            return deviceJob;
+            return Ok("DeviceJob successfully deleted.");
         }
 
         private bool DeviceJobExists(int id)

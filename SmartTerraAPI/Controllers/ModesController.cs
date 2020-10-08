@@ -162,7 +162,7 @@ namespace SmartTerraAPI.Controllers
             _context.Modes.Remove(mode);
             await _context.SaveChangesAsync();
 
-            return mode;
+            return Ok("Mode successfully deleted.");
         }
 
         private bool ModeExists(int id)

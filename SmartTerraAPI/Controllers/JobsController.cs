@@ -148,7 +148,7 @@ namespace SmartTerraAPI.Controllers
             _context.Jobs.Remove(job);
             await _context.SaveChangesAsync();
 
-            return job;
+            return Ok("Job successfully deleted.");
         }
 
         private bool JobExists(int id)
