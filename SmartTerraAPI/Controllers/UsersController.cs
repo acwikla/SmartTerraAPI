@@ -160,6 +160,36 @@ namespace SmartTerraAPI.Controllers
             return CreatedAtAction("GetUser", new { id = insertedUser.Id }, insertedUser);
         }
 
+        // POST: api/users/5/devices
+        [HttpPost("{id}/devices")]
+        public async Task<ActionResult<DeviceDTO>> PostDevice(int id, DeviceDTO device)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if(user == null)
+            {
+                //TODO: poszukać jaki kod błędu nalezy zwrócić
+            }
+
+            var newDevice = new Device()
+            {
+                Name = device.Name,
+                Mode = device.Mode,
+                User = user,
+            };
+
+            await _context.Devices.AddAsync(newDevice);
+            await _context.SaveChangesAsync();
+
+            var deviceDTO = new DeviceDTO()
+            {
+                Id = newDevice.Id,
+                Name = device.Name,
+                Mode = device.Mode
+            };
+
+            return CreatedAtAction("GetDevice", new { id = deviceDTO.Id }, deviceDTO);
+        }
+
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<User>> DeleteUser(int id)

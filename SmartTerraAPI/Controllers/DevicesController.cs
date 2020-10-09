@@ -103,30 +103,6 @@ namespace SmartTerraAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Devices
-        [HttpPost]
-        public async Task<ActionResult<DeviceDTO>> PostDevice(DeviceDTO device)
-        {
-            var newDevice = new Device()
-            {
-                Name = device.Name,
-                Mode = device.Mode,
-                User = null //TODO: add(find) User from url
-            };
-
-            await _context.Devices.AddAsync(newDevice);
-            await _context.SaveChangesAsync();
-
-            var deviceDTO = new DeviceDTO()
-            {
-                Id = newDevice.Id,
-                Name = device.Name,
-                Mode = device.Mode
-            };
-
-            return CreatedAtAction("GetDevice", new { id = deviceDTO.Id }, deviceDTO);
-        }
-
         // DELETE: api/Devices/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Device>> DeleteDevice(int id)
