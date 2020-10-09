@@ -34,7 +34,6 @@ namespace SmartTerraAPI.Controllers
                 {
                     Id = d.Id,
                     Name = d.Name,
-                    Mode = d.Mode
                 };
                 devicesDTO.Add(deviceDTO);
             }
@@ -57,7 +56,6 @@ namespace SmartTerraAPI.Controllers
             {
                 Id = device.Id,
                 Name = device.Name,
-                Mode = device.Mode
             };
 
             return Ok(deviceDTO);
@@ -79,7 +77,6 @@ namespace SmartTerraAPI.Controllers
             }
              
             deviceToUpdate.Name = device.Name;
-            deviceToUpdate.Mode = device.Mode;
             //TODO: update user & deviceJobs
 
             _context.Entry(deviceToUpdate).State = EntityState.Modified;

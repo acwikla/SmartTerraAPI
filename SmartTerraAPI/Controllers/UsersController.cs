@@ -81,8 +81,7 @@ namespace SmartTerraAPI.Controllers
                 userDeviceDTO = new DeviceDTO()
                 {
                     Id = d.Id,
-                    Name = d.Name,
-                    Mode = d.Mode
+                    Name = d.Name
                 };
                 userDevicesDTO.Add(userDeviceDTO);
             }
@@ -162,19 +161,18 @@ namespace SmartTerraAPI.Controllers
 
         // POST: api/users/5/devices
         [HttpPost("{id}/devices")]
-        public async Task<ActionResult<DeviceDTO>> PostDevice(int id, DeviceDTO device)
+        public async Task<ActionResult<DeviceDTO>> PostDevice(int id, DeviceAddDTO device)
         {
             var user = await _context.Users.FindAsync(id);
             if(user == null)
             {
-                //TODO: poszukać jaki kod błędu nalezy zwrócić
+                return BadRequest($"There is no user for given id: {id}.");
             }
 
             var newDevice = new Device()
             {
                 Name = device.Name,
-                Mode = device.Mode,
-                User = user,
+                User = user
             };
 
             await _context.Devices.AddAsync(newDevice);
@@ -183,8 +181,7 @@ namespace SmartTerraAPI.Controllers
             var deviceDTO = new DeviceDTO()
             {
                 Id = newDevice.Id,
-                Name = device.Name,
-                Mode = device.Mode
+                Name = device.Name
             };
 
             return CreatedAtAction("GetDevice", new { id = deviceDTO.Id }, deviceDTO);
