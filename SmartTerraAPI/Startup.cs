@@ -41,6 +41,12 @@ namespace SmartTerraAPI
             services.AddDbContext<SmartTerraDbContext>(opt => opt.UseInMemoryDatabase("smartApiDb"));
             //services.AddDbContext<SmartTerraDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("SmartTerraDB")));
 
+            // na podstawie: https://docs.microsoft.com/pl-pl/aspnet/core/data/ef-mvc/migrations?view=aspnetcore-3.1
+            // w wierszu polecen visual studio: View->Terminal
+            //dotnet tool install--global dotnet-ef
+            //dotnet ef migrations add InitialCreate
+            //dotnet ef database update
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
