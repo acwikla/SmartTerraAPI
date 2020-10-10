@@ -22,6 +22,9 @@ namespace SmartTerraAPI.Models
         public bool Done { get; set; }
 
         [Required]
+        public string Body { get; set; }
+
+        [Required]
         public Device Device { get; set; }
 
         [Required]

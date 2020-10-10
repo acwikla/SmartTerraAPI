@@ -50,7 +50,7 @@ namespace SmartTerraAPI.Controllers
 
             if (user == null)
             {
-                return NotFound("User does not exist.");
+                return BadRequest($"There is no user for given id: {id}.");
             }
 
             var userDTO = new UserDTO()
@@ -72,7 +72,7 @@ namespace SmartTerraAPI.Controllers
 
             if (userDevices == null)
             {
-                return NotFound();
+                return BadRequest($"There is no device for user with given id: {id}.");
             }
 
             DeviceDTO userDeviceDTO;
@@ -89,6 +89,27 @@ namespace SmartTerraAPI.Controllers
             return Ok(userDevicesDTO);
         }
 
+        // GET: api/Users/1/Devices/1
+        [HttpGet("{id}/devices/{deviceId}")]
+        public async Task<ActionResult<DeviceDTO>> GetDevice(int id, int deviceId)
+        {
+            var userDevices = await _context.Users.Include(n => n.Devices).Where(user => user.Id == id).SelectMany(user => user.Devices).ToListAsync();
+            Device device = userDevices.Where(device => device.Id == deviceId).FirstOrDefault();
+
+            if (device == null)
+            {
+                return BadRequest($"There is no device for given id: {deviceId}.");
+            }
+
+            var deviceDTO = new DeviceDTO()
+            {
+                Id = device.Id,
+                Name = device.Name,
+            };
+
+            return Ok(deviceDTO);
+        }
+
         // PUT: api/Users/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(int id, UserRegisterDTO user)
@@ -99,10 +120,9 @@ namespace SmartTerraAPI.Controllers
             }*/
 
             var userToUpdate = await _context.Users.FindAsync(id);
-
             if (userToUpdate == null)
             {
-                return NotFound("User does not exist.");
+                return BadRequest($"There is no user for given id: {id}.");
             }
 
             userToUpdate.Login = user.Login;
@@ -136,7 +156,7 @@ namespace SmartTerraAPI.Controllers
         {
             if (EmailExists(user.Email))
             {
-                return BadRequest("User with this email already exists.");
+                return BadRequest($"User with this email already exists.");
             }
 
             var newUser = new User()
@@ -184,7 +204,7 @@ namespace SmartTerraAPI.Controllers
                 Name = device.Name
             };
 
-            return CreatedAtAction("GetDevice", new { id = deviceDTO.Id }, deviceDTO);
+            return CreatedAtAction("GetDevice", "Devices", new { id = deviceDTO.Id }, deviceDTO);
         }
 
         // DELETE: api/Users/5
@@ -194,7 +214,7 @@ namespace SmartTerraAPI.Controllers
             var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
-                return NotFound();
+                return BadRequest($"There is no user for given id: {id}.");
             }
 
             _context.Users.Remove(user);

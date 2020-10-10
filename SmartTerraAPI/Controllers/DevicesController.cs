@@ -21,44 +21,63 @@ namespace SmartTerraAPI.Controllers
             _context = context;
         }
 
-        // GET: api/Devices
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<DeviceDTO>>> GetDevice()
-        {
-            var devices = await _context.Devices.ToListAsync();
-            List<DeviceDTO> devicesDTO = new List<DeviceDTO>();
-
-            foreach (Device d in devices)
-            {
-                var deviceDTO = new DeviceDTO()
-                {
-                    Id = d.Id,
-                    Name = d.Name,
-                };
-                devicesDTO.Add(deviceDTO);
-            }
-
-            return Ok(devicesDTO);
-        }
-
-        // GET: api/Devices/5
+        // GET: api/devices/{id}/modes
         [HttpGet("{id}")]
-        public async Task<ActionResult<DeviceDTO>> GetDevice(int id)
+        public async Task<ActionResult<ModeDTO>> GetMode(int id)
         {
             var device = await _context.Devices.FindAsync(id);
 
             if (device == null)
             {
-                return NotFound("Device does not exist.");
+                return BadRequest($"There is no mode for device with given id: {id}.");
             }
 
-            var deviceDTO = new DeviceDTO()
+            var mode = device.Mode;
+
+            var modeDTO = new ModeDTO()
             {
-                Id = device.Id,
-                Name = device.Name,
+                Id = mode.Id,
+                Name = mode.Name,
+                Temperature = mode.Temperature,
+                Humidity = mode.Humidity,
+                TwilightHour = mode.TwilightHour,
+                HourOfDawn = mode.HourOfDawn
             };
 
-            return Ok(deviceDTO);
+            return Ok(modeDTO);
+        }
+
+        // POST: api/devices/{id}/modes
+        [HttpPost("{id}/modes")]
+        public async Task<ActionResult<ModeDTO>> PostMode(int id, ModeDTO mode)
+        {
+            var device = await _context.Devices.FindAsync(id);
+
+            var newMode = new Mode()
+            {
+                Name = mode.Name,
+                Temperature = mode.Temperature,
+                Humidity = mode.Humidity,
+                TwilightHour = mode.TwilightHour,
+                HourOfDawn = mode.HourOfDawn,
+                Device = device,
+                DeviceId = device.Id
+            };
+
+            await _context.Modes.AddAsync(newMode);
+            await _context.SaveChangesAsync();
+
+            var modeDTO = new ModeDTO()
+            {
+                Id = newMode.Id,
+                Name = mode.Name,
+                Temperature = mode.Temperature,
+                Humidity = mode.Humidity,
+                TwilightHour = mode.TwilightHour,
+                HourOfDawn = mode.HourOfDawn
+            };
+
+            return CreatedAtAction("GetMode", new { id = modeDTO.Id }, modeDTO);
         }
 
         // PUT: api/Devices/5
@@ -70,14 +89,12 @@ namespace SmartTerraAPI.Controllers
                 return BadRequest();
             }*/
             var deviceToUpdate = await _context.Devices.FindAsync(id);
-
             if (deviceToUpdate == null)
             {
-                return NotFound("Device does not exist.");
+                return BadRequest($"There is no device for given id: {id}.");
             }
-             
+
             deviceToUpdate.Name = device.Name;
-            //TODO: update user & deviceJobs
 
             _context.Entry(deviceToUpdate).State = EntityState.Modified;
 
@@ -107,7 +124,7 @@ namespace SmartTerraAPI.Controllers
             var device = await _context.Devices.FindAsync(id);
             if (device == null)
             {
-                return NotFound();
+                return BadRequest($"There is no device for given id: {id}.");
             }
 
             _context.Devices.Remove(device);

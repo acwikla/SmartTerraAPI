@@ -46,30 +46,6 @@ namespace SmartTerraAPI.Controllers
             return Ok(modesDTO);
         }
 
-        // GET: api/Modes/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ModeDTO>> GetMode(int id)
-        {
-            var mode = await _context.Modes.FindAsync(id);
-
-            if (mode == null)
-            {
-                return NotFound("Mode does not exist.");
-            }
-
-            var modeDTO = new ModeDTO()
-            {
-                Id = mode.Id,
-                Name = mode.Name,
-                Temperature = mode.Temperature,
-                Humidity = mode.Humidity,
-                TwilightHour = mode.TwilightHour,
-                HourOfDawn = mode.HourOfDawn
-            };
-
-            return Ok(modeDTO);
-        }
-
         // PUT: api/Modes/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMode(int id, ModeDTO mode)
@@ -83,7 +59,7 @@ namespace SmartTerraAPI.Controllers
 
             if (modeToUpdate == null)
             {
-                return NotFound("Mode does not exist.");
+                return BadRequest($"There is no mode for given id: {id}.");
             }
 
             modeToUpdate.Name = mode.Name;
@@ -91,7 +67,6 @@ namespace SmartTerraAPI.Controllers
             modeToUpdate.Humidity = mode.Humidity;
             modeToUpdate.TwilightHour = mode.TwilightHour;
             modeToUpdate.HourOfDawn = mode.HourOfDawn;
-            //TODO: update device
 
             _context.Entry(modeToUpdate).State = EntityState.Modified;
 
@@ -114,41 +89,6 @@ namespace SmartTerraAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Modes
-        [HttpPost]
-        public async Task<ActionResult<ModeDTO>> PostMode(ModeDTO mode)
-        //ModeDTO because Device and DeviceId are required in Mode class
-        //user cannot(should not) send Device object from body (I think)
-        {
-            //TODO:  check if name at users modes exist
-
-            var newMode = new Mode()
-            {
-                Name = mode.Name,
-                Temperature = mode.Temperature,
-                Humidity = mode.Humidity,
-                TwilightHour = mode.TwilightHour,
-                HourOfDawn = mode.HourOfDawn,
-                Device= null,//TODO: add(find) DeviceId and Device form url
-                DeviceId = 0
-            };
-
-            await _context.Modes.AddAsync(newMode);
-            await _context.SaveChangesAsync();
-
-            var modeDTO = new ModeDTO()
-            {
-                Id = newMode.Id,
-                Name = mode.Name,
-                Temperature = mode.Temperature,
-                Humidity = mode.Humidity,
-                TwilightHour = mode.TwilightHour,
-                HourOfDawn = mode.HourOfDawn
-            };
-
-            return CreatedAtAction("GetMode", new { id = modeDTO.Id }, modeDTO);
-        }
-
         // DELETE: api/Modes/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Mode>> DeleteMode(int id)
@@ -156,7 +96,7 @@ namespace SmartTerraAPI.Controllers
             var mode = await _context.Modes.FindAsync(id);
             if (mode == null)
             {
-                return NotFound();
+                return BadRequest($"There is no mode for given id: {id}.");
             }
 
             _context.Modes.Remove(mode);

@@ -21,11 +21,14 @@ namespace SmartTerraAPI.Controllers
             _context = context;
         }
 
-        // GET: api/DeviceJobs
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<DeviceJobDTO>>> GetDeviceJob()
+        // GET: api/DeviceJobs/{id}/deviceId={deviceId}
+        [HttpGet("deviceId={deviceId}")]
+        public async Task<ActionResult<IEnumerable<DeviceJobDTO>>> GetDeviceJob(int id, int deviceId)
         {
-            var deviceJobs = await _context.DeviceJobs.ToListAsync();
+            var device = await _context.Devices.FindAsync(deviceId);
+
+            var deviceJobs = device.DeviceJobs;
+
             List<DeviceJobDTO> deviceJobsDTO = new List<DeviceJobDTO>();
 
             foreach (DeviceJob d in deviceJobs)
@@ -36,7 +39,8 @@ namespace SmartTerraAPI.Controllers
                     ExecutionTime = d.ExecutionTime,
                     CreatedDate = d.CreatedDate,
                     Done = d.Done,
-                    Device = null,//TODO: add(find) Device and Job from url
+                    Body = d.Body,
+                    Device = device,//TODO: add(find) Device and Job from url
                     Job = null
                 };
                 deviceJobsDTO.Add(deviceJobDTO);
@@ -62,6 +66,7 @@ namespace SmartTerraAPI.Controllers
                 ExecutionTime = deviceJob.ExecutionTime,
                 CreatedDate = deviceJob.CreatedDate,
                 Done = deviceJob.Done,
+                Body = deviceJob.Body,
                 Device = null,//TODO: add(find) Device and Job from url
                 Job = null
             };
@@ -87,7 +92,7 @@ namespace SmartTerraAPI.Controllers
             deviceJobToUpdate.ExecutionTime = deviceJob.ExecutionTime;
             deviceJobToUpdate.CreatedDate = deviceJob.CreatedDate;
             deviceJobToUpdate.Done = deviceJob.Done;
-            //TODO: update device & job
+            //TODO: update device
 
             _context.Entry(deviceJobToUpdate).State = EntityState.Modified;
 

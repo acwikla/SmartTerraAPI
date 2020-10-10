@@ -32,20 +32,13 @@ namespace SmartTerraAPI
         {
             services.AddCors(options =>
             {
-                //cors oznacza ze fron i backend sa na roznych serwerach(portach), inaczej będą sie blokowaly(chyba)
                 options.AddPolicy("CorsPolicy", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowCredentials().Build());
             });
             
             services.AddControllers();
 
-            services.AddDbContext<SmartTerraDbContext>(opt => opt.UseInMemoryDatabase("smartApiDb"));
-            //services.AddDbContext<SmartTerraDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("SmartTerraDB")));
-
-            // na podstawie: https://docs.microsoft.com/pl-pl/aspnet/core/data/ef-mvc/migrations?view=aspnetcore-3.1
-            // w wierszu polecen visual studio: View->Terminal
-            //dotnet tool install--global dotnet-ef
-            //dotnet ef migrations add InitialCreate
-            //dotnet ef database update
+            //services.AddDbContext<SmartTerraDbContext>(opt => opt.UseInMemoryDatabase("smartApiDb"));
+            services.AddDbContext<SmartTerraDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("SmartTerraDB")));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

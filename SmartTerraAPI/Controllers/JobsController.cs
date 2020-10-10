@@ -35,7 +35,6 @@ namespace SmartTerraAPI.Controllers
                     Id = j.Id,
                     Name = j.Name,
                     Type = j.Type,
-                    Body = j.Body,
                     Description = j.Description
                 };
                 jobsDTO.Add(jobDTO);
@@ -60,7 +59,6 @@ namespace SmartTerraAPI.Controllers
                 Id = job.Id,
                 Name = job.Name,
                 Type = job.Type,
-                Body = job.Body,
                 Description = job.Description
             };
             return Ok(jobDTO);
@@ -83,7 +81,6 @@ namespace SmartTerraAPI.Controllers
 
             jobToUpdate.Name = job.Name;
             jobToUpdate.Type = job.Type;
-            jobToUpdate.Body = job.Body;
             jobToUpdate.Description = job.Description;
             //TODO: update deviceJobs
 
@@ -116,7 +113,6 @@ namespace SmartTerraAPI.Controllers
             {
                 Name = job.Name,
                 Type = job.Type,
-                Body = job.Body,
                 Description = job.Description
             };
 
@@ -128,7 +124,6 @@ namespace SmartTerraAPI.Controllers
                 Id = newJob.Id,
                 Name = job.Name,
                 Type = job.Type,
-                Body = job.Body,
                 Description = job.Description
             };
 
