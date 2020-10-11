@@ -65,7 +65,7 @@ namespace SmartTerraAPI.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ExecutionTime = table.Column<DateTime>(nullable: false),
-                    CreatedDate = table.Column<DateTime>(nullable: true),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
                     Done = table.Column<bool>(nullable: false),
                     DeviceId = table.Column<int>(nullable: false),
                     JobId = table.Column<int>(nullable: false)
