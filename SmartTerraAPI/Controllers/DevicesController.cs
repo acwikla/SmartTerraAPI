@@ -22,10 +22,10 @@ namespace SmartTerraAPI.Controllers
         }
 
         // GET: api/devices/{id}/modes
-        [HttpGet("{id}")]
+        [HttpGet("{id}/modes")]
         public async Task<ActionResult<ModeDTO>> GetMode(int id)
         {
-            var device = await _context.Devices.FindAsync(id);
+            var device = await _context.Devices.Include(d=> d.Mode).Where(device =>device.Id == id).FirstOrDefaultAsync();
 
             if (device.Mode == null)
             {
