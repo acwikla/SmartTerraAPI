@@ -27,7 +27,7 @@ namespace SmartTerraAPI.Controllers
         {
             var device = await _context.Devices.FindAsync(id);
 
-            if (device == null)
+            if (device.Mode == null)
             {
                 return BadRequest($"There is no mode for device with given id: {id}.");
             }

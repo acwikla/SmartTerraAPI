@@ -26,19 +26,22 @@ namespace SmartTerraAPI.Controllers
         public async Task<ActionResult<IEnumerable<DeviceJobDTO>>> GetDeviceJob()
         {
             var deviceJobs = await _context.DeviceJobs.ToListAsync();
+
             List<DeviceJobDTO> deviceJobsDTO = new List<DeviceJobDTO>();
 
             foreach (DeviceJob d in deviceJobs)
             {
+                var deviceJob = await _context.DeviceJobs.Include(d => d.Device).Include(j => j.Job).Where(deviceJobs => deviceJobs.Id == d.Id).FirstOrDefaultAsync();
+
                 var deviceJobDTO = new DeviceJobDTO()
                 {
-                    Id = d.Id,
-                    ExecutionTime = d.ExecutionTime,
-                    CreatedDate = d.CreatedDate,
-                    Done = d.Done,
-                    Body = d.Body,
-                    Device = d.Device,//TODO: add(find) Device and Job from url
-                    Job = d.Job
+                    Id = deviceJob.Id,
+                    ExecutionTime = deviceJob.ExecutionTime,
+                    CreatedDate = deviceJob.CreatedDate,
+                    Done = deviceJob.Done,
+                    Body = deviceJob.Body,
+                    Device = deviceJob.Device,//TODO: add(find) Device and Job from url
+                    Job = deviceJob.Job
                 };
                 deviceJobsDTO.Add(deviceJobDTO);
             }
@@ -50,10 +53,10 @@ namespace SmartTerraAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<DeviceJobDTO>> GetDeviceJob(int id)
         {
-            var deviceJob = await _context.DeviceJobs.FindAsync(id);
+            var deviceJob = await _context.DeviceJobs.Include(d => d.Device).Include(j=> j.Job).Where(deviceJobs => deviceJobs.Id == id).FirstOrDefaultAsync();
             if (deviceJob == null)
             {
-                return BadRequest($"There is no deviceJob for deviceJob with given id: {id}.");
+                return BadRequest($"There is no deviceJob for given id: {id}.");
             }
 
             var device = deviceJob.Device;
@@ -91,10 +94,11 @@ namespace SmartTerraAPI.Controllers
             {
                 return BadRequest();
             }*/
-            var deviceJobToUpdate = await _context.DeviceJobs.FindAsync(id);
+            var deviceJobToUpdate = await _context.DeviceJobs.Include(d => d.Device).Where(deviceJobs => deviceJobs.Id == id).FirstOrDefaultAsync();
+
             if (deviceJobToUpdate == null)
             {
-                return BadRequest($"There is no device job for given id: {id}.");
+                return BadRequest($"There is no deviceJob for given id: {id}.");
             }
 
             deviceJobToUpdate.ExecutionTime = deviceJob.ExecutionTime;
@@ -150,9 +154,9 @@ namespace SmartTerraAPI.Controllers
                 Job = job
             };
 
-            await _context.DeviceJobs.AddAsync(newDeviceJob);
             _context.Entry(device).State = EntityState.Modified;
             _context.Entry(job).State = EntityState.Modified;
+            await _context.DeviceJobs.AddAsync(newDeviceJob);
 
             await _context.SaveChangesAsync();//exeption => 'cannot insert value null'
 
