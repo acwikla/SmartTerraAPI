@@ -39,6 +39,7 @@ namespace SmartTerraAPI.Controllers
 
                 var jobDTO = new JobDTO()
                 {
+                    Id = deviceJob.Job.Id,
                     Name = deviceJob.Job.Name,
                     Type = deviceJob.Job.Type,
                     Description = deviceJob.Job.Description
@@ -85,6 +86,7 @@ namespace SmartTerraAPI.Controllers
             }
             var jobDTO = new JobDTO()
             {
+                Id = deviceJob.Job.Id,
                 Name = deviceJob.Job.Name,
                 Type = deviceJob.Job.Type,
                 Description = deviceJob.Job.Description
@@ -150,7 +152,7 @@ namespace SmartTerraAPI.Controllers
 
         // POST: api/DeviceJobs/deviceId={deviceId}/jobId={jobId}
         [HttpPost("deviceId={deviceId}/jobId={jobId}")]
-        public async Task<ActionResult<DeviceJob>> PostDeviceJob(int deviceId, int jobId, DeviceJobDTO deviceJob)
+        public async Task<ActionResult<DeviceJob>> PostDeviceJob(int deviceId, int jobId, DeviceJobAddDTO deviceJob)
         {
             var device = await _context.Devices.FindAsync(deviceId);
             if (device == null)
@@ -169,6 +171,7 @@ namespace SmartTerraAPI.Controllers
             }
             var jobDTO = new JobDTO()
             {
+                Id = job.Id,
                 Name = job.Name,
                 Type = job.Type,
                 Description = job.Description
