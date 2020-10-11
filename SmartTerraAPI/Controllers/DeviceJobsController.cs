@@ -151,10 +151,11 @@ namespace SmartTerraAPI.Controllers
             };
 
             await _context.DeviceJobs.AddAsync(newDeviceJob);
-            await _context.SaveChangesAsync();//exeption => 'cannot insert value null'
-
             _context.Entry(device).State = EntityState.Modified;
             _context.Entry(job).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();//exeption => 'cannot insert value null'
+
             var deviceJobDTO = new DeviceJobDTO()
             {
                 Id = newDeviceJob.Id,

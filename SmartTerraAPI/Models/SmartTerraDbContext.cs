@@ -22,6 +22,10 @@ namespace SmartTerraAPI.Models
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<DeviceJob>()
+            .Property(s => s.CreatedDate)
+            .HasDefaultValueSql("GETDATE()");
+
             base.OnModelCreating(builder);
         }
 
