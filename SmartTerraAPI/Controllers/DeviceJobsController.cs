@@ -32,6 +32,17 @@ namespace SmartTerraAPI.Controllers
             foreach (DeviceJob d in deviceJobs)
             {
                 var deviceJob = await _context.DeviceJobs.Include(d => d.Device).Include(j => j.Job).Where(deviceJobs => deviceJobs.Id == d.Id).FirstOrDefaultAsync();
+                var deviceDTO = new DeviceAddDTO
+                {
+                    Name = deviceJob.Device.Name
+                };
+
+                var jobDTO = new JobDTO()
+                {
+                    Name = deviceJob.Job.Name,
+                    Type = deviceJob.Job.Type,
+                    Description = deviceJob.Job.Description
+                };
 
                 var deviceJobDTO = new DeviceJobDTO()
                 {
@@ -40,8 +51,8 @@ namespace SmartTerraAPI.Controllers
                     CreatedDate = deviceJob.CreatedDate,
                     Done = deviceJob.Done,
                     Body = deviceJob.Body,
-                    Device = deviceJob.Device,//TODO: add(find) Device and Job from url
-                    Job = deviceJob.Job
+                    Device = deviceDTO,
+                    Job = jobDTO
                 };
                 deviceJobsDTO.Add(deviceJobDTO);
             }
@@ -53,25 +64,32 @@ namespace SmartTerraAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<DeviceJobDTO>> GetDeviceJob(int id)
         {
-            var deviceJob = await _context.DeviceJobs.Include(d => d.Device).Include(j=> j.Job).Where(deviceJobs => deviceJobs.Id == id).FirstOrDefaultAsync();
+            var deviceJob = await _context.DeviceJobs.Include(d => d.Device).Include(j => j.Job).Where(deviceJobs => deviceJobs.Id == id).FirstOrDefaultAsync();
             if (deviceJob == null)
             {
                 return BadRequest($"There is no deviceJob for given id: {id}.");
             }
 
-            var device = deviceJob.Device;
-            if (device == null)
+            if (deviceJob.Device == null)
             {
                 return BadRequest($"There is no device for deviceJob with given id: {id}.");
             }
+            var deviceDTO = new DeviceAddDTO
+            {
+                Name = deviceJob.Device.Name
+            };
 
-            var job = deviceJob.Job;
-            if (job == null)
+            if (deviceJob.Job == null)
             {
                 return BadRequest($"There is no job for deviceJob with given id: {id}.");
             }
+            var jobDTO = new JobDTO()
+            {
+                Name = deviceJob.Job.Name,
+                Type = deviceJob.Job.Type,
+                Description = deviceJob.Job.Description
+            };
             
-
             var deviceJobDTO = new DeviceJobDTO()
             {
                 Id = deviceJob.Id,
@@ -79,8 +97,8 @@ namespace SmartTerraAPI.Controllers
                 CreatedDate = deviceJob.CreatedDate,
                 Done = deviceJob.Done,
                 Body = deviceJob.Body,
-                Device = deviceJob.Device,
-                Job = deviceJob.Job
+                Device = deviceDTO,
+                Job = jobDTO
             };
 
             return Ok(deviceJobDTO);
@@ -139,12 +157,22 @@ namespace SmartTerraAPI.Controllers
             {
                 return BadRequest($"There is no device for given id: {deviceId}.");
             }
+            var deviceDTO = new DeviceAddDTO
+            {
+                Name = device.Name
+            };
 
             var job = await _context.Jobs.FindAsync(jobId);
             if (job == null)
             {
                 return BadRequest($"There is no job for given id: {jobId}.");
             }
+            var jobDTO = new JobDTO()
+            {
+                Name = job.Name,
+                Type = job.Type,
+                Description = job.Description
+            };
 
             var newDeviceJob = new DeviceJob()
             {
@@ -156,9 +184,9 @@ namespace SmartTerraAPI.Controllers
 
             _context.Entry(device).State = EntityState.Modified;
             _context.Entry(job).State = EntityState.Modified;
-            await _context.DeviceJobs.AddAsync(newDeviceJob);
 
-            await _context.SaveChangesAsync();//exeption => 'cannot insert value null'
+            await _context.DeviceJobs.AddAsync(newDeviceJob);
+            await _context.SaveChangesAsync();
 
             var deviceJobDTO = new DeviceJobDTO()
             {
@@ -167,8 +195,8 @@ namespace SmartTerraAPI.Controllers
                 CreatedDate = newDeviceJob.CreatedDate,
                 Done = newDeviceJob.Done,
                 Body = newDeviceJob.Body,
-                Device = newDeviceJob.Device,
-                Job = newDeviceJob.Job
+                Device = deviceDTO,
+                Job = jobDTO
             };
 
             return CreatedAtAction("GetDeviceJob", new { id = deviceJobDTO.Id }, deviceJobDTO);

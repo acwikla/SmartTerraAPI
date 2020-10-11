@@ -25,9 +25,8 @@ namespace SmartTerraAPI.DTO
         [Required]
         public string Body { get; set; }
 
-        //TODO: change Device type to DeviceDTO type...(?)
-        public Device Device { get; set; }
+        public DeviceAddDTO Device { get; set; }
 
-        public Job Job { get; set; }
+        public JobDTO Job { get; set; }
     }
 }
