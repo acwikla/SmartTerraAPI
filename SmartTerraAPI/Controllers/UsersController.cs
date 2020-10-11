@@ -204,7 +204,7 @@ namespace SmartTerraAPI.Controllers
                 Name = device.Name
             };
 
-            return CreatedAtAction("GetDevice", "Devices", new { id = deviceDTO.Id }, deviceDTO);
+            return CreatedAtAction("GetDevice", new { id = id, deviceId= deviceDTO.Id }, deviceDTO);
         }
 
         // DELETE: api/Users/5
