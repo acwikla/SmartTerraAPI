@@ -21,37 +21,39 @@ namespace SmartTerraAPI.Controllers
             _context = context;
         }
 
-        // GET: api/DeviceJobs
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<DeviceJobDTO>>> GetDeviceJob()
+        // GET: api/DeviceJobs/deviceId={deviceId}
+        [HttpGet("deviceId={deviceId}")]
+        public async Task<ActionResult<IEnumerable<DeviceJobDTO>>> GetDeviceJobs(int deviceId)
         {
-            var deviceJobs = await _context.DeviceJobs.ToListAsync();
-
+            List<DeviceJob> deviceJobs = await _context.DeviceJobs.Include(d => d.Device).Include(j => j.Job).Where(deviceJob => deviceJob.Device.Id == deviceId).ToListAsync();
+            if (deviceJobs==null)
+            {
+                return BadRequest($"There is no deviceJob for device with given id: {deviceId}.");
+            }
             List<DeviceJobDTO> deviceJobsDTO = new List<DeviceJobDTO>();
 
             foreach (DeviceJob d in deviceJobs)
             {
-                var deviceJob = await _context.DeviceJobs.Include(d => d.Device).Include(j => j.Job).Where(deviceJobs => deviceJobs.Id == d.Id).FirstOrDefaultAsync();
                 var deviceDTO = new DeviceAddDTO
                 {
-                    Name = deviceJob.Device.Name
+                    Name = d.Device.Name
                 };
 
                 var jobDTO = new JobDTO()
                 {
-                    Id = deviceJob.Job.Id,
-                    Name = deviceJob.Job.Name,
-                    Type = deviceJob.Job.Type,
-                    Description = deviceJob.Job.Description
+                    Id = d.Job.Id,
+                    Name = d.Job.Name,
+                    Type = d.Job.Type,
+                    Description = d.Job.Description
                 };
 
                 var deviceJobDTO = new DeviceJobDTO()
                 {
-                    Id = deviceJob.Id,
-                    ExecutionTime = deviceJob.ExecutionTime,
-                    CreatedDate = deviceJob.CreatedDate,
-                    Done = deviceJob.Done,
-                    Body = deviceJob.Body,
+                    Id = d.Id,
+                    ExecutionTime = d.ExecutionTime,
+                    CreatedDate = d.CreatedDate,
+                    Done = d.Done,
+                    Body = d.Body,
                     Device = deviceDTO,
                     Job = jobDTO
                 };
@@ -66,6 +68,7 @@ namespace SmartTerraAPI.Controllers
         public async Task<ActionResult<DeviceJobDTO>> GetDeviceJob(int id)
         {
             var deviceJob = await _context.DeviceJobs.Include(d => d.Device).Include(j => j.Job).Where(deviceJobs => deviceJobs.Id == id).FirstOrDefaultAsync();
+
             if (deviceJob == null)
             {
                 return BadRequest($"There is no deviceJob for given id: {id}.");
@@ -106,9 +109,10 @@ namespace SmartTerraAPI.Controllers
             return Ok(deviceJobDTO);
         }
 
+        //TODO: add PUT method to update date from database(like Done)(??)
         // PUT: api/DeviceJobs/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDeviceJob(int id, DeviceJobDTO deviceJob)
+        public async Task<IActionResult> PutDeviceJob(int id, DeviceJobAddDTO deviceJob)
         {
             /*if (id != deviceJob.Id)
             {
@@ -122,8 +126,8 @@ namespace SmartTerraAPI.Controllers
             }
 
             deviceJobToUpdate.ExecutionTime = deviceJob.ExecutionTime;
-            deviceJobToUpdate.CreatedDate = deviceJob.CreatedDate;
-            deviceJobToUpdate.Done = deviceJob.Done;
+            //deviceJobToUpdate.CreatedDate = deviceJob.CreatedDate;
+            //deviceJobToUpdate.Done = deviceJob.Done;
             deviceJobToUpdate.Body = deviceJob.Body;
 
             var deviceToUpdate = deviceJobToUpdate.Device;
@@ -212,7 +216,7 @@ namespace SmartTerraAPI.Controllers
             var deviceJob = await _context.DeviceJobs.FindAsync(id);
             if (deviceJob == null)
             {
-                return NotFound();
+                return NotFound();            
             }
 
             _context.DeviceJobs.Remove(deviceJob);

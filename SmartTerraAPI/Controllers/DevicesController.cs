@@ -124,7 +124,7 @@ namespace SmartTerraAPI.Controllers
             var device = await _context.Devices.FindAsync(id);
             if (device == null)
             {
-                return BadRequest($"There is no device for given id: {id}.");
+                return NotFound();
             }
 
             _context.Devices.Remove(device);

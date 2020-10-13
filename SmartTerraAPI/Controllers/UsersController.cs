@@ -214,7 +214,7 @@ namespace SmartTerraAPI.Controllers
             var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
-                return BadRequest($"There is no user for given id: {id}.");
+                return NotFound();
             }
 
             _context.Users.Remove(user);

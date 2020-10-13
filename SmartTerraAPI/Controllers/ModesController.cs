@@ -96,7 +96,7 @@ namespace SmartTerraAPI.Controllers
             var mode = await _context.Modes.FindAsync(id);
             if (mode == null)
             {
-                return BadRequest($"There is no mode for given id: {id}.");
+                return NotFound();
             }
 
             _context.Modes.Remove(mode);

@@ -76,7 +76,7 @@ namespace SmartTerraAPI.Controllers
 
             if(jobToUpdate == null)
             {
-                return NotFound("Job does not exist.");
+                return NotFound();
             }
 
             jobToUpdate.Name = job.Name;
