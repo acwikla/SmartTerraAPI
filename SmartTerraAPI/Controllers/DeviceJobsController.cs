@@ -109,7 +109,24 @@ namespace SmartTerraAPI.Controllers
             return Ok(deviceJobDTO);
         }
 
-        //TODO: add PUT method to update date from database(like Done)(??)
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> FetchDoneAtributte(int id, bool done)
+        {
+            var deviceJobToUpdate = await _context.DeviceJobs.Include(d => d.Device).Include(j => j.Job).Where(deviceJobs => deviceJobs.Id == id).FirstOrDefaultAsync();
+            if (deviceJobToUpdate == null)
+            {
+                return BadRequest($"There is no deviceJob for given id: {id}.");
+            }
+
+            deviceJobToUpdate.Done = done;
+
+            _context.Entry(deviceJobToUpdate).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            //TODO: change return message(?)
+            return Ok($"Successfully changed Done attribute to: {done}");
+        }
+
         // PUT: api/DeviceJobs/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDeviceJob(int id, DeviceJobAddDTO deviceJob)
