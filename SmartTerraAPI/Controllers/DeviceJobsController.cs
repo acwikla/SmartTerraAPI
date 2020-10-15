@@ -110,7 +110,7 @@ namespace SmartTerraAPI.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> FetchDoneAtributte(int id, bool done)
+        public async Task<IActionResult> UpdateDoneAttribute(int id, bool done)
         {
             var deviceJobToUpdate = await _context.DeviceJobs.Include(d => d.Device).Include(j => j.Job).Where(deviceJobs => deviceJobs.Id == id).FirstOrDefaultAsync();
             if (deviceJobToUpdate == null)
@@ -123,7 +123,7 @@ namespace SmartTerraAPI.Controllers
             _context.Entry(deviceJobToUpdate).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            //TODO: change return message(?)
+            //TODO: change return message to CreatedAtAction and create DTO object(?)
             return Ok($"Successfully changed Done attribute to: {done}");
         }
 

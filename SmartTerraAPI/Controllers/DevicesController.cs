@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using SmartTerraAPI.DTO;
 using SmartTerraAPI.Models;
 
@@ -73,9 +74,11 @@ namespace SmartTerraAPI.Controllers
                 Name = mode.Name,
                 Temperature = mode.Temperature,
                 Humidity = mode.Humidity,
+                //TwilightHour = JsonConvert.DeserializeObject<TimeSpan>(mode.TwilightHour.ToString()),
+                //HourOfDawn = JsonConvert.DeserializeObject<TimeSpan>(mode.HourOfDawn.ToString())
                 TwilightHour = mode.TwilightHour,
                 HourOfDawn = mode.HourOfDawn
-            };
+        };
 
             return CreatedAtAction("GetMode", new { id = modeDTO.Id }, modeDTO);
         }
