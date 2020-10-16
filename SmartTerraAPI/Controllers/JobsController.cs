@@ -82,7 +82,6 @@ namespace SmartTerraAPI.Controllers
             jobToUpdate.Name = job.Name;
             jobToUpdate.Type = job.Type;
             jobToUpdate.Description = job.Description;
-            //TODO: update deviceJobs
 
             _context.Entry(jobToUpdate).State = EntityState.Modified;
 

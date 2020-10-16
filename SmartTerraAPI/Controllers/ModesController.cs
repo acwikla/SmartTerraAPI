@@ -21,31 +21,6 @@ namespace SmartTerraAPI.Controllers
             _context = context;
         }
 
-        // GET: api/Modes
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ModeDTO>>> GetMode()
-        {
-            var modes = await _context.Modes.ToListAsync();
-            List<ModeDTO> modesDTO = new List<ModeDTO>();
-
-            foreach (Mode m in modes)
-            {
-                var modeDTO = new ModeDTO()
-                {
-                    Id = m.Id,
-                    Name = m.Name,
-                    Temperature = m.Temperature,
-                    Humidity = m.Humidity,
-                    TwilightHour = m.TwilightHour,
-                    HourOfDawn = m.HourOfDawn
-
-                };
-                modesDTO.Add(modeDTO);
-            }
-
-            return Ok(modesDTO);
-        }
-
         // PUT: api/Modes/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMode(int id, ModeDTO mode)
