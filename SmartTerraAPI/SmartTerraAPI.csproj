@@ -7,6 +7,8 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\WeatherForecastController.cs" />
+    <Compile Remove="Migrations\20201015083631_AddDefaultJobs.cs" />
+    <Compile Remove="Migrations\20201015083631_AddDefaultJobs.Designer.cs" />
     <Compile Remove="WeatherForecast.cs" />
   </ItemGroup>
 

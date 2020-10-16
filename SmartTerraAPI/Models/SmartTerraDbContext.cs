@@ -26,6 +26,30 @@ namespace SmartTerraAPI.Models
             .Property(s => s.CreatedDate)
             .HasDefaultValueSql("GETDATE()");
 
+            builder.Entity<Job>().HasData(
+            new Job
+                {
+                    Id = 1,
+                    Name = "ManageLedColor",
+                    Type = "LED",
+                    Description = "Change LED color."
+                },
+            new Job
+                {
+                    Id = 2,
+                    Name = "ManageLedBrightness",
+                    Type = "LED",
+                    Description = "Change LED brightness."
+                },
+            new Job
+                {
+                    Id = 3,
+                    Name = "Pump",
+                    Type = "PUMP",
+                    Description = "Turn on the water pump."
+                }
+            );
+
             base.OnModelCreating(builder);
         }
 
