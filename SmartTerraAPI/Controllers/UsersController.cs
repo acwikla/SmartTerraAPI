@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartTerraAPI.DTO;
 using SmartTerraAPI.Models;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace SmartTerraAPI.Controllers
 {
@@ -159,11 +161,24 @@ namespace SmartTerraAPI.Controllers
                 return BadRequest($"User with this email already exists.");
             }
 
+            byte[] salt = new byte[128 / 8];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(salt);
+            }
+
+            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+            password: user.Password,
+            salt: salt,
+            prf: KeyDerivationPrf.HMACSHA1,
+            iterationCount: 10000,
+            numBytesRequested: 256 / 8));
+
             var newUser = new User()
             {
                 Login = user.Login,
                 Email = user.Email,
-                Password = user.Password
+                Password = hashed
             };
 
             await _context.Users.AddAsync(newUser);
