@@ -16,7 +16,6 @@ namespace SmartTerraAPI.Models
 
         [Required]
         [MinLength(6, ErrorMessage = "Password must have at least 6 characters.")]
-        //TODO:hasło powinno byc zaszyfrowane (do zrobienia na później)
         public string Password { get; set; }
 
         [Required]

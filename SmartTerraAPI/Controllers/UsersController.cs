@@ -129,7 +129,7 @@ namespace SmartTerraAPI.Controllers
 
             userToUpdate.Login = user.Login;
             userToUpdate.Email = user.Email;
-            userToUpdate.Password = user.Password;
+            userToUpdate.Password = HashPassword(user.Password);
 
             _context.Entry(userToUpdate).State = EntityState.Modified;
 
@@ -161,24 +161,11 @@ namespace SmartTerraAPI.Controllers
                 return BadRequest($"User with this email already exists.");
             }
 
-            byte[] salt = new byte[128 / 8];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(salt);
-            }
-
-            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-            password: user.Password,
-            salt: salt,
-            prf: KeyDerivationPrf.HMACSHA1,
-            iterationCount: 10000,
-            numBytesRequested: 256 / 8));
-
             var newUser = new User()
             {
                 Login = user.Login,
                 Email = user.Email,
-                Password = hashed
+                Password = HashPassword(user.Password)
             };
 
             await _context.Users.AddAsync(newUser);
@@ -246,6 +233,24 @@ namespace SmartTerraAPI.Controllers
         private bool EmailExists(string email)
         {
             return _context.Users.Any(e => e.Email == email);
+        }
+
+        private string HashPassword(string password)
+        {
+            byte[] salt = new byte[128 / 8];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(salt);
+            }
+
+            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+            password: password,
+            salt: salt,
+            prf: KeyDerivationPrf.HMACSHA1,
+            iterationCount: 10000,
+            numBytesRequested: 256 / 8));
+
+            return hashed;
         }
     }
 }
