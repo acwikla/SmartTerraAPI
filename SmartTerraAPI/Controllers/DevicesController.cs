@@ -50,7 +50,7 @@ namespace SmartTerraAPI.Controllers
 
         // POST: api/devices/{id}/modes
         [HttpPost("{id}/modes")]
-        public async Task<ActionResult<ModeDTO>> PostMode(int id, ModeDTO mode)
+        public async Task<ActionResult<ModeDTO>> PostMode(int id, ModeAddDTO mode)
         {
             var device = await _context.Devices.FindAsync(id);
 
