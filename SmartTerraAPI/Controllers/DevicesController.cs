@@ -48,6 +48,30 @@ namespace SmartTerraAPI.Controllers
             return Ok(modeDTO);
         }
 
+        // GET: api/devices/{id}/deviceProperties
+        [HttpGet("{id}/deviceProperties")]
+        public async Task<ActionResult<DevicePropertiesDTO>> GetDeviceProperties(int id)
+        {
+            var device = await _context.Devices.Include(d => d.DeviceProperties).Where(device => device.Id == id).FirstOrDefaultAsync();
+            var deviceProperties = device.DeviceProperties;
+            if (deviceProperties == null)
+            {
+                return BadRequest($"There is device properties for device with given id: {id}.");
+            }
+            var devicePropertiesDTO = new DevicePropertiesDTO()
+            {
+                Id = deviceProperties.Id,
+                isWaterLevelSufficient = deviceProperties.isWaterLevelSufficient,
+                Temperature = deviceProperties.Temperature,
+                Humidity = deviceProperties.Humidity,
+                HeatIndex = deviceProperties.HeatIndex,
+                LEDHexColor = deviceProperties.LEDHexColor,
+                LEDBrightness = deviceProperties.LEDBrightness
+            };
+
+            return Ok(devicePropertiesDTO);
+        }
+
         // POST: api/devices/{id}/modes
         [HttpPost("{id}/modes")]
         public async Task<ActionResult<ModeDTO>> PostMode(int id, ModeAddDTO mode)

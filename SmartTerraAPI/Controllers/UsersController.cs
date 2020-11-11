@@ -206,6 +206,21 @@ namespace SmartTerraAPI.Controllers
                 Name = device.Name
             };
 
+            var basicDeviceProperties = new DeviceProperties()
+            {
+                Device = newDevice,
+                DeviceId = newDevice.Id,
+                isWaterLevelSufficient = true,//w sumie to nie wiem co tu ustawic
+                Temperature = 0,
+                Humidity = 0,
+                HeatIndex = 0,
+                LEDHexColor = "",
+                LEDBrightness = 0
+            };
+            //RedirectToAction("PostDeviceProperties", "DevicePropertiesController", new { basicDeviceProperties });
+            await _context.DeviceProperties.AddAsync(basicDeviceProperties);
+            await _context.SaveChangesAsync();
+
             return CreatedAtAction("GetDevice", new { id = id, deviceId= deviceDTO.Id }, deviceDTO);
         }
 

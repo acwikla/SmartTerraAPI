@@ -62,5 +62,7 @@ namespace SmartTerraAPI.Models
         public DbSet<SmartTerraAPI.Models.User> Users { get; set; }
 
         public DbSet<SmartTerraAPI.Models.DeviceJob> DeviceJobs { get; set; }
+
+        public DbSet<SmartTerraAPI.Models.DeviceProperties> DeviceProperties { get; set; }
     }
 }
