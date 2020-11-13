@@ -23,8 +23,6 @@ namespace SmartTerraAPI.Models
         [Range(0, 100)]         //TODO: check minimum and maximum humidity value
         public double Humidity { get; set; }
 
-        public double HeatIndex { get; set; }
-
         [Required]
         public TimeSpan TwilightHour { get; set; }
 

@@ -17,8 +17,6 @@ namespace SmartTerraAPI.DTO
         [Required]
         public double Humidity { get; set; }
 
-        public double HeatIndex { get; set; }
-
         [Required]
         public TimeSpan TwilightHour { get; set; }
 

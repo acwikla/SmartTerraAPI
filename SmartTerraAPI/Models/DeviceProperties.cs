@@ -20,7 +20,7 @@ namespace SmartTerraAPI.Models
         public bool isWaterLevelSufficient { get; set; }
 
         [Required]
-        [Range(0, 50)]
+        [Range(0, 80)]
         public double Temperature { get; set; }
 
         [Required]
@@ -29,6 +29,10 @@ namespace SmartTerraAPI.Models
 
         [Required]
         public double HeatIndex { get; set; }
+
+        [Required]
+        [Range(0, 100)]
+        public double SoilMoisturePercentage { get; set; }
 
         [Required]
         public string LEDHexColor { get; set; }

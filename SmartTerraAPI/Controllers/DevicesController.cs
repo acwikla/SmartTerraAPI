@@ -65,6 +65,7 @@ namespace SmartTerraAPI.Controllers
                 Temperature = deviceProperties.Temperature,
                 Humidity = deviceProperties.Humidity,
                 HeatIndex = deviceProperties.HeatIndex,
+                SoilMoisturePercentage = deviceProperties.SoilMoisturePercentage,
                 LEDHexColor = deviceProperties.LEDHexColor,
                 LEDBrightness = deviceProperties.LEDBrightness
             };

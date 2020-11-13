@@ -17,6 +17,8 @@ namespace SmartTerraAPI.DTO
 
         public double HeatIndex { get; set; }
 
+        public double SoilMoisturePercentage { get; set; }
+
         public string LEDHexColor { get; set; }
 
         public double LEDBrightness { get; set; }

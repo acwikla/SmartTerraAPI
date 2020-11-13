@@ -41,6 +41,7 @@ namespace SmartTerraAPI.Controllers
                 Temperature = deviceProperties.Temperature,
                 Humidity = deviceProperties.Humidity,
                 HeatIndex = deviceProperties.HeatIndex,
+                SoilMoisturePercentage = deviceProperties.SoilMoisturePercentage,
                 LEDHexColor = deviceProperties.LEDHexColor,
                 LEDBrightness = deviceProperties.LEDBrightness
             };
@@ -78,6 +79,7 @@ namespace SmartTerraAPI.Controllers
             devicePropertiesToUpdate.Temperature = newDeviceProperties.Temperature;
             devicePropertiesToUpdate.Humidity = newDeviceProperties.Humidity;
             devicePropertiesToUpdate.HeatIndex = newDeviceProperties.HeatIndex;
+            devicePropertiesToUpdate.SoilMoisturePercentage = newDeviceProperties.SoilMoisturePercentage;
             devicePropertiesToUpdate.LEDHexColor = newDeviceProperties.LEDHexColor;
             devicePropertiesToUpdate.LEDBrightness = newDeviceProperties.LEDBrightness;
 
@@ -101,6 +103,7 @@ namespace SmartTerraAPI.Controllers
                 Temperature = deviceProperties.Temperature,
                 Humidity = deviceProperties.Humidity,
                 HeatIndex = deviceProperties.HeatIndex,
+                SoilMoisturePercentage = deviceProperties.SoilMoisturePercentage,
                 LEDHexColor = deviceProperties.LEDHexColor,
                 LEDBrightness = deviceProperties.LEDBrightness
             };

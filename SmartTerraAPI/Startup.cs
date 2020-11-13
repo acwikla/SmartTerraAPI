@@ -77,7 +77,7 @@ namespace SmartTerraAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpRedirection();
 
             app.UseRouting();
 

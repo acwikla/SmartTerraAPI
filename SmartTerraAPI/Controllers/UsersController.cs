@@ -210,10 +210,11 @@ namespace SmartTerraAPI.Controllers
             {
                 Device = newDevice,
                 DeviceId = newDevice.Id,
-                isWaterLevelSufficient = true,//w sumie to nie wiem co tu ustawic
+                isWaterLevelSufficient = false,//w sumie to nie wiem co tu ustawic
                 Temperature = 0,
                 Humidity = 0,
                 HeatIndex = 0,
+                SoilMoisturePercentage = 0,
                 LEDHexColor = "",
                 LEDBrightness = 0
             };
