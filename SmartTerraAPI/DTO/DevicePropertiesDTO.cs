@@ -10,7 +10,7 @@ namespace SmartTerraAPI.DTO
     public class DevicePropertiesDTO
     {
         public int Id { get; set; }
-        public bool isWaterLevelSufficient { get; set; }
+        public bool isLiquidLevelSufficient { get; set; }
         public double Temperature { get; set; }
 
         public double Humidity { get; set; }

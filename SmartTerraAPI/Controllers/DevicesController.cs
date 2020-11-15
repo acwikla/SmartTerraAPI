@@ -61,7 +61,7 @@ namespace SmartTerraAPI.Controllers
             var devicePropertiesDTO = new DevicePropertiesDTO()
             {
                 Id = deviceProperties.Id,
-                isWaterLevelSufficient = deviceProperties.isWaterLevelSufficient,
+                isLiquidLevelSufficient = deviceProperties.isLiquidLevelSufficient,
                 Temperature = deviceProperties.Temperature,
                 Humidity = deviceProperties.Humidity,
                 HeatIndex = deviceProperties.HeatIndex,

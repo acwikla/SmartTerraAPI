@@ -37,7 +37,7 @@ namespace SmartTerraAPI.Controllers
             var devicePropertiesDTO = new DevicePropertiesDTO()
             {
                 Id = deviceProperties.Id,
-                isWaterLevelSufficient = deviceProperties.isWaterLevelSufficient,
+                isLiquidLevelSufficient = deviceProperties.isLiquidLevelSufficient,
                 Temperature = deviceProperties.Temperature,
                 Humidity = deviceProperties.Humidity,
                 HeatIndex = deviceProperties.HeatIndex,
@@ -49,8 +49,8 @@ namespace SmartTerraAPI.Controllers
             return Ok(devicePropertiesDTO);
         }
 
-        [HttpPatch("{id}/waterLevel")]
-        public async Task<IActionResult> UpdateWaterLevelProperty(int id, bool waterLevelData)
+        [HttpPatch("{id}/LiquidLevel")]
+        public async Task<IActionResult> UpdateLiquidLevelProperty(int id, bool waterLevelData)
         {
             var devicePropertiesToUpdate = await _context.DeviceProperties.Include(d => d.Device).Where(DeviceProperties => DeviceProperties.Id == id).FirstOrDefaultAsync();
             if (devicePropertiesToUpdate == null)
@@ -58,7 +58,7 @@ namespace SmartTerraAPI.Controllers
                 return BadRequest($"There is no device properties for given id: {id}.");
             }
 
-            devicePropertiesToUpdate.isWaterLevelSufficient = waterLevelData;
+            devicePropertiesToUpdate.isLiquidLevelSufficient = waterLevelData;
 
             _context.Entry(devicePropertiesToUpdate).State = EntityState.Modified;
             await _context.SaveChangesAsync();
@@ -75,7 +75,7 @@ namespace SmartTerraAPI.Controllers
                 return BadRequest($"There is no device properties for given id: {id}.");
             }
 
-            devicePropertiesToUpdate.isWaterLevelSufficient = newDeviceProperties.isWaterLevelSufficient;
+            devicePropertiesToUpdate.isLiquidLevelSufficient = newDeviceProperties.isLiquidLevelSufficient;
             devicePropertiesToUpdate.Temperature = newDeviceProperties.Temperature;
             devicePropertiesToUpdate.Humidity = newDeviceProperties.Humidity;
             devicePropertiesToUpdate.HeatIndex = newDeviceProperties.HeatIndex;
@@ -99,7 +99,7 @@ namespace SmartTerraAPI.Controllers
             var newDevicePropertiesDTO = new DevicePropertiesDTO()
             {
                 Id = deviceProperties.Id,
-                isWaterLevelSufficient = deviceProperties.isWaterLevelSufficient,
+                isLiquidLevelSufficient = deviceProperties.isLiquidLevelSufficient,
                 Temperature = deviceProperties.Temperature,
                 Humidity = deviceProperties.Humidity,
                 HeatIndex = deviceProperties.HeatIndex,

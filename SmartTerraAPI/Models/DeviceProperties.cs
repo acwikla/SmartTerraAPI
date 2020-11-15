@@ -17,7 +17,7 @@ namespace SmartTerraAPI.Models
         public int DeviceId { get; set; }
 
         [Required]
-        public bool isWaterLevelSufficient { get; set; }
+        public bool isLiquidLevelSufficient { get; set; }
 
         [Required]
         [Range(0, 80)]
