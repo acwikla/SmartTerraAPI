@@ -50,7 +50,7 @@ namespace SmartTerraAPI.Controllers
         }
 
         [HttpPatch("{id}/LiquidLevel")]
-        public async Task<IActionResult> UpdateLiquidLevelProperty(int id, bool waterLevelData)
+        public async Task<IActionResult> UpdateLiquidLevelProperty(int id, DeviceLiquidLevelDTO deviceLquidLevelData)
         {
             var devicePropertiesToUpdate = await _context.DeviceProperties.Include(d => d.Device).Where(DeviceProperties => DeviceProperties.Id == id).FirstOrDefaultAsync();
             if (devicePropertiesToUpdate == null)
@@ -58,12 +58,13 @@ namespace SmartTerraAPI.Controllers
                 return BadRequest($"There is no device properties for given id: {id}.");
             }
 
-            devicePropertiesToUpdate.isLiquidLevelSufficient = waterLevelData;
+            devicePropertiesToUpdate.isLiquidLevelSufficient = deviceLquidLevelData.isLiquidLevelSufficient;
 
             _context.Entry(devicePropertiesToUpdate).State = EntityState.Modified;
+
             await _context.SaveChangesAsync();
 
-            return Ok($"Successfully changed waterLevel property to: {waterLevelData}");
+            return Ok($"Successfully changed waterLevel property to: {deviceLquidLevelData.isLiquidLevelSufficient}");
         }
 
         [HttpPatch("{id}")]

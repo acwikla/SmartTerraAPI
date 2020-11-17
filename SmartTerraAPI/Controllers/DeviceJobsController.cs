@@ -110,7 +110,7 @@ namespace SmartTerraAPI.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> UpdateDoneProperty(int id, bool done)
+        public async Task<IActionResult> UpdateDoneProperty(int id, JobDoneDTO jobDone)
         {
             var deviceJobToUpdate = await _context.DeviceJobs.Include(d => d.Device).Include(j => j.Job).Where(deviceJobs => deviceJobs.Id == id).FirstOrDefaultAsync();
             if (deviceJobToUpdate == null)
@@ -118,13 +118,13 @@ namespace SmartTerraAPI.Controllers
                 return BadRequest($"There is no deviceJob for given id: {id}.");
             }
 
-            deviceJobToUpdate.Done = done;
+            deviceJobToUpdate.Done = jobDone.Done;
 
             _context.Entry(deviceJobToUpdate).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             //TODO: change return message to CreatedAtAction and create DTO object(?)
-            return Ok($"Successfully changed Done property to: {done}");
+            return Ok($"Successfully changed Done property to: {jobDone.Done}");
         }
 
         // PUT: api/DeviceJobs/5
