@@ -20,6 +20,7 @@ namespace SmartTerraAPI.Models
             
         }
 
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<DeviceJob>()
@@ -30,21 +31,21 @@ namespace SmartTerraAPI.Models
             new Job
                 {
                     Id = 1,
-                    Name = "ManageLedColor",
+                    Name = "TurnOnLED",
                     Type = "LED",
-                    Description = "Change LED color."
+                    Description = "Turn on LED strip."
                 },
             new Job
                 {
                     Id = 2,
-                    Name = "ManageLedBrightness",
+                    Name = "TurnOffLED",
                     Type = "LED",
-                    Description = "Change LED brightness."
+                    Description = "Turn off LED strip."
                 },
             new Job
                 {
                     Id = 3,
-                    Name = "Pump",
+                    Name = "TurnOnWaterPump",
                     Type = "PUMP",
                     Description = "Turn on the water pump."
                 }

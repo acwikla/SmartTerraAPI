@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartTerraAPI.Models;
 
 namespace SmartTerraAPI.Migrations
 {
     [DbContext(typeof(SmartTerraDbContext))]
-    partial class SmartTerraDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201117230138_SeedNewJobDefaultData")]
+    partial class SeedNewJobDefaultData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -144,22 +146,22 @@ namespace SmartTerraAPI.Migrations
                         new
                         {
                             Id = 1,
-                            Description = "Turn on LED strip.",
-                            Name = "TurnOnLED",
+                            Description = "Turn on LED.",
+                            Name = "TurnOnWaterPump",
                             Type = "LED"
                         },
                         new
                         {
                             Id = 2,
-                            Description = "Turn off LED strip.",
-                            Name = "TurnOffLED",
+                            Description = "Turn off LED brightness.",
+                            Name = "TurnOffWaterPump",
                             Type = "LED"
                         },
                         new
                         {
                             Id = 3,
                             Description = "Turn on the water pump.",
-                            Name = "TurnOnWaterPump",
+                            Name = "TurnOnPump",
                             Type = "PUMP"
                         });
                 });
