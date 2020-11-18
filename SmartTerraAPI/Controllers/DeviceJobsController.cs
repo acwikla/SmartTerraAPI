@@ -63,6 +63,47 @@ namespace SmartTerraAPI.Controllers
             return Ok(deviceJobsDTO);
         }
 
+        // GET: api/DeviceJobs/deviceId={deviceId}/FalseDoneFlag
+        [HttpGet("deviceId={deviceId}/FlaseDoneFlag")]
+        public async Task<ActionResult<DeviceJobDTO>> GetDeviceJobFlaseDoneFlag(int deviceId)
+        {
+            List<DeviceJob> deviceJobs = await _context.DeviceJobs.Where(deviceJob => deviceJob.Done == false).Include(d => d.Device).Include(j => j.Job).Where(deviceJob => deviceJob.Device.Id == deviceId).ToListAsync();
+            if (deviceJobs == null)
+            {
+                return BadRequest($"There is no deviceJob for device with given id: {deviceId}.");
+            }
+            var deviceJob = deviceJobs.First();
+
+            List<DeviceJobDTO> deviceJobsDTO = new List<DeviceJobDTO>();
+
+            var deviceDTO = new DeviceAddDTO
+            {
+                Name = deviceJob.Device.Name
+            };
+
+            var jobDTO = new JobDTO()
+            {
+                Id = deviceJob.Job.Id,
+                Name = deviceJob.Job.Name,
+                Type = deviceJob.Job.Type,
+                Description = deviceJob.Job.Description
+            };
+
+            var deviceJobDTO = new DeviceJobDTO()
+            {
+                Id = deviceJob.Id,
+                ExecutionTime = deviceJob.ExecutionTime,
+                CreatedDate = deviceJob.CreatedDate,
+                Done = deviceJob.Done,
+                Body = deviceJob.Body,
+                Device = deviceDTO,
+                Job = jobDTO
+            };
+
+            await DeleteDeviceJob(deviceJob.Id);
+            return Ok(deviceJobDTO);
+        }
+
         // GET: api/DeviceJobs/5
         [HttpGet("{id}")]
         public async Task<ActionResult<DeviceJobDTO>> GetDeviceJob(int id)
