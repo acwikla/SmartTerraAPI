@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using System.ComponentModel;
 
 namespace SmartTerraAPI.Models
 {
@@ -14,6 +15,9 @@ namespace SmartTerraAPI.Models
         [Required]
         [StringLength(60, MinimumLength = 1)]
         public string Name { get; set; }
+
+        [DefaultValue(true)]
+        bool isOn { get; set; }
 
         [Required]
         [Range(0, 50)]
