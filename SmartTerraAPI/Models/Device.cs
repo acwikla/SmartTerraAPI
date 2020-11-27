@@ -16,8 +16,7 @@ namespace SmartTerraAPI.Models
         [Required]
         public User User { get; set; }
 
-        //TODO: dodac [Required], jezeli dodam automatyczne tworzenie DeviceProperties dla urzadzenia
-        public DeviceProperties DeviceProperties { get; set; }
+        public ICollection<DeviceProperties> DeviceProperties { get; set; }
 
         public Mode Mode { get; set; }
 

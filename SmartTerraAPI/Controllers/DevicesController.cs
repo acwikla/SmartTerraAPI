@@ -51,27 +51,37 @@ namespace SmartTerraAPI.Controllers
 
         // GET: api/devices/{id}/deviceProperties
         [HttpGet("{id}/deviceProperties")]
-        public async Task<ActionResult<DevicePropertiesDTO>> GetDeviceProperties(int id)
+        public async Task<ActionResult<IEnumerable<DevicePropertiesDTO>>> GetAllDeviceProperties(int id)
         {
             var device = await _context.Devices.Include(d => d.DeviceProperties).Where(device => device.Id == id).FirstOrDefaultAsync();
-            var deviceProperties = device.DeviceProperties;
-            if (deviceProperties == null)
-            {
-                return BadRequest($"There is device properties for device with given id: {id}.");
-            }
-            var devicePropertiesDTO = new DevicePropertiesDTO()
-            {
-                Id = deviceProperties.Id,
-                isLiquidLevelSufficient = deviceProperties.isLiquidLevelSufficient,
-                Temperature = deviceProperties.Temperature,
-                Humidity = deviceProperties.Humidity,
-                HeatIndex = deviceProperties.HeatIndex,
-                SoilMoisturePercentage = deviceProperties.SoilMoisturePercentage,
-                LEDHexColor = deviceProperties.LEDHexColor,
-                LEDBrightness = deviceProperties.LEDBrightness
-            };
+            var allDeviceProperties = device.DeviceProperties;
 
-            return Ok(devicePropertiesDTO);
+            if (allDeviceProperties == null)
+            {
+                return BadRequest($"There is no device properties for device with given id: {id}.");
+            }
+
+            List<DevicePropertiesDTO> allDevicePropertiesDTO = new List<DevicePropertiesDTO>();
+            DevicePropertiesDTO devicePropertiesDTO;
+
+            foreach (DeviceProperties d in allDeviceProperties)
+            {
+                devicePropertiesDTO = new DevicePropertiesDTO()
+                {
+                    Id = d.Id,
+                    isLiquidLevelSufficient = d.isLiquidLevelSufficient,
+                    Temperature = d.Temperature,
+                    Humidity = d.Humidity,
+                    HeatIndex = d.HeatIndex,
+                    SoilMoisturePercentage = d.SoilMoisturePercentage,
+                    LEDHexColor = d.LEDHexColor,
+                    LEDBrightness = d.LEDBrightness
+                };
+                allDevicePropertiesDTO.Add(devicePropertiesDTO);
+            }
+            
+
+            return Ok(allDevicePropertiesDTO);
         }
 
         // POST: api/devices/{id}/modes
@@ -107,6 +117,31 @@ namespace SmartTerraAPI.Controllers
         };
 
             return CreatedAtAction("GetMode", new { id = modeDTO.Id }, modeDTO);
+        }
+
+        // PATCH: api/devices/{id}/deviceProperties
+        [HttpPatch("{id}/deviceProperties")]
+        public async Task<IActionResult> UpdateDeviceProperties(int id, DevicePropertiesDTO deviceProperties)
+        {
+            var device = await _context.Devices.FindAsync(id);
+
+            var newDeviceProperties = new DeviceProperties()
+            {
+                isLiquidLevelSufficient = deviceProperties.isLiquidLevelSufficient,
+                Temperature = deviceProperties.Temperature,
+                Humidity = deviceProperties.Humidity,
+                HeatIndex = deviceProperties.HeatIndex,
+                SoilMoisturePercentage = deviceProperties.SoilMoisturePercentage,
+                LEDHexColor = deviceProperties.LEDHexColor,
+                LEDBrightness = deviceProperties.LEDBrightness,
+                Device = device,
+                DeviceId = id
+            };
+
+            await _context.DeviceProperties.AddAsync(newDeviceProperties);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetAllDeviceProperties", new { id = device.Id }, device);
         }
 
         // PUT: api/Devices/5

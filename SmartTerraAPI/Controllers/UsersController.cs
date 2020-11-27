@@ -67,7 +67,7 @@ namespace SmartTerraAPI.Controllers
 
         // GET: api/Users/1/devices
         [HttpGet("{id}/devices")]
-        public async Task<ActionResult<DeviceDTO>> GetUserDevices(int id)
+        public async Task<ActionResult<IEnumerable<DeviceDTO>>> GetUserDevices(int id)
         {
             var userDevices = await _context.Users.Include(n => n.Devices).Where(user => user.Id == id).SelectMany(user => user.Devices).ToListAsync();
             List <DeviceDTO> userDevicesDTO = new List<DeviceDTO>();

@@ -29,10 +29,11 @@ namespace SmartTerraAPI.Controllers
 
             if (device.DeviceProperties == null)
             {
-                return BadRequest($"There is no device roperties for given id: {id}.");
+                return BadRequest($"There is no device properties for given id: {id}.");
             }
 
-            var deviceProperties = device.DeviceProperties;
+            var allDeviceProperties = device.DeviceProperties;
+            var deviceProperties = allDeviceProperties.LastOrDefault();
 
             var devicePropertiesDTO = new DevicePropertiesDTO()
             {
@@ -67,28 +68,6 @@ namespace SmartTerraAPI.Controllers
             return Ok($"Successfully changed waterLevel property to: {deviceLquidLevelData.isLiquidLevelSufficient}");
         }
 
-        [HttpPatch("{id}")]
-        public async Task<IActionResult> UpdateDeviceProperties(int id, DevicePropertiesDTO newDeviceProperties)
-        {
-            var devicePropertiesToUpdate = await _context.DeviceProperties.Include(d => d.Device).Where(DeviceProperties => DeviceProperties.Id == id).FirstOrDefaultAsync();
-            if (devicePropertiesToUpdate == null)
-            {
-                return BadRequest($"There is no device properties for given id: {id}.");
-            }
-
-            devicePropertiesToUpdate.isLiquidLevelSufficient = newDeviceProperties.isLiquidLevelSufficient;
-            devicePropertiesToUpdate.Temperature = newDeviceProperties.Temperature;
-            devicePropertiesToUpdate.Humidity = newDeviceProperties.Humidity;
-            devicePropertiesToUpdate.HeatIndex = newDeviceProperties.HeatIndex;
-            devicePropertiesToUpdate.SoilMoisturePercentage = newDeviceProperties.SoilMoisturePercentage;
-            devicePropertiesToUpdate.LEDHexColor = newDeviceProperties.LEDHexColor;
-            devicePropertiesToUpdate.LEDBrightness = newDeviceProperties.LEDBrightness;
-
-            _context.Entry(devicePropertiesToUpdate).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-
-            return Ok($"Successfully changed device properties.");
-        }
 
         // POST: api/DeviceProperties
         [HttpPost]
