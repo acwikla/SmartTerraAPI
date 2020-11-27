@@ -39,6 +39,7 @@ namespace SmartTerraAPI.Controllers
             {
                 Id = mode.Id,
                 Name = mode.Name,
+                isOn = mode.isOn,
                 Temperature = mode.Temperature,
                 Humidity = mode.Humidity,
                 TwilightHour = mode.TwilightHour,
@@ -81,6 +82,7 @@ namespace SmartTerraAPI.Controllers
 
             var newMode = new Mode()
             {
+                //isOn domyslnie bedzie true
                 Name = mode.Name,
                 Temperature = mode.Temperature,
                 Humidity = mode.Humidity,
@@ -97,10 +99,9 @@ namespace SmartTerraAPI.Controllers
             {
                 Id = newMode.Id,
                 Name = mode.Name,
+                isOn = mode.isOn,
                 Temperature = mode.Temperature,
                 Humidity = mode.Humidity,
-                //TwilightHour = JsonConvert.DeserializeObject<TimeSpan>(mode.TwilightHour.ToString()),
-                //HourOfDawn = JsonConvert.DeserializeObject<TimeSpan>(mode.HourOfDawn.ToString())
                 TwilightHour = mode.TwilightHour,
                 HourOfDawn = mode.HourOfDawn
         };

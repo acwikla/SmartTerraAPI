@@ -17,7 +17,7 @@ namespace SmartTerraAPI.Models
         public string Name { get; set; }
 
         [DefaultValue(true)]
-        bool isOn { get; set; }
+        public bool isOn { get; set; }
 
         [Required]
         [Range(0, 50)]

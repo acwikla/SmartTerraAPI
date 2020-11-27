@@ -21,6 +21,23 @@ namespace SmartTerraAPI.Controllers
             _context = context;
         }
 
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateDoneProperty(int id, ModeIsOnDTO modeIsOn)
+        {
+            var modeToUpdate = await _context.Modes.Include(d => d.Device).Where(mode => mode.Id == id).FirstOrDefaultAsync();
+            if (modeToUpdate == null)
+            {
+                return BadRequest($"There is no mode for given id: {id}.");
+            }
+
+            modeToUpdate.isOn = modeIsOn.isOn;
+
+            _context.Entry(modeToUpdate).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return Ok($"Successfully changed Done property to: {modeToUpdate.isOn}");
+        }
+
         // PUT: api/Modes/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMode(int id, ModeDTO mode)

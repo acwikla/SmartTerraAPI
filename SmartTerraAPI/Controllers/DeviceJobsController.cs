@@ -163,7 +163,6 @@ namespace SmartTerraAPI.Controllers
             _context.Entry(deviceJobToUpdate).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            //TODO: change return message to CreatedAtAction and create DTO object(?)
             return Ok($"Successfully changed Done property to: {jobDone.Done}");
         }
 
@@ -176,7 +175,7 @@ namespace SmartTerraAPI.Controllers
                 return BadRequest();
             }*/
             var deviceJobToUpdate = await _context.DeviceJobs.Include(d => d.Device).Where(deviceJobs => deviceJobs.Id == id).FirstOrDefaultAsync();
-
+            
             if (deviceJobToUpdate == null)
             {
                 return BadRequest($"There is no deviceJob for given id: {id}.");
@@ -216,6 +215,8 @@ namespace SmartTerraAPI.Controllers
         public async Task<ActionResult<DeviceJob>> PostDeviceJob(int deviceId, int jobId, DeviceJobAddDTO deviceJob)
         {
             var device = await _context.Devices.FindAsync(deviceId);
+            var modeToTurnOff = device.Mode;
+
             if (device == null)
             {
                 return BadRequest($"There is no device for given id: {deviceId}.");
@@ -246,7 +247,10 @@ namespace SmartTerraAPI.Controllers
                 Job = job
             };
 
+            modeToTurnOff.isOn = false;
+
             _context.Entry(device).State = EntityState.Modified;
+            _context.Entry(modeToTurnOff).State = EntityState.Modified;
             _context.Entry(job).State = EntityState.Modified;
 
             await _context.DeviceJobs.AddAsync(newDeviceJob);
