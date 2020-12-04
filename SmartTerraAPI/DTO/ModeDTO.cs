@@ -15,7 +15,7 @@ namespace SmartTerraAPI.DTO
         public string Name { get; set; }
 
         [DefaultValue(true)]
-        public bool isOn { get; set; }
+        public bool IsOn { get; set; }
 
         [Required]
         public double Temperature { get; set; }

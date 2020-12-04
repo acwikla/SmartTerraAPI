@@ -39,7 +39,7 @@ namespace SmartTerraAPI.Controllers
             {
                 Id = mode.Id,
                 Name = mode.Name,
-                isOn = mode.isOn,
+                IsOn = mode.IsOn,
                 Temperature = mode.Temperature,
                 Humidity = mode.Humidity,
                 TwilightHour = mode.TwilightHour,
@@ -84,6 +84,34 @@ namespace SmartTerraAPI.Controllers
             return Ok(allDevicePropertiesDTO);
         }
 
+        // GET: api/devices/{id}/latestDeviceProperties
+        [HttpGet("{id}/latestDeviceProperties")]
+        public async Task<ActionResult<DevicePropertiesDTO>> GetLatestDeviceProperties(int id)
+        {
+            var device = await _context.Devices.Include(d => d.DeviceProperties).Where(device => device.Id == id).FirstOrDefaultAsync();
+            var latestDeviceProperties = device.DeviceProperties.LastOrDefault();
+
+            if (latestDeviceProperties == null)
+            {
+                return BadRequest($"There is no device properties for device with given id: {id}.");
+            }
+
+            DevicePropertiesDTO latestDevicePropertiesDTO;
+            latestDevicePropertiesDTO = new DevicePropertiesDTO()
+            {
+                Id = latestDeviceProperties.Id,
+                isLiquidLevelSufficient = latestDeviceProperties.isLiquidLevelSufficient,
+                Temperature = latestDeviceProperties.Temperature,
+                Humidity = latestDeviceProperties.Humidity,
+                HeatIndex = latestDeviceProperties.HeatIndex,
+                SoilMoisturePercentage = latestDeviceProperties.SoilMoisturePercentage,
+                LEDHexColor = latestDeviceProperties.LEDHexColor,
+                LEDBrightness = latestDeviceProperties.LEDBrightness
+            };
+
+            return Ok(latestDevicePropertiesDTO);
+        }
+
         // POST: api/devices/{id}/modes
         [HttpPost("{id}/modes")]
         public async Task<ActionResult<ModeDTO>> PostMode(int id, ModeAddDTO mode)
@@ -109,7 +137,7 @@ namespace SmartTerraAPI.Controllers
             {
                 Id = newMode.Id,
                 Name = mode.Name,
-                isOn = mode.isOn,
+                IsOn = mode.IsOn,
                 Temperature = mode.Temperature,
                 Humidity = mode.Humidity,
                 TwilightHour = mode.TwilightHour,

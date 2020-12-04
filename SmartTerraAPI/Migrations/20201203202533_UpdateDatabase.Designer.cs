@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartTerraAPI.Models;
 
 namespace SmartTerraAPI.Migrations
 {
     [DbContext(typeof(SmartTerraDbContext))]
-    partial class SmartTerraDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201203202533_UpdateDatabase")]
+    partial class UpdateDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -179,9 +181,6 @@ namespace SmartTerraAPI.Migrations
                     b.Property<double>("Humidity")
                         .HasColumnType("float");
 
-                    b.Property<bool>("IsOn")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(60)")
@@ -192,6 +191,9 @@ namespace SmartTerraAPI.Migrations
 
                     b.Property<TimeSpan>("TwilightHour")
                         .HasColumnType("time");
+
+                    b.Property<bool>("isOn")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 

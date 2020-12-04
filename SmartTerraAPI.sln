@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30406.217
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTerraAPI", "SmartTerraAPI\SmartTerraAPI.csproj", "{DFDBAA25-C797-4610-A860-F14AE76DA628}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartTerraAPI", "SmartTerraAPI\SmartTerraAPI.csproj", "{DFDBAA25-C797-4610-A860-F14AE76DA628}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartTerraWebApp", "SmartTerraWebApp\SmartTerraWebApp.csproj", "{A223118F-D1C6-4969-8BDA-3497AD9FD4CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{DFDBAA25-C797-4610-A860-F14AE76DA628}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFDBAA25-C797-4610-A860-F14AE76DA628}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DFDBAA25-C797-4610-A860-F14AE76DA628}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A223118F-D1C6-4969-8BDA-3497AD9FD4CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A223118F-D1C6-4969-8BDA-3497AD9FD4CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A223118F-D1C6-4969-8BDA-3497AD9FD4CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A223118F-D1C6-4969-8BDA-3497AD9FD4CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

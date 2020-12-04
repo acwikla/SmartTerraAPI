@@ -214,7 +214,7 @@ namespace SmartTerraAPI.Controllers
         [HttpPost("deviceId={deviceId}/jobId={jobId}")]
         public async Task<ActionResult<DeviceJob>> PostDeviceJob(int deviceId, int jobId, DeviceJobAddDTO deviceJob)
         {
-            var device = await _context.Devices.FindAsync(deviceId);
+            var device = await _context.Devices.Include(d => d.Mode).Where(device => device.Id == deviceId).FirstOrDefaultAsync();
             var modeToTurnOff = device.Mode;
 
             if (device == null)
@@ -246,8 +246,13 @@ namespace SmartTerraAPI.Controllers
                 Device = device,
                 Job = job
             };
+            
+            if(modeToTurnOff == null)
+            {
+                return BadRequest($"There is no mode for device with given id: {deviceId}.");
+            }
 
-            modeToTurnOff.isOn = false;
+            modeToTurnOff.IsOn = false;
 
             _context.Entry(device).State = EntityState.Modified;
             _context.Entry(modeToTurnOff).State = EntityState.Modified;

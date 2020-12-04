@@ -9,6 +9,6 @@ namespace SmartTerraAPI.DTO
     public class ModeIsOnDTO
     {
         [Required]
-        public bool isOn { get; set; }
+        public bool IsOn { get; set; }
     }
 }

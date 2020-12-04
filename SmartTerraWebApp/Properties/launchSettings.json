@@ -3,28 +3,25 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:64624",
-      "sslPort": 44385
+      "applicationUrl": "http://localhost:28837",
+      "sslPort": 0
     }
   },
-  "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "api/users",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "SmartTerraAPI": {
+    "SmartTerraWebApp": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/users",
+      "applicationUrl": "http://localhost:6000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "https://localhost:5001;http://odin:5000"
+      }
     }
   }
 }

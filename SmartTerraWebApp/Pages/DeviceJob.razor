@@ -1,0 +1,22 @@
+﻿@page "/devicejob"
+
+@using SmartTerraWebApp.Data
+
+<h3>DeviceJob</h3>
+<p>"Users:" @users</p>
+
+<button class="btn btn-primary" @onclick="GetUsers">Click me</button>
+
+@code {
+    private string users = "";
+    private void GetUsers()
+    {
+        const string URL = "http://localhost:5000/api/users";
+
+        HttpClient client = new HttpClient();
+        client.BaseAddress = new Uri(URL);
+
+        users = client.GetStringAsync(URL).Result;
+
+    }
+}
