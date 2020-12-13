@@ -59,13 +59,13 @@ namespace SmartTerraWebApp.Data
         }
 
 
-        public async Task<HttpResponseMessage> PostNewJob(int JobId, int DeviceId, DateTime ExecutionTime, string Body)
+        public async Task<HttpResponseMessage> PostNewJob(int jobId, int deviceId, DateTime ExecutionTime, string Body)
         {
             var newDeviceJob = new DeviceJobAdd();
             newDeviceJob.ExecutionTime = ExecutionTime;
             newDeviceJob.Body = Body;
 
-            const string URL = "http://localhost:5000/api/DeviceJobs/deviceId=1/jobId=1";
+            string URL = $"http://localhost:5000/api/DeviceJobs/deviceId={deviceId}/jobId={jobId}";
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(URL);
 
