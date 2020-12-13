@@ -61,17 +61,21 @@ namespace SmartTerraWebApp.Data
 
         public async Task<HttpResponseMessage> PostNewJob(int jobId, int deviceId, DateTime ExecutionTime, string Body)
         {
-            var newDeviceJob = new DeviceJobAdd();
-            newDeviceJob.ExecutionTime = ExecutionTime;
-            newDeviceJob.Body = Body;
+            var newDeviceJob = new DeviceJobAdd { ExecutionTime = ExecutionTime, Body = Body };//-
 
-            string testObjc = "{ Body : " + Body + "}";
+            string testObjc = "{\" Body\" : " + Body + "}";//-
+
+            string newDevJobJSONString = Newtonsoft.Json.JsonConvert.SerializeObject(newDeviceJob);//-
+
+            var jsonOutput = JsonConvert.SerializeObject(new { jsonCreditApplication = newDeviceJob });//-
+
+            var jsonObj = JObject.Parse("{\"Body\":\"hi\"}");
 
             string URL = $"http://localhost:5000/api/DeviceJobs/deviceId={deviceId}/jobId={jobId}";
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(URL);
 
-            HttpResponseMessage response = await client.PostAsJsonAsync(URL, testObjc);
+            HttpResponseMessage response = await client.PostAsJsonAsync(URL, jsonObj);
 
             return response;
         }
