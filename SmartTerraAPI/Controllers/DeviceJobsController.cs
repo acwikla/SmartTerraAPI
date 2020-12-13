@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -211,6 +212,7 @@ namespace SmartTerraAPI.Controllers
         }
 
         // POST: api/DeviceJobs/deviceId={deviceId}/jobId={jobId}
+        [EnableCors]
         [HttpPost("deviceId={deviceId}/jobId={jobId}")]
         public async Task<ActionResult<DeviceJob>> PostDeviceJob(int deviceId, int jobId, DeviceJobAddDTO deviceJob)
         {

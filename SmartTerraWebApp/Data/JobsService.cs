@@ -65,11 +65,13 @@ namespace SmartTerraWebApp.Data
             newDeviceJob.ExecutionTime = ExecutionTime;
             newDeviceJob.Body = Body;
 
+            string testObjc = "{ Body : " + Body + "}";
+
             string URL = $"http://localhost:5000/api/DeviceJobs/deviceId={deviceId}/jobId={jobId}";
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(URL);
 
-            HttpResponseMessage response = await client.PostAsJsonAsync(URL, newDeviceJob);
+            HttpResponseMessage response = await client.PostAsJsonAsync(URL, testObjc);
 
             return response;
         }
