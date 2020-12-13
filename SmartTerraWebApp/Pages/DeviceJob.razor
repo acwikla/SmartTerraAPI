@@ -1,6 +1,7 @@
 ﻿@page "/devicejob"
 
 @using SmartTerraWebApp.Data
+@using SmartTerraAPI.DTO
 
 <h3>Add job for device.</h3>
 <p></p>
@@ -66,7 +67,7 @@ else
 @code {
 
     JobsService jobsService = new JobsService();
-    private Jobs[] jobs;
+    private JobDTO[] jobs;
 
     protected override async Task OnInitializedAsync()
     {

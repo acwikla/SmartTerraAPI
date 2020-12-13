@@ -31,5 +31,9 @@
     <PackageReference Include="WebApiContrib.Formatting.JavaScriptSerializer" Version="0.9.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SmartTerra.Core\SmartTerra.Core.csproj" />
+  </ItemGroup>
+
 
 </Project>

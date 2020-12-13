@@ -212,7 +212,7 @@ namespace SmartTerraAPI.Controllers
         }
 
         // POST: api/DeviceJobs/deviceId={deviceId}/jobId={jobId}
-        [EnableCors]
+        //[EnableCors]
         [HttpPost("deviceId={deviceId}/jobId={jobId}")]
         public async Task<ActionResult<DeviceJob>> PostDeviceJob(int deviceId, int jobId, DeviceJobAddDTO deviceJob)
         {

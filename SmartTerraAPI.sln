@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartTerraAPI", "SmartTerra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartTerraWebApp", "SmartTerraWebApp\SmartTerraWebApp.csproj", "{A223118F-D1C6-4969-8BDA-3497AD9FD4CE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTerra.Core", "SmartTerra.Core\SmartTerra.Core.csproj", "{C934E9B0-791E-4F09-A9F8-151385CECAAD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A223118F-D1C6-4969-8BDA-3497AD9FD4CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A223118F-D1C6-4969-8BDA-3497AD9FD4CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A223118F-D1C6-4969-8BDA-3497AD9FD4CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C934E9B0-791E-4F09-A9F8-151385CECAAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C934E9B0-791E-4F09-A9F8-151385CECAAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C934E9B0-791E-4F09-A9F8-151385CECAAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C934E9B0-791E-4F09-A9F8-151385CECAAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

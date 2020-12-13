@@ -8,9 +8,8 @@ using Nancy.Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using static System.Net.WebRequestMethods;
-using System.Net.Http;
 using System.Net.Http.Json;
-using System.Threading.Tasks;
+using SmartTerraAPI.DTO;
 
 namespace SmartTerraWebApp.Data
 {
@@ -39,9 +38,9 @@ namespace SmartTerraWebApp.Data
          }
 
 
-        public async Task<Jobs[]> GetJobsAsync()
+        public async Task<JobDTO[]> GetJobsAsync()
         {
-            var DBJobs = new Jobs[0];
+            var DBJobs = new JobDTO[0];
 
             const string URL = "http://localhost:5000/api/Jobs";
             HttpClient client = new HttpClient();
@@ -49,7 +48,7 @@ namespace SmartTerraWebApp.Data
 
             try
                 {
-                    DBJobs = await client.GetFromJsonAsync<Jobs[]>(
+                    DBJobs = await client.GetFromJsonAsync<JobDTO[]>(
                         URL);
                 }
                 catch
@@ -61,21 +60,17 @@ namespace SmartTerraWebApp.Data
 
         public async Task<HttpResponseMessage> PostNewJob(int jobId, int deviceId, DateTime ExecutionTime, string Body)
         {
-            var newDeviceJob = new DeviceJobAdd { ExecutionTime = ExecutionTime, Body = Body };//-
-
-            string testObjc = "{\" Body\" : " + Body + "}";//-
-
-            string newDevJobJSONString = Newtonsoft.Json.JsonConvert.SerializeObject(newDeviceJob);//-
-
-            var jsonOutput = JsonConvert.SerializeObject(new { jsonCreditApplication = newDeviceJob });//-
-
-            var jsonObj = JObject.Parse("{\"Body\":\"hi\"}");
+            // create DeviceJob object
+            var newDeviceJob = new DeviceJobAddDTO { ExecutionTime = ExecutionTime, Body = Body };
+            // parse to json
+            string newDevJobJSONString = Newtonsoft.Json.JsonConvert.SerializeObject(newDeviceJob);
 
             string URL = $"http://localhost:5000/api/DeviceJobs/deviceId={deviceId}/jobId={jobId}";
-            HttpClient client = new HttpClient();
+            var client = new HttpClient();
             client.BaseAddress = new Uri(URL);
 
-            HttpResponseMessage response = await client.PostAsJsonAsync(URL, jsonObj);
+            // post 
+            HttpResponseMessage response = await client.PostAsJsonAsync(URL, JObject.Parse(newDevJobJSONString));
 
             return response;
         }

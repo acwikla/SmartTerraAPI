@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SmartTerraAPI.Models;
 
-namespace SmartTerraAPI.Models
+namespace SmartTerraAPI
 {
     public class SmartTerraDbContext : DbContext
     {
