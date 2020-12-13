@@ -2,21 +2,89 @@
 
 @using SmartTerraWebApp.Data
 
-<h3>DeviceJob</h3>
-<p>"Users:" @users</p>
+<h3>Add job for device.</h3>
+<p></p>
 
-<button class="btn btn-primary" @onclick="GetUsers">Click me</button>
+@if (jobs == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var job in jobs)
+            {
+                <tr>
+                    <td>@job.Id</td>
+                    <td>@job.Name</td>
+                    <td>@job.Description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<h4>Type job ID and device ID</h4>
+<form>
+    <div class="form-group w-50">
+        <label for="JobId">Job Id</label>
+        <input value="@JobIdString"
+               @onchange="@((ChangeEventArgs __e) => JobIdString =
+        __e.Value.ToString())" />
+    </div>
+    <div class="form-group">
+        <label for="Body">Device Id</label>
+        <input value="@DeviceIdString"
+               @onchange="@((ChangeEventArgs __e) => DeviceIdString =
+        __e.Value.ToString())" />
+    </div>
+    <div class="form-group">
+        <label for="ExecutionTimeString">Execution Time</label>
+        <input value="@ExecutionTimeString"
+               @onchange="@((ChangeEventArgs __e) => ExecutionTimeString =
+        __e.Value.ToString())" />
+    </div>
+    <div class="form-group">
+        <label for="Body">Body</label>
+        <input value="@Body"
+               @onchange="@((ChangeEventArgs __e) => Body =
+        __e.Value.ToString())" />
+    </div>
+</form>
+
+<button type="submit" class="btn btn-primary" @onclick="AddJob">Add Job</button>
+<p>@responseMessage</p>
 
 @code {
-    private string users = "";
-    private void GetUsers()
+
+    JobsService jobsService = new JobsService();
+    private Jobs[] jobs;
+
+    protected override async Task OnInitializedAsync()
     {
-        const string URL = "http://localhost:5000/api/users";
+        jobs = await jobsService.GetJobsAsync();
+    }
 
-        HttpClient client = new HttpClient();
-        client.BaseAddress = new Uri(URL);
+    string JobIdString, DeviceIdString, Body, ExecutionTimeString;
 
-        users = client.GetStringAsync(URL).Result;
+    int JobId, DeviceId; DateTime ExecutionTime;
 
+    HttpResponseMessage responseMessage;
+
+    public async Task AddJob()
+    {
+        JobId = int.Parse(JobIdString);
+        DeviceId = int.Parse(DeviceIdString);
+        ExecutionTime = DateTime.Parse(ExecutionTimeString);
+
+        responseMessage= await jobsService.PostNewJob(JobId, DeviceId, ExecutionTime, Body);
     }
 }
