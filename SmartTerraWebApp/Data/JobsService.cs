@@ -70,7 +70,8 @@ namespace SmartTerraWebApp.Data
             client.BaseAddress = new Uri(URL);
 
             // post 
-            HttpResponseMessage response = await client.PostAsJsonAsync(URL, JObject.Parse(newDevJobJSONString));
+            //JObject.Parse(newDevJobJSONString)
+            HttpResponseMessage response = await client.PostAsJsonAsync(URL, newDeviceJob);
 
             return response;
         }

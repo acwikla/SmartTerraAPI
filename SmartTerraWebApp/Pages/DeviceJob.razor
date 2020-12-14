@@ -3,7 +3,7 @@
 @using SmartTerraWebApp.Data
 @using SmartTerraAPI.DTO
 
-<h3>Add job for device.</h3>
+<h5>Add job for device.</h5>
 <p></p>
 
 @if (jobs == null)
@@ -32,37 +32,101 @@ else
         </tbody>
     </table>
 }
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<h5>Please enter data.</h5>
+<table class="table table-sm">
+    <thead>
+        <tr>
+            <th>Job Id</th>
+            <th>Device Id</th>
+            <th>Job Execution Time</th>
+            @if (JobIdString == "1")
+            {
+                <th> Hex Color</th>
+            }
+            else if (JobIdString == "3")
+            {
+                <th> Working Time[sec]</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <input value="@JobIdString"
+                       @onchange="@((ChangeEventArgs __e) => JobIdString =
+                            __e.Value.ToString())" />
+            </td>
 
-<h4>Type job ID and device ID</h4>
-<form>
-    <div class="form-group w-50">
-        <label for="JobId">Job Id</label>
-        <input value="@JobIdString"
-               @onchange="@((ChangeEventArgs __e) => JobIdString =
-        __e.Value.ToString())" />
-    </div>
-    <div class="form-group">
-        <label for="Body">Device Id</label>
-        <input value="@DeviceIdString"
-               @onchange="@((ChangeEventArgs __e) => DeviceIdString =
-        __e.Value.ToString())" />
-    </div>
-    <div class="form-group">
-        <label for="ExecutionTimeString">Execution Time</label>
-        <input value="@ExecutionTimeString"
-               @onchange="@((ChangeEventArgs __e) => ExecutionTimeString =
-        __e.Value.ToString())" />
-    </div>
-    <div class="form-group">
-        <label for="Body">Body</label>
-        <input value="@Body"
-               @onchange="@((ChangeEventArgs __e) => Body =
-        __e.Value.ToString())" />
-    </div>
-</form>
+            <td>
+                <input value="@DeviceIdString"
+                       @onchange="@((ChangeEventArgs __e) => DeviceIdString =
+                            __e.Value.ToString())" />
+            </td>
 
+            <td>
+                <input type="datetime-local" value="@ExecutionTimeString"
+                       @onchange="@((ChangeEventArgs __e) => ExecutionTimeString =
+                            __e.Value.ToString())" />
+            </td>
+            @if (JobIdString == "1")
+            {
+                <td>
+                    <input type="color" value="@Body"
+                           @onchange="@((ChangeEventArgs __e) => Body =
+                                 __e.Value.ToString())" />
+                </td>
+            }
+            else if (JobIdString == "3")
+            {
+                <td>
+                    <input type="number" value="@Body"
+                           @onchange="@((ChangeEventArgs __e) => Body =
+                                        __e.Value.ToString())" />
+                </td>
+            }
+        </tr>
+    </tbody>
+</table>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<table class="table table-sm">
+    <thead>
+        <tr>
+            <th>Summary</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                @if (reasonPhrase == "Bad Request")
+                {
+                    <p>Sorry, problem occurred!</p>
+                    <p>@contentValue</p>
+                }
+                else if (reasonPhrase == "Created")
+                {
+                    <p>Job has been successfully added!</p>
+                }
+                else if (reasonPhrase == "")
+                {
+                    <p>No job has been added yet.</p>
+                }
+            </td>
+        </tr>
+    </tbody>
+</table>
+<p></p>
+<p></p>
 <button type="submit" class="btn btn-primary" @onclick="AddJob">Add Job</button>
-<p>@responseMessage</p>
+<p></p>
+
+
 
 @code {
 
@@ -80,12 +144,17 @@ else
 
     HttpResponseMessage responseMessage;
 
+    string contentValue = "";
+    string reasonPhrase = "";
+
     public async Task AddJob()
     {
         JobId = int.Parse(JobIdString);
         DeviceId = int.Parse(DeviceIdString);
         ExecutionTime = DateTime.Parse(ExecutionTimeString);
 
-        responseMessage= await jobsService.PostNewJob(JobId, DeviceId, ExecutionTime, Body);
+        responseMessage = await jobsService.PostNewJob(JobId, DeviceId, ExecutionTime, Body);
+        reasonPhrase = responseMessage.ReasonPhrase;
+        contentValue = await responseMessage.Content.ReadAsStringAsync();
     }
 }
