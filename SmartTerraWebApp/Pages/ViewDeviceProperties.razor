@@ -1,0 +1,168 @@
+﻿@page "/viewdeviceproperties"
+
+@using SmartTerraWebApp.Data
+@using SmartTerraAPI.DTO
+@using Newtonsoft.Json;
+
+<h4 style="color: indigo;">View Device Properties</h4>
+<p></p>
+<input placeholder="Please enter device ID" value="@deviceIdString" @onchange="@((ChangeEventArgs __e) => deviceIdString =__e.Value.ToString())" />
+<button type="button" class="btn btn-outline-info btn-sm" @onclick="FetchData">Fetch Data</button>
+@if (latestDevProp != null)
+{
+    <br>
+    <br />
+    <h5>Actual device properties:</h5><p></p>
+    <table class="table table-sm h-25 w-50">
+        <thead>
+            <tr>
+                <th scope="col">Properties for device with ID: @deviceId</th>
+                <th scope="col">Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td scope="row">Temperature</td>
+                <td>@latestDevProp.Temperature</td>
+            </tr>
+            <tr>
+                <td scope="row">Humidity</td>
+                <td>@latestDevProp.Humidity</td>
+            </tr>
+            <tr>
+                <td scope="row">Heat Index</td>
+                <td>@latestDevProp.HeatIndex</td>
+            </tr>
+            <tr>
+                <td scope="row">Soil Moisture Percentage</td>
+                <td>@latestDevProp.SoilMoisturePercentage</td>
+            </tr>
+            <tr>
+                <td scope="row">Liquid Level</td>
+                @if (latestDevProp.isLiquidLevelSufficient)
+                {
+                    <td>Sufficient</td>
+                }
+                else
+                {
+                    <td>Not sufficient</td>
+                }
+            </tr>
+            <tr>
+                <td scope="row">LED Hex Color</td>
+                <td>@latestDevProp.LEDHexColor</td>
+            </tr>
+            <tr>
+                <td scope="row">LED Brightness</td>
+                <td>@latestDevProp.LEDBrightness</td>
+            </tr>
+        </tbody>
+    </table>
+}
+@if (allDevProp != null)
+{
+    <h5>Previous device properties:</h5><p></p>
+    <table class="table table-sm h-25">
+        <thead>
+            <tr>
+                <th scope="col">Properties</th>
+                <th scope="col">Value</th>
+                @foreach (DevicePropertiesDTO deviceProperties in allDevProp)
+                {
+                    <th scope="col"></th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td scope="row">Temperature</td>
+                @foreach (DevicePropertiesDTO deviceProperties in allDevProp)
+                {
+                    <td>@deviceProperties.Temperature</td>
+                }
+            </tr>
+            <tr>
+                <td scope="row">Humidity</td>
+                @foreach (DevicePropertiesDTO deviceProperties in allDevProp)
+                {
+                    <td>@deviceProperties.Humidity</td>
+                }
+            </tr>
+            <tr>
+                <td scope="row">Heat Index</td>
+                @foreach (DevicePropertiesDTO deviceProperties in allDevProp)
+                {
+                    <td>@deviceProperties.HeatIndex</td>
+                }
+            </tr>
+            <tr>
+                <td scope="row">Soil Moisture Percentage</td>
+                @foreach (DevicePropertiesDTO deviceProperties in allDevProp)
+                {
+                    <td>@deviceProperties.SoilMoisturePercentage</td>
+                }
+            </tr>
+            <tr>
+                <td scope="row">Liquid Level</td>
+                @foreach (DevicePropertiesDTO deviceProperties in allDevProp)
+                {
+                    @if (deviceProperties.isLiquidLevelSufficient)
+                    {
+                        <td>Sufficient</td>
+                    }
+                    else
+                    {
+                        <td>Not sufficient</td>
+                    }
+                }
+            </tr>
+            <tr>
+                <td scope="row">LED Hex Color</td>
+                @foreach (DevicePropertiesDTO deviceProperties in allDevProp)
+                {
+                    <td>@deviceProperties.LEDHexColor</td>
+                }
+            </tr>
+            <tr>
+                <td scope="row">LED Brightness</td>
+                @foreach (DevicePropertiesDTO deviceProperties in allDevProp)
+                {
+                    <td>@deviceProperties.LEDBrightness</td>
+                }
+            </tr>
+        </tbody>
+    </table>
+}
+else if (reasonPhrase == "Error")
+{
+    <p><em>Error, please enter a valid device ID.</em></p>
+}
+
+@code {
+    DevicePropertiesService devPropService = new DevicePropertiesService();
+    private string deviceIdString;
+    public int deviceId;
+    private string latestDevPropString = "";
+    private DevicePropertiesDTO latestDevProp;
+
+    private string allDevPropString = "";
+    private DevicePropertiesDTO[] allDevProp;
+    string reasonPhrase = "";
+
+    protected async Task FetchData()
+    {
+        if (deviceIdString == null)
+        {
+            reasonPhrase = "Error";
+            return;
+        }
+
+        deviceId = int.Parse(deviceIdString);
+        latestDevPropString = await devPropService.GetLatestDeviceProperties(deviceId);
+        latestDevProp = JsonConvert.DeserializeObject<DevicePropertiesDTO>(latestDevPropString);
+
+        allDevProp = await devPropService.GetAllDeviceProperties(deviceId);
+
+        //allDevProp = JsonConvert.DeserializeObject<DevicePropertiesDTO>(Newtonsoft.Json.JsonConvert.SerializeObject(allDevPropString);
+    }
+}

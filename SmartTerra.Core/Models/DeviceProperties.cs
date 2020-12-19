@@ -40,6 +40,6 @@ namespace SmartTerraAPI.Models
         [Required]
         public double LEDBrightness { get; set; }
 
-        //dodac dane o godzinach, albo nie
+
     }
 }

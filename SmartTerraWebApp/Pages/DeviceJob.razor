@@ -3,9 +3,9 @@
 @using SmartTerraWebApp.Data
 @using SmartTerraAPI.DTO
 
-<h5>Add job for device.</h5>
+<h4 style="color:indigo">Add job for device.</h4>
 <p></p>
-
+<p></p>
 @if (jobs == null)
 {
     <p><em>Loading...</em></p>
@@ -15,7 +15,6 @@ else
     <table class="table table-sm">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Name</th>
                 <th>Description</th>
             </tr>
@@ -24,7 +23,6 @@ else
             @foreach (var job in jobs)
             {
                 <tr>
-                    <td>@job.Id</td>
                     <td>@job.Name</td>
                     <td>@job.Description</td>
                 </tr>
@@ -38,27 +36,28 @@ else
 <p></p>
 <h5>Please enter data.</h5>
 <table class="table table-sm">
-    <thead>
-        <tr>
-            <th>Job Id</th>
-            <th>Device Id</th>
-            <th>Job Execution Time</th>
-            @if (JobIdString == "1")
-            {
-                <th> Hex Color</th>
-            }
-            else if (JobIdString == "3")
-            {
-                <th> Working Time[sec]</th>
-            }
-        </tr>
-    </thead>
     <tbody>
         <tr>
             <td>
-                <input value="@JobIdString"
-                       @onchange="@((ChangeEventArgs __e) => JobIdString =
-                            __e.Value.ToString())" />
+                <select value="@JobNameString" @onchange="((ChangeEventArgs __e) => JobNameString =__e.Value.ToString())">
+                    <option value="" disabled hidden>Select job</option>
+                    @foreach (var job in jobs)
+                    {
+                        <option value="@job.Name">@job.Name</option>
+                        if (JobNameString == "TurnOnLED")
+                        {
+                            JobId = 1;
+                        }
+                        else if (JobNameString == "TurnOffLED")
+                        {
+                            JobId = 2;
+                        }
+                        else if (JobNameString == "TurnOnWaterPump")
+                        {
+                            JobId = 3;
+                        }
+                    }
+                </select>
             </td>
 
             <td>
@@ -71,8 +70,9 @@ else
                 <input type="datetime-local" value="@ExecutionTimeString"
                        @onchange="@((ChangeEventArgs __e) => ExecutionTimeString =
                             __e.Value.ToString())" />
+
             </td>
-            @if (JobIdString == "1")
+            @if (JobId == 1)
             {
                 <td>
                     <input type="color" value="@Body"
@@ -80,7 +80,13 @@ else
                                  __e.Value.ToString())" />
                 </td>
             }
-            else if (JobIdString == "3")
+            else if (JobId == 2)
+            {
+                <td>
+                    <input type="hidden" />
+                </td>
+            }
+            else if (JobId == 3)
             {
                 <td>
                     <input type="number" value="@Body"
@@ -90,6 +96,25 @@ else
             }
         </tr>
     </tbody>
+    <thead>
+        <tr>
+            <th>Job Name</th>
+            <th>Device Id</th>
+            <th>Job Execution Time</th>
+            @if (JobId == 1)
+            {
+                <th> Hex Color</th>
+            }
+            else if (JobId == 3)
+            {
+                <th> Working Time[sec]</th>
+            }
+            else
+            {
+                <th></th>
+            }
+        </tr>
+    </thead>
 </table>
 <p></p>
 <p></p>
@@ -106,24 +131,35 @@ else
             <td>
                 @if (reasonPhrase == "Bad Request")
                 {
-                    <p>Sorry, problem occurred!</p>
-                    <p>@contentValue</p>
+                    <div class="alert alert-secondary" role="alert">
+                        <p>Sorry, problem occurred!</p>
+                        <p>@contentValue</p> 
+                    </div>
                 }
                 else if (reasonPhrase == "Created")
                 {
-                    <p>Job has been successfully added!</p>
+                    <div class="alert alert-info" role="alert">
+                        <p>Job has been successfully added!</p>
+                    </div>
+                }
+                else if (reasonPhrase == "Error")
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <p>Error occurred!</p>
+                        <p>Please check if all data has been entered.</p>
+                    </div>
                 }
                 else if (reasonPhrase == "")
                 {
-                    <p>No job has been added yet.</p>
+                <p>No job has been added yet.</p>
                 }
-            </td>
+                </td>
         </tr>
     </tbody>
 </table>
 <p></p>
 <p></p>
-<button type="submit" class="btn btn-primary" @onclick="AddJob">Add Job</button>
+<button type="button" class="btn btn-outline-secondary btn-sm" @onclick="AddJob">Add Job</button>
 <p></p>
 
 
@@ -131,14 +167,14 @@ else
 @code {
 
     JobsService jobsService = new JobsService();
-    private JobDTO[] jobs;
+    private JobDTO[] jobs = new JobDTO[] { };
 
     protected override async Task OnInitializedAsync()
     {
         jobs = await jobsService.GetJobsAsync();
     }
 
-    string JobIdString, DeviceIdString, Body, ExecutionTimeString;
+    public string JobNameString, DeviceIdString, Body, ExecutionTimeString;
 
     int JobId, DeviceId; DateTime ExecutionTime;
 
@@ -147,9 +183,20 @@ else
     string contentValue = "";
     string reasonPhrase = "";
 
+
     public async Task AddJob()
     {
-        JobId = int.Parse(JobIdString);
+        if (JobId == 2 && Body == null)
+        {
+            Body = "null";
+        }
+
+        if (JobNameString == null || DeviceIdString == null || ExecutionTimeString == null)
+        {
+            reasonPhrase = "Error";
+            return;
+        }
+
         DeviceId = int.Parse(DeviceIdString);
         ExecutionTime = DateTime.Parse(ExecutionTimeString);
 

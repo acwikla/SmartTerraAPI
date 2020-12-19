@@ -31,7 +31,7 @@ namespace SmartTerraWebApp.Data
              ReuestResultString = client.GetStringAsync(URL).Result;
              if (ReuestResultString==null)
              {
-                 return "there is no jobs in database";
+                 return "There is no jobs in database";
              }
 
              return ReuestResultString;
