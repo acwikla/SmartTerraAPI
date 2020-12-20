@@ -4,7 +4,12 @@
 @using SmartTerraAPI.DTO
 @using Newtonsoft.Json;
 
-<h4 style="color: indigo;">View Device Properties</h4>
+<h4 style="color: indigo;">View properties for device with ID: @deviceId</h4>
+<style>
+    tbody {
+        color: dimgray;
+    }
+</style>
 <p></p>
 <input placeholder="Please enter device ID" value="@deviceIdString" @onchange="@((ChangeEventArgs __e) => deviceIdString =__e.Value.ToString())" />
 <button type="button" class="btn btn-outline-info btn-sm" @onclick="FetchData">Fetch Data</button>
@@ -12,11 +17,11 @@
 {
     <br>
     <br />
-    <h5>Actual device properties:</h5><p></p>
+    <h5>Current device properties:</h5><p></p>
     <table class="table table-sm h-25 w-50">
         <thead>
             <tr>
-                <th scope="col">Properties for device with ID: @deviceId</th>
+                <th scope="col">Properties</th>
                 <th scope="col">Value</th>
             </tr>
         </thead>
@@ -135,7 +140,11 @@
 }
 else if (reasonPhrase == "Error")
 {
-    <p><em>Error, please enter a valid device ID.</em></p>
+    <br>
+    <br />
+    <div class="alert alert-danger" role="alert">
+        <p>Error, please enter a valid device ID.</p>
+    </div>
 }
 
 @code {

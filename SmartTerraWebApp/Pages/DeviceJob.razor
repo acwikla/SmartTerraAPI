@@ -3,9 +3,15 @@
 @using SmartTerraWebApp.Data
 @using SmartTerraAPI.DTO
 
-<h4 style="color:indigo">Add job for device.</h4>
+<h4 style="color: indigo">Add job for device.</h4>
 <p></p>
 <p></p>
+<style>
+    tbody {
+        color: dimgray;
+    }
+</style>
+
 @if (jobs == null)
 {
     <p><em>Loading...</em></p>
@@ -133,7 +139,7 @@ else
                 {
                     <div class="alert alert-secondary" role="alert">
                         <p>Sorry, problem occurred!</p>
-                        <p>@contentValue</p> 
+                        <p>@contentValue</p>
                     </div>
                 }
                 else if (reasonPhrase == "Created")
@@ -151,15 +157,15 @@ else
                 }
                 else if (reasonPhrase == "")
                 {
-                <p>No job has been added yet.</p>
+                    <p>No job has been added yet.</p>
                 }
-                </td>
+            </td>
         </tr>
     </tbody>
 </table>
 <p></p>
 <p></p>
-<button type="button" class="btn btn-outline-secondary btn-sm" @onclick="AddJob">Add Job</button>
+<button type="button" class="btn btn-outline-info btn-sm" @onclick="AddJob">Add Job</button>
 <p></p>
 
 
@@ -191,7 +197,7 @@ else
             Body = "null";
         }
 
-        if (JobNameString == null || DeviceIdString == null || ExecutionTimeString == null)
+        if (JobNameString == null || DeviceIdString == null || DeviceIdString == "" || ExecutionTimeString == null)
         {
             reasonPhrase = "Error";
             return;

@@ -1,5 +1,18 @@
-﻿<h3>ManageMode</h3>
+﻿@page "/managemode"
+
+@using SmartTerraWebApp.Data
+@using SmartTerraAPI.DTO
+@using Newtonsoft.Json;
+
+<h4 style="color: indigo;">Manage Mode</h4>
 
 @code {
-
+    // oninitial override: GET: api/devices/{deviceId}/modes=> in null =>alert:"Please add mode."
+    //load modes
+    // PATCH: api/IsOn/{modeId}
+    //switch
+    // POST: api/devices/{deviceId}/modes
+    //add mode
+    // PUT: api/Modes/{modeId}
+    //change mode
 }
