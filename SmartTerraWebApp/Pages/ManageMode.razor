@@ -5,14 +5,193 @@
 @using Newtonsoft.Json;
 
 <h4 style="color: indigo;">Manage Mode</h4>
+<style>
+    tbody {
+        color: dimgray;
+    }
+
+    label {
+        min-width: 130px
+    }
+</style>
+<p></p>
+<input placeholder="Please enter device ID" value="@deviceIdString" @onchange="@((ChangeEventArgs __e) => deviceIdString =__e.Value.ToString())" />
+<button type="button" class="btn btn-outline-info btn-sm" @onclick="LoadMode">Load Mode</button>
+<br />
+<br />
+@if (modeDTO != null)
+{
+    <br />
+    <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="customSwitch1" @onclick="ChangeIsOnMode">
+        <label class="custom-control-label" for="customSwitch1">
+            Automatic Mode is: @IsOnString
+        </label>
+    </div>
+    <br>
+    <br />
+    <h5>@modeDTO.Name mode for device with ID: @modeDeviceId</h5>
+    <h5>Current settings:</h5><p></p>
+    <p></p>
+    <table class="table table-sm h-25 w-50">
+        <thead>
+            <tr>
+                <th scope="col">Properties</th>
+                <th scope="col">Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td scope="row">Temperature</td>
+                <td>@modeDTO.Temperature</td>
+            </tr>
+            <tr>
+                <td scope="row">Humidity</td>
+                <td>@modeDTO.Humidity</td>
+            </tr>
+            <tr>
+                <td scope="row">Twilight Hour</td>
+                <td>@modeDTO.TwilightHour</td>
+            </tr>
+            <tr>
+                <td scope="row">Hour Of Dawn</td>
+                <td>@modeDTO.HourOfDawn</td>
+            </tr>
+        </tbody>
+    </table>
+    <br />
+    @if (!isNewMode)
+    {
+        <button type="button" class="btn btn-outline-info btn-sm" @onclick="ChangeMode">Change Mode</button>
+    }
+    <p>@tempValue</p>
+
+}
+@if (responseMessage == "Bad Request")
+{
+    <div class="alert alert-danger" role="alert">
+        <p>Sorry, there is no mode for device with given ID: @deviceIdString!</p>
+        <p>Please add mode.</p>
+        <button type="button" class="btn btn-outline-info btn-sm" @onclick="AddMode">Add Mode</button>
+        <p>@tempValue</p>
+        <br />
+    </div>
+}
+@if (isNewMode)
+{
+    <br />
+    <h5>Please, enter new mode settings.</h5>
+    <div class="input-group input-group-sm mb-3">
+        <div class="input-group-prepend">
+            <label class="input-group-text" for="inputGroupSelect01">Name</label>
+        </div>
+        <input type="text" @onchange="@((ChangeEventArgs __e) => @modeAddDTO.Name =__e.Value.ToString())" />
+    </div>
+    <div class="input-group input-group-sm mb-3">
+        <div class="input-group-prepend">
+            <label class="input-group-text" for="inputGroupSelect02">Temperature</label>
+            <input type="number" @onchange="@((ChangeEventArgs __e) => @modeAddDTO.Temperature =double.Parse(__e.Value.ToString()))" />
+        </div>
+    </div>
+    <div class="input-group input-group-sm mb-3">
+        <div class="input-group-prepend">
+            <label class="input-group-text" for="inputGroupSelect03">Humidity</label>
+            <input type="number" @onchange="@((ChangeEventArgs __e) => @modeAddDTO.Humidity = double.Parse(__e.Value.ToString()))" />
+        </div>
+    </div>
+    <div class="input-group input-group-sm mb-3">
+        <div class="input-group-prepend">
+            <label class="input-group-text" for="inputGroupSelect04">Hour Of Dawn</label>
+            <input type="time" @onchange="@((ChangeEventArgs __e) => @modeAddDTO.HourOfDawn =TimeSpan.Parse(__e.Value.ToString()))" />
+        </div>
+    </div>
+    <div class="input-group input-group-sm mb-3">
+        <div class="input-group-prepend">
+            <label class="input-group-text" for="inputGroupSelect05">Twilight Hour</label>
+            <input type="time" @onchange="@((ChangeEventArgs __e) => @modeAddDTO.TwilightHour =TimeSpan.Parse(__e.Value.ToString()))" />
+        </div>
+    </div>
+    <button type="button" class="btn btn-outline-info btn-sm" @onclick="UpdateMode">Udate Mode</button>
+    <p>@tempValue</p>
+}
 
 @code {
+    bool IsOnValue = false;
+    string IsOnString = "Off";
+    public void ChangeIsOnMode()
+    {
+        IsOnValue = !IsOnValue;
+        if (IsOnValue)
+        {
+            IsOnString = "On";
+        }
+        else
+        {
+            IsOnString = "Off";
+        }
+        PatchIsOnMode();
+    }
+    ManageModeService manageModeService = new ManageModeService();
+    private string deviceIdString;
+    public int deviceId;
+    public int modeDeviceId;
+    private string responseMessage = "";
+    private ModeDTO modeDTO;
+    public bool isNewMode = false;
+    public ModeAddDTO modeAddDTO = new ModeAddDTO() { };
+    public string tempValue;
     // oninitial override: GET: api/devices/{deviceId}/modes=> in null =>alert:"Please add mode."
     //load modes
+    public async Task LoadMode()
+    {
+        deviceId = int.Parse(deviceIdString);
+        responseMessage = await manageModeService.GetMode(deviceId);
+        if (responseMessage == "Bad Request")
+        {
+            modeDTO = null;
+            return;
+
+        }
+
+        modeDTO = JsonConvert.DeserializeObject<ModeDTO>(responseMessage);
+        IsOnValue = modeDTO.IsOn;
+        modeDeviceId = deviceId;
+        if (IsOnValue)
+        {
+            IsOnString = "On";
+        }
+        else
+        {
+            IsOnString = "Off";
+        }
+
+    }
+
     // PATCH: api/IsOn/{modeId}
     //switch
+    public void PatchIsOnMode()
+    {
+        tempValue = "PatchIsOnMode";
+    }
     // POST: api/devices/{deviceId}/modes
     //add mode
-    // PUT: api/Modes/{modeId}
+    public void AddMode()
+    {
+        isNewMode = true;
+        responseMessage = "Created";
+        tempValue = "AddMode";
+    }
     //change mode
+    public void ChangeMode()
+    {
+        isNewMode = true;
+    }
+
+    // PUT: api/Modes/{modeId}
+    public void UpdateMode()
+    {
+        isNewMode = !isNewMode;
+        responseMessage = "Updated";
+        tempValue = "UpdateMode";
+    }
 }
