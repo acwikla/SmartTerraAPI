@@ -64,17 +64,12 @@
     {
         <button type="button" class="btn btn-outline-info btn-sm" @onclick="ChangeMode">Change Mode</button>
     }
-    <p>@tempValue</p>
-
 }
-@if (responseMessage == "Bad Request")
+@if (isNewMode && responseMessageString == "Bad Request")
 {
     <div class="alert alert-danger" role="alert">
         <p>Sorry, there is no mode for device with given ID: @deviceIdString!</p>
         <p>Please add mode.</p>
-        <button type="button" class="btn btn-outline-info btn-sm" @onclick="AddMode">Add Mode</button>
-        <p>@tempValue</p>
-        <br />
     </div>
 }
 @if (isNewMode)
@@ -111,9 +106,35 @@
             <input type="time" @onchange="@((ChangeEventArgs __e) => @modeAddDTO.TwilightHour =TimeSpan.Parse(__e.Value.ToString()))" />
         </div>
     </div>
-    <button type="button" class="btn btn-outline-info btn-sm" @onclick="UpdateMode">Udate Mode</button>
-    <p>@tempValue</p>
+    <button type="button" class="btn btn-outline-info btn-sm" @onclick="UpdateMode">Update Mode</button>
+    <br />
+    <br />
 }
+@if (modeAdded)
+{
+    @if (reasonPhrase == "Bad Request")
+    {
+        <div class="alert alert-secondary" role="alert">
+            <p>Sorry, problem occurred!</p>
+            <p>@contentValue</p>
+        </div>
+    }
+    else if (reasonPhrase == "Created")
+    {
+        <div class="alert alert-info" role="alert">
+            <p>Mode has been successfully added!</p>
+        </div>
+    }
+    else if (reasonPhrase == "Error")
+    {
+        <div class="alert alert-danger" role="alert">
+            <p>Error occurred!</p>
+            <p>Please check if all data has been entered.</p>
+        </div>
+    }
+}
+
+
 
 @code {
     bool IsOnValue = false;
@@ -129,33 +150,40 @@
         {
             IsOnString = "Off";
         }
-        PatchIsOnMode();
+
+        ModeIsOnDTO modeIsOnDTO = new ModeIsOnDTO();
+        modeIsOnDTO.IsOn = IsOnValue;
+        PatchIsOnMode(modeIsOnDTO);
     }
     ManageModeService manageModeService = new ManageModeService();
     private string deviceIdString;
-    public int deviceId;
-    public int modeDeviceId;
-    private string responseMessage = "";
+    public int deviceId, modeDeviceId, modeId;
+    private string responseMessageString = "", contentValue = "", reasonPhrase = "";
+    private HttpResponseMessage responseMessage;
     private ModeDTO modeDTO;
-    public bool isNewMode = false;
+    public bool isNewMode = false, modeAdded = false;
     public ModeAddDTO modeAddDTO = new ModeAddDTO() { };
-    public string tempValue;
+    public ModeDTO modeToUpdateDTO = new ModeDTO() { };
     // oninitial override: GET: api/devices/{deviceId}/modes=> in null =>alert:"Please add mode."
     //load modes
     public async Task LoadMode()
     {
+        modeAdded = false;
         deviceId = int.Parse(deviceIdString);
-        responseMessage = await manageModeService.GetMode(deviceId);
-        if (responseMessage == "Bad Request")
+        responseMessageString = await manageModeService.GetMode(deviceId);
+        if (responseMessageString == "Bad Request")
         {
             modeDTO = null;
+            isNewMode = true;
             return;
 
         }
 
-        modeDTO = JsonConvert.DeserializeObject<ModeDTO>(responseMessage);
+        modeDTO = JsonConvert.DeserializeObject<ModeDTO>(responseMessageString);
+        modeId = modeDTO.Id;
         IsOnValue = modeDTO.IsOn;
         modeDeviceId = deviceId;
+        isNewMode = false;
         if (IsOnValue)
         {
             IsOnString = "On";
@@ -169,29 +197,41 @@
 
     // PATCH: api/IsOn/{modeId}
     //switch
-    public void PatchIsOnMode()
+    public async Task PatchIsOnMode(ModeIsOnDTO modeIsOnDTO)
     {
-        tempValue = "PatchIsOnMode";
+        await manageModeService.PatchIsOnFlag(modeId, modeIsOnDTO);
     }
+
     // POST: api/devices/{deviceId}/modes
     //add mode
-    public void AddMode()
+    public async Task AddMode()
     {
-        isNewMode = true;
-        responseMessage = "Created";
-        tempValue = "AddMode";
+        responseMessage = await manageModeService.PostMode(deviceId, modeAddDTO);
+        reasonPhrase = responseMessage.ReasonPhrase;
+        contentValue = await responseMessage.Content.ReadAsStringAsync();
+        isNewMode = false;
+        modeAdded = true;
     }
-    //change mode
+    //change mode flag
     public void ChangeMode()
     {
         isNewMode = true;
     }
 
     // PUT: api/Modes/{modeId}
-    public void UpdateMode()
+    public async Task UpdateMode()
     {
-        isNewMode = !isNewMode;
-        responseMessage = "Updated";
-        tempValue = "UpdateMode";
+        modeToUpdateDTO.Name = modeAddDTO.Name;
+        modeToUpdateDTO.Temperature = modeAddDTO.Temperature;
+        modeToUpdateDTO.Humidity = modeAddDTO.Humidity;
+        modeToUpdateDTO.HourOfDawn = modeAddDTO.HourOfDawn;
+        modeToUpdateDTO.TwilightHour = modeAddDTO.TwilightHour;
+
+        responseMessage = await manageModeService.ChangeMode(modeId, modeToUpdateDTO);
+        reasonPhrase = responseMessage.ReasonPhrase;
+        contentValue = await responseMessage.Content.ReadAsStringAsync();
+        isNewMode = false;
+        modeAdded = true;
+        await LoadMode();
     }
 }

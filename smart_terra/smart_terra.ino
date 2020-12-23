@@ -15,7 +15,7 @@
 #define DHT_PIN D8
 #define SOIL_MOISTURE_SENSOR_PIN A0
 #define LED_PIN D6 
-#define LED_COUNT 11
+#define LED_COUNT 46
 #define WATER_PUMP_PIN D5 
 #define LIQUID_LEVEL_SENSOR D7
 #define PROPELLER_PIN D2
@@ -82,7 +82,8 @@ void setup() {
 
 
 void loop() {
-  if (WiFi.status() == WL_CONNECTED) 
+  set_LED_color("#ffffff");
+  /*if (WiFi.status() == WL_CONNECTED) 
   { 
     get_mode_data();
     
@@ -99,7 +100,7 @@ void loop() {
     }
     delay(5000);
     counter++;
-  }
+  }*/
 }
 //declarations of request functions:
 void send_liquid_level_sensor_data(bool sensor_data);
@@ -120,7 +121,7 @@ void simulate_day_night_mode();
 void turnoff_LED();
 void get_LED_brightness();
 void set_LED_brightness(float brightness);
-void set_LED_color(String hex_value);
+//void set_LED_color(String hex_value);
 byte* color_converter(String hex_value);
 
 void get_mode_data(){
