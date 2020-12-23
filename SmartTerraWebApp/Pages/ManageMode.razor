@@ -69,12 +69,10 @@
 {
     <div class="alert alert-danger" role="alert">
         <p>Sorry, there is no mode for device with given ID: @deviceIdString!</p>
-        <p>Please add mode.</p>
     </div>
 }
 @if (isNewMode)
 {
-    <br />
     <h5>Please, enter new mode settings.</h5>
     <div class="input-group input-group-sm mb-3">
         <div class="input-group-prepend">
@@ -106,7 +104,14 @@
             <input type="time" @onchange="@((ChangeEventArgs __e) => @modeAddDTO.TwilightHour =TimeSpan.Parse(__e.Value.ToString()))" />
         </div>
     </div>
-    <button type="button" class="btn btn-outline-info btn-sm" @onclick="UpdateMode">Update Mode</button>
+    @if (modeDTO != null)
+    {
+        <button type="button" class="btn btn-outline-info btn-sm" @onclick="UpdateMode">Add Settings</button>
+    }
+    else if (modeDTO == null)
+    {
+        <button type="button" class="btn btn-outline-info btn-sm" @onclick="AddMode">Add Settings</button>
+    }
     <br />
     <br />
 }
