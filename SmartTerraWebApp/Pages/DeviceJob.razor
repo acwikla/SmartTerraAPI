@@ -150,24 +150,17 @@ else
         <tbody>
             <tr>
                 <td>
-                    @if (reasonPhrase == "Bad Request")
+                    @if (reasonPhrase == "Bad Request" || reasonPhrase == "Error")
                     {
-                        <div class="alert alert-secondary" role="alert">
-                            <p>Sorry, problem occurred!</p>
-                            <p>@contentValue</p>
+                        <div class="alert alert-danger" role="alert">
+                            <p>Error occurred!</p>
+                            <p>Please check if all data has been entered.</p>
                         </div>
                     }
                     else if (reasonPhrase == "Created")
                     {
                         <div class="alert alert-info" role="alert">
                             <p>Job has been successfully added!</p>
-                        </div>
-                    }
-                    else if (reasonPhrase == "Error")
-                    {
-                        <div class="alert alert-danger" role="alert">
-                            <p>Error occurred!</p>
-                            <p>Please check if all data has been entered.</p>
                         </div>
                     }
                     else if (reasonPhrase == "")

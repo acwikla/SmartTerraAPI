@@ -23,10 +23,11 @@
         margin-right: 0;
     }
 </style>
-<h4 style="color: indigo;">Hello @user.Login!</h4><p></p>
+
 @if (!logInSuccess)
 {
-    <h5>Please, login!</h5>
+    <h4 style="color: indigo;">Welcome to SmartTerraWebApp!</h4>
+    <h5>Please, log in!</h5>
     <input placeholder="Email address" type="email" value="@email" @onchange="@((ChangeEventArgs __e) => email =__e.Value.ToString())" />
     <br />
     <input placeholder="Password" type="text" value="@password" @onchange="@((ChangeEventArgs __e) => password =__e.Value.ToString())" />
@@ -45,20 +46,16 @@
     @if (returnMessage == "Bad Request")
     {
         <div class="alert alert-danger" role="alert">
-            <p>Sorry, problem occurred!</p>
+            <p>Error occurred!</p>
             <p>There is no user with given email address: @email</p>
         </div>
     }
 }
 @if (logInSuccess)
 {
-    <button type="button" class="btn btn-outline-secondary btn-sm" @onclick="LogOut">Log out</button>
-    <br />
+    <h4 style="color: indigo;">Hello @user.Login!</h4><p></p>
     if (devicesDTO != null)
     {
-
-        <h5>Current chosen device: @choosenDevice.Name</h5>
-        <br />
         <h6>Choose your device,</h6>
         @if (!fetchDeviceFlag)
         {
@@ -83,7 +80,8 @@
         <h6>or add a new one.</h6>
         @if (!addDeviceFlag)
         {
-            <button type="button" class="btn btn-outline-info btn-sm" @onclick="AddDevice">Add device</button>
+            <button type="button" class="btn btn-outline-info btn-sm" @onclick="AddDevice">Add device</button><p></p>
+            <br />
         }
     }
     else
@@ -99,36 +97,71 @@
                 <input type="text" @onchange="@((ChangeEventArgs __e) => device.Name = __e.Value.ToString())" />
             </div>
         </div>
-        <button type="button" class="btn btn-outline-info btn-sm" @onclick="PostDevice">Add device</button>
+        <button type="button" class="btn btn-outline-info btn-sm" @onclick="PostDevice">Add device</button><p></p>
+        <br />
     }
-}
-@if (addDeviceFlag)
-{
-    <div class="input-group input-group-sm mb-3">
-        <div class="input-group-prepend">
-            <label class="input-group-text" for="inputGroupSelect03">Name</label>
-            <input value="@newDeviceName" type="text" @onchange="@((ChangeEventArgs __e) => newDeviceName = __e.Value.ToString())" />
-        </div>
-    </div>
-    <button type="button" class="btn btn-outline-info btn-sm" @onclick="PostDevice">Add device</button>
-    <br />
-    @if (!fetchDeviceFlag)
+
+    @if (addDeviceFlag)
     {
-        @if (reasonPhrase == "Bad Request")
-        {
-            <div class="alert alert-danger" role="alert">
-                <p>Sorry, error occurred!</p>
-                <p>Please check if all data has been entered.</p>
+        <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect03">Name</label>
+                <input value="@newDeviceName" type="text" @onchange="@((ChangeEventArgs __e) => newDeviceName = __e.Value.ToString())" />
             </div>
-        }
-        else if (reasonPhrase == "Created")
-        {
-            <div class="alert alert-info" role="alert">
-                <p>Device has been successfully added!</p>
-            </div>
-        }
+        </div>
+        <button type="button" class="btn btn-outline-info btn-sm" @onclick="PostDevice">Add device</button><p></p>
+        <br />
     }
+
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Summary</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td scope="row">Current chosen device</td>
+                @if (@choosenDevice.Name == null)
+                {
+                    <td> No device was selected.</td>
+                }
+                else
+                {
+                <td>@choosenDevice.Name with ID: @choosenDevice.Id </td>
+                }
+            </tr>
+            <tr>
+                <td scope="row">Device action status</td>
+                @if (reasonPhrase == "Bad Request")
+                {
+                    <td>
+                            <p>Error occurred!</p>
+                            <p>Please check if all data has been entered.</p>
+                    </td>
+                }
+                else if (reasonPhrase == "Created")
+                {
+                    <td>
+                            <p>Device has been successfully added!</p>
+                    </td>
+                }
+                else
+                {
+                    <td>No action was taken.</td>
+                }
+            </tr>
+        </tbody>
+    </table>
 }
+
+@if (logInSuccess)
+{
+    <br />
+    <button type="button" class="btn btn-outline-secondary btn-sm" @onclick="LogOut">Log out</button>
+}
+
 
 
 
@@ -165,6 +198,7 @@
         }
         logInSuccess = true;
         devicesDTO = await userService.GetDevices(user.Id);
+        email = "";
     }
 
     public void LogOut()
@@ -180,6 +214,7 @@
         devicesDTO = await userService.GetDevices(user.Id);
         fetchDeviceFlag = true;
         addDeviceFlag = false;
+        reasonPhrase = "";
     }
 
     public void ChooseDevice()
@@ -207,5 +242,6 @@
         reasonPhrase = responseMessage.ReasonPhrase;
         contentValue = await responseMessage.Content.ReadAsStringAsync();
         fetchDeviceFlag = false;
+        newDeviceName = "";
     }
 }

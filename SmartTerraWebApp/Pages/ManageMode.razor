@@ -84,7 +84,7 @@ else
     }
     @if (isNewMode && responseMessageString == "Bad Request")
     {
-        <div class="alert alert-danger" role="alert">
+        <div class="alert alert-secondary" role="alert">
             <p>Sorry, there is no mode for device with given ID: @deviceId!</p>
         </div>
     }
@@ -134,11 +134,11 @@ else
     }
     @if (modeAdded)
     {
-        @if (reasonPhrase == "Bad Request")
+        @if (reasonPhrase == "Bad Request"|| reasonPhrase == "Error")
         {
-            <div class="alert alert-secondary" role="alert">
-                <p>Sorry, problem occurred!</p>
-                <p>@contentValue</p>
+            <div class="alert alert-danger" role="alert">
+                <p>Error occurred!</p>
+                <p>Please check if all data has been entered.</p>
             </div>
         }
         else if (reasonPhrase == "Created")
@@ -148,13 +148,6 @@ else
             </div>
             <br />
             <button type="button" class="btn btn-outline-info btn-sm" @onclick="LoadMode">Load Mode</button>
-        }
-        else if (reasonPhrase == "Error")
-        {
-            <div class="alert alert-danger" role="alert">
-                <p>Error occurred!</p>
-                <p>Please check if all the data has been entered.</p>
-            </div>
         }
     }
 }
@@ -203,7 +196,6 @@ else
 
     public async Task LoadMode()
     {
-        modeAdded = false;
         responseMessageString = await manageModeService.GetMode(deviceId);
         if (responseMessageString == "Bad Request")
         {
