@@ -2,172 +2,187 @@
 
 @using SmartTerraWebApp.Data
 @using SmartTerraAPI.DTO
+@using static SmartTerraWebApp.Pages.Index;
 
-<h4 style="color: indigo">Add job for device.</h4>
-<p></p>
-<p></p>
+
 <style>
     tbody {
         color: dimgray;
     }
 </style>
-
-@if (jobs == null)
+@if (choosenDevice.Id == 0)
 {
-    <p><em>Loading...</em></p>
+    <div class="alert alert-primary" role="alert">
+        @if (!logInSuccess)
+        {
+            <h5>Please, log in first.</h5>
+        }
+        else
+        {
+            <h5>Please, choose device first.</h5>
+        }
+    </div>
 }
+
 else
 {
+    <h4 style="color: indigo">Add job for device: @choosenDevice.Name with ID: @choosenDevice.Id.</h4>
+    <p></p>
+    <p></p>
+    @if (jobs == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var job in jobs)
+                {
+                    <tr>
+                        <td>@job.Name</td>
+                        <td>@job.Description</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <h5>Please enter data.</h5>
+    <table class="table table-sm">
+        <tbody>
+            <tr>
+                <td>
+                    <select value="@JobNameString" @onchange="((ChangeEventArgs __e) => JobNameString = __e.Value.ToString())">
+                        <option value="" disabled hidden>Select job</option>
+                        @foreach (var job in jobs)
+                        {
+                            <option value="@job.Name">@job.Name</option>
+                            if (JobNameString == "TurnOnLED")
+                            {
+                                JobId = 1;
+                            }
+                            else if (JobNameString == "TurnOffLED")
+                            {
+                                JobId = 2;
+                            }
+                            else if (JobNameString == "TurnOnWaterPump")
+                            {
+                                JobId = 3;
+                            }
+                        }
+                    </select>
+                </td>
+
+                <td>
+                    <input value="@choosenDevice.Id" disabled />
+                </td>
+
+                <td>
+                    <input type="datetime-local" value="@ExecutionTimeString"
+                           @onchange="@((ChangeEventArgs __e) => ExecutionTimeString =
+                            __e.Value.ToString())" />
+
+                </td>
+                @if (JobId == 1)
+                {
+                    <td>
+                        <input type="color" value="@Body"
+                               @onchange="@((ChangeEventArgs __e) => Body =
+                                 __e.Value.ToString())" />
+                    </td>
+                }
+                else if (JobId == 2)
+                {
+                    <td>
+                        <input type="hidden" />
+                    </td>
+                }
+                else if (JobId == 3)
+                {
+                    <td>
+                        <input type="number" value="@Body"
+                               @onchange="@((ChangeEventArgs __e) => Body =
+                                        __e.Value.ToString())" />
+                    </td>
+                }
+            </tr>
+        </tbody>
+        <thead>
+            <tr>
+                <th>Job Name</th>
+                <th>Device Id</th>
+                <th>Job Execution Time</th>
+                @if (JobId == 1)
+                {
+                    <th> Hex Color</th>
+                }
+                else if (JobId == 3)
+                {
+                    <th> Working Time[sec]</th>
+                }
+                else
+                {
+                    <th></th>
+                }
+            </tr>
+        </thead>
+    </table>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
     <table class="table table-sm">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Description</th>
+                <th>Summary</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var job in jobs)
-            {
-                <tr>
-                    <td>@job.Name</td>
-                    <td>@job.Description</td>
-                </tr>
-            }
+            <tr>
+                <td>
+                    @if (reasonPhrase == "Bad Request")
+                    {
+                        <div class="alert alert-secondary" role="alert">
+                            <p>Sorry, problem occurred!</p>
+                            <p>@contentValue</p>
+                        </div>
+                    }
+                    else if (reasonPhrase == "Created")
+                    {
+                        <div class="alert alert-info" role="alert">
+                            <p>Job has been successfully added!</p>
+                        </div>
+                    }
+                    else if (reasonPhrase == "Error")
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <p>Error occurred!</p>
+                            <p>Please check if all data has been entered.</p>
+                        </div>
+                    }
+                    else if (reasonPhrase == "")
+                    {
+                        <p>No job has been added yet.</p>
+                    }
+                </td>
+            </tr>
         </tbody>
     </table>
+    <p></p>
+    <p></p>
+    <button type="button" class="btn btn-outline-info btn-sm" @onclick="AddJob">Add Job</button>
+    <p></p>
 }
-<p></p>
-<p></p>
-<p></p>
-<p></p>
-<h5>Please enter data.</h5>
-<table class="table table-sm">
-    <tbody>
-        <tr>
-            <td>
-                <select value="@JobNameString" @onchange="((ChangeEventArgs __e) => JobNameString =__e.Value.ToString())">
-                    <option value="" disabled hidden>Select job</option>
-                    @foreach (var job in jobs)
-                    {
-                        <option value="@job.Name">@job.Name</option>
-                        if (JobNameString == "TurnOnLED")
-                        {
-                            JobId = 1;
-                        }
-                        else if (JobNameString == "TurnOffLED")
-                        {
-                            JobId = 2;
-                        }
-                        else if (JobNameString == "TurnOnWaterPump")
-                        {
-                            JobId = 3;
-                        }
-                    }
-                </select>
-            </td>
-
-            <td>
-                <input value="@DeviceIdString"
-                       @onchange="@((ChangeEventArgs __e) => DeviceIdString =
-                            __e.Value.ToString())" />
-            </td>
-
-            <td>
-                <input type="datetime-local" value="@ExecutionTimeString"
-                       @onchange="@((ChangeEventArgs __e) => ExecutionTimeString =
-                            __e.Value.ToString())" />
-
-            </td>
-            @if (JobId == 1)
-            {
-                <td>
-                    <input type="color" value="@Body"
-                           @onchange="@((ChangeEventArgs __e) => Body =
-                                 __e.Value.ToString())" />
-                </td>
-            }
-            else if (JobId == 2)
-            {
-                <td>
-                    <input type="hidden" />
-                </td>
-            }
-            else if (JobId == 3)
-            {
-                <td>
-                    <input type="number" value="@Body"
-                           @onchange="@((ChangeEventArgs __e) => Body =
-                                        __e.Value.ToString())" />
-                </td>
-            }
-        </tr>
-    </tbody>
-    <thead>
-        <tr>
-            <th>Job Name</th>
-            <th>Device Id</th>
-            <th>Job Execution Time</th>
-            @if (JobId == 1)
-            {
-                <th> Hex Color</th>
-            }
-            else if (JobId == 3)
-            {
-                <th> Working Time[sec]</th>
-            }
-            else
-            {
-                <th></th>
-            }
-        </tr>
-    </thead>
-</table>
-<p></p>
-<p></p>
-<p></p>
-<p></p>
-<table class="table table-sm">
-    <thead>
-        <tr>
-            <th>Summary</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-                @if (reasonPhrase == "Bad Request")
-                {
-                    <div class="alert alert-secondary" role="alert">
-                        <p>Sorry, problem occurred!</p>
-                        <p>@contentValue</p>
-                    </div>
-                }
-                else if (reasonPhrase == "Created")
-                {
-                    <div class="alert alert-info" role="alert">
-                        <p>Job has been successfully added!</p>
-                    </div>
-                }
-                else if (reasonPhrase == "Error")
-                {
-                    <div class="alert alert-danger" role="alert">
-                        <p>Error occurred!</p>
-                        <p>Please check if all data has been entered.</p>
-                    </div>
-                }
-                else if (reasonPhrase == "")
-                {
-                    <p>No job has been added yet.</p>
-                }
-            </td>
-        </tr>
-    </tbody>
-</table>
-<p></p>
-<p></p>
-<button type="button" class="btn btn-outline-info btn-sm" @onclick="AddJob">Add Job</button>
-<p></p>
-
 
 
 @code {
@@ -180,9 +195,9 @@ else
         jobs = await jobsService.GetJobsAsync();
     }
 
-    public string JobNameString, DeviceIdString, Body, ExecutionTimeString;
+    public string JobNameString, Body, ExecutionTimeString;
 
-    int JobId, DeviceId; DateTime ExecutionTime;
+    int JobId, DeviceId = choosenDevice.Id; DateTime ExecutionTime;
 
     HttpResponseMessage responseMessage;
 
@@ -197,13 +212,12 @@ else
             Body = "null";
         }
 
-        if (JobNameString == null || DeviceIdString == null || DeviceIdString == "" || ExecutionTimeString == null)
+        if (JobNameString == null || ExecutionTimeString == null)
         {
             reasonPhrase = "Error";
             return;
         }
 
-        DeviceId = int.Parse(DeviceIdString);
         ExecutionTime = DateTime.Parse(ExecutionTimeString);
 
         responseMessage = await jobsService.PostNewJob(JobId, DeviceId, ExecutionTime, Body);

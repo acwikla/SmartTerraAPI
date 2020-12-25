@@ -3,8 +3,9 @@
 @using SmartTerraWebApp.Data
 @using SmartTerraAPI.DTO
 @using Newtonsoft.Json;
+@using static SmartTerraWebApp.Pages.Index;
 
-<h4 style="color: indigo;">Manage Mode</h4>
+
 <style>
     tbody {
         color: dimgray;
@@ -14,128 +15,140 @@
         min-width: 130px
     }
 </style>
-<p></p>
-<input placeholder="Please enter device ID" value="@deviceIdString" @onchange="@((ChangeEventArgs __e) => deviceIdString =__e.Value.ToString())" />
-<button type="button" class="btn btn-outline-info btn-sm" @onclick="LoadMode">Load Mode</button>
-<br />
-<br />
-@if (modeDTO != null)
+@if (choosenDevice.Id == 0)
 {
-    <br />
-    <div class="custom-control custom-switch">
-        <input type="checkbox" class="custom-control-input" id="customSwitch1" @onclick="ChangeIsOnMode">
-        <label class="custom-control-label" for="customSwitch1">
-            Automatic Mode is: @IsOnString
-        </label>
+    <div class="alert alert-primary" role="alert">
+        @if (!logInSuccess)
+        {
+            <h5>Please, log in first.</h5>
+        }
+        else
+        {
+            <h5>Please, choose device first.</h5>
+        }
     </div>
-    <br>
-    <br />
-    <h5>@modeDTO.Name mode for device with ID: @modeDeviceId</h5>
-    <h5>Current settings:</h5><p></p>
+}
+else
+{
+    <h4 style="color: indigo;">Manage mode for device: @choosenDevice.Name.</h4>
     <p></p>
-    <table class="table table-sm h-25 w-50">
-        <thead>
-            <tr>
-                <th scope="col">Properties</th>
-                <th scope="col">Value</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td scope="row">Temperature</td>
-                <td>@modeDTO.Temperature</td>
-            </tr>
-            <tr>
-                <td scope="row">Humidity</td>
-                <td>@modeDTO.Humidity</td>
-            </tr>
-            <tr>
-                <td scope="row">Twilight Hour</td>
-                <td>@modeDTO.TwilightHour</td>
-            </tr>
-            <tr>
-                <td scope="row">Hour Of Dawn</td>
-                <td>@modeDTO.HourOfDawn</td>
-            </tr>
-        </tbody>
-    </table>
-    <br />
-    @if (!isNewMode)
-    {
-        <button type="button" class="btn btn-outline-info btn-sm" @onclick="ChangeMode">Change Mode</button>
-    }
-}
-@if (isNewMode && responseMessageString == "Bad Request")
-{
-    <div class="alert alert-danger" role="alert">
-        <p>Sorry, there is no mode for device with given ID: @deviceIdString!</p>
-    </div>
-}
-@if (isNewMode)
-{
-    <h5>Please, enter new mode settings.</h5>
-    <div class="input-group input-group-sm mb-3">
-        <div class="input-group-prepend">
-            <label class="input-group-text" for="inputGroupSelect01">Name</label>
-        </div>
-        <input type="text" @onchange="@((ChangeEventArgs __e) => @modeAddDTO.Name =__e.Value.ToString())" />
-    </div>
-    <div class="input-group input-group-sm mb-3">
-        <div class="input-group-prepend">
-            <label class="input-group-text" for="inputGroupSelect02">Temperature</label>
-            <input type="number" @onchange="@((ChangeEventArgs __e) => @modeAddDTO.Temperature =double.Parse(__e.Value.ToString()))" />
-        </div>
-    </div>
-    <div class="input-group input-group-sm mb-3">
-        <div class="input-group-prepend">
-            <label class="input-group-text" for="inputGroupSelect03">Humidity</label>
-            <input type="number" @onchange="@((ChangeEventArgs __e) => @modeAddDTO.Humidity = double.Parse(__e.Value.ToString()))" />
-        </div>
-    </div>
-    <div class="input-group input-group-sm mb-3">
-        <div class="input-group-prepend">
-            <label class="input-group-text" for="inputGroupSelect04">Hour Of Dawn</label>
-            <input type="time" @onchange="@((ChangeEventArgs __e) => @modeAddDTO.HourOfDawn =TimeSpan.Parse(__e.Value.ToString()))" />
-        </div>
-    </div>
-    <div class="input-group input-group-sm mb-3">
-        <div class="input-group-prepend">
-            <label class="input-group-text" for="inputGroupSelect05">Twilight Hour</label>
-            <input type="time" @onchange="@((ChangeEventArgs __e) => @modeAddDTO.TwilightHour =TimeSpan.Parse(__e.Value.ToString()))" />
-        </div>
-    </div>
     @if (modeDTO != null)
     {
-        <button type="button" class="btn btn-outline-info btn-sm" @onclick="UpdateMode">Add Settings</button>
-    }
-    else if (modeDTO == null)
-    {
-        <button type="button" class="btn btn-outline-info btn-sm" @onclick="AddMode">Add Settings</button>
-    }
-    <br />
-    <br />
-}
-@if (modeAdded)
-{
-    @if (reasonPhrase == "Bad Request")
-    {
-        <div class="alert alert-secondary" role="alert">
-            <p>Sorry, problem occurred!</p>
-            <p>@contentValue</p>
+        <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="customSwitch1" @onclick="ChangeIsOnMode">
+            <label class="custom-control-label" for="customSwitch1">
+                Automatic Mode is: @IsOnString
+            </label>
         </div>
+        <br />
+        <h5>Current settings for @modeDTO.Name mode</h5><p></p>
+        <p></p>
+        <table class="table table-sm h-25 w-50">
+            <thead>
+                <tr>
+                    <th scope="col">Properties</th>
+                    <th scope="col">Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td scope="row">Temperature</td>
+                    <td>@modeDTO.Temperature</td>
+                </tr>
+                <tr>
+                    <td scope="row">Humidity</td>
+                    <td>@modeDTO.Humidity</td>
+                </tr>
+                <tr>
+                    <td scope="row">Twilight Hour</td>
+                    <td>@modeDTO.TwilightHour</td>
+                </tr>
+                <tr>
+                    <td scope="row">Hour Of Dawn</td>
+                    <td>@modeDTO.HourOfDawn</td>
+                </tr>
+            </tbody>
+        </table>
+        <br />
+        @if (!isNewMode)
+        {
+            <button type="button" class="btn btn-outline-info btn-sm" @onclick="ChangeMode">Change Mode</button>
+        }
     }
-    else if (reasonPhrase == "Created")
-    {
-        <div class="alert alert-info" role="alert">
-            <p>Mode has been successfully added!</p>
-        </div>
-    }
-    else if (reasonPhrase == "Error")
+    @if (isNewMode && responseMessageString == "Bad Request")
     {
         <div class="alert alert-danger" role="alert">
-            <p>Error occurred!</p>
-            <p>Please check if all data has been entered.</p>
+            <p>Sorry, there is no mode for device with given ID: @deviceId!</p>
         </div>
+    }
+    @if (isNewMode)
+    {
+        <h5>Please, enter new mode settings.</h5>
+        <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">Name</label>
+            </div>
+            <input type="text" @onchange="@((ChangeEventArgs __e) => @modeAddDTO.Name = __e.Value.ToString())" />
+        </div>
+        <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect02">Temperature</label>
+                <input type="number" @onchange="@((ChangeEventArgs __e) => @modeAddDTO.Temperature = double.Parse(__e.Value.ToString()))" />
+            </div>
+        </div>
+        <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect03">Humidity</label>
+                <input type="number" @onchange="@((ChangeEventArgs __e) => @modeAddDTO.Humidity = double.Parse(__e.Value.ToString()))" />
+            </div>
+        </div>
+        <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect04">Hour Of Dawn</label>
+                <input type="time" @onchange="@((ChangeEventArgs __e) => @modeAddDTO.HourOfDawn = TimeSpan.Parse(__e.Value.ToString()))" />
+            </div>
+        </div>
+        <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect05">Twilight Hour</label>
+                <input type="time" @onchange="@((ChangeEventArgs __e) => @modeAddDTO.TwilightHour = TimeSpan.Parse(__e.Value.ToString()))" />
+            </div>
+        </div>
+        @if (modeDTO != null)
+        {
+            <button type="button" class="btn btn-outline-info btn-sm" @onclick="UpdateMode">Add Settings</button>
+        }
+        else if (modeDTO == null)
+        {
+            <button type="button" class="btn btn-outline-info btn-sm" @onclick="AddMode">Add Settings</button>
+        }
+        <br />
+        <br />
+    }
+    @if (modeAdded)
+    {
+        @if (reasonPhrase == "Bad Request")
+        {
+            <div class="alert alert-secondary" role="alert">
+                <p>Sorry, problem occurred!</p>
+                <p>@contentValue</p>
+            </div>
+        }
+        else if (reasonPhrase == "Created")
+        {
+            <div class="alert alert-info" role="alert">
+                <p>Mode has been successfully added!</p>
+            </div>
+            <br />
+            <button type="button" class="btn btn-outline-info btn-sm" @onclick="LoadMode">Load Mode</button>
+        }
+        else if (reasonPhrase == "Error")
+        {
+            <div class="alert alert-danger" role="alert">
+                <p>Error occurred!</p>
+                <p>Please check if all the data has been entered.</p>
+            </div>
+        }
     }
 }
 
@@ -144,6 +157,14 @@
 @code {
     bool IsOnValue = false;
     string IsOnString = "Off";
+    protected override async Task OnInitializedAsync()
+    {
+        if (choosenDevice.Id != 0)
+        {
+            await LoadMode();
+        }
+    }
+
     public void ChangeIsOnMode()
     {
         IsOnValue = !IsOnValue;
@@ -161,20 +182,20 @@
         PatchIsOnMode(modeIsOnDTO);
     }
     ManageModeService manageModeService = new ManageModeService();
-    private string deviceIdString;
-    public int deviceId, modeDeviceId, modeId;
+    public int deviceId = choosenDevice.Id, modeDeviceId, modeId;
     private string responseMessageString = "", contentValue = "", reasonPhrase = "";
     private HttpResponseMessage responseMessage;
-    private ModeDTO modeDTO;
+    private static ModeDTO modeDTO;
     public bool isNewMode = false, modeAdded = false;
     public ModeAddDTO modeAddDTO = new ModeAddDTO() { };
     public ModeDTO modeToUpdateDTO = new ModeDTO() { };
     // oninitial override: GET: api/devices/{deviceId}/modes=> in null =>alert:"Please add mode."
     //load modes
+
+
     public async Task LoadMode()
     {
         modeAdded = false;
-        deviceId = int.Parse(deviceIdString);
         responseMessageString = await manageModeService.GetMode(deviceId);
         if (responseMessageString == "Bad Request")
         {
