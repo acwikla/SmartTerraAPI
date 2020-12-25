@@ -34,12 +34,19 @@ else
     <p></p>
     @if (modeDTO != null)
     {
-        <div class="custom-control custom-switch">
+    <div class="custom-control custom-switch">
+        @if (IsOnValue)
+        {
+            <input checked type="checkbox" class="custom-control-input" id="customSwitch1" @onclick="ChangeIsOnMode">
+        }
+        else
+        {
             <input type="checkbox" class="custom-control-input" id="customSwitch1" @onclick="ChangeIsOnMode">
-            <label class="custom-control-label" for="customSwitch1">
-                Automatic Mode is: @IsOnString
-            </label>
-        </div>
+        }
+        <label class="custom-control-label" for="customSwitch1">
+            Automatic Mode is: @IsOnString
+        </label>
+    </div>
         <br />
         <h5>Current settings for @modeDTO.Name mode</h5><p></p>
         <p></p>
