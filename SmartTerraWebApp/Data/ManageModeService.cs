@@ -37,10 +37,11 @@ namespace SmartTerraWebApp.Data
 
             return requestResultString;
         }
+
         // PATCH: api/IsOn/{modeId}
         public async Task PatchIsOnFlag(int id, ModeIsOnDTO modeIsOnDTO)
         {
-            string URL = $"http://localhost:5000/api/IsOn/{id}";
+            string URL = $"http://localhost:5000/api/modes/IsOn/{id}";
 
             using (var client = new HttpClient())
             using (var request = new HttpRequestMessage(new HttpMethod("PATCH"), URL))
@@ -58,6 +59,7 @@ namespace SmartTerraWebApp.Data
                 }
             }
         }
+
         // POST: api/devices/{deviceId}/modes
         public async Task<HttpResponseMessage> PostMode( int deviceId, ModeAddDTO newMdeAddDTO)
         {

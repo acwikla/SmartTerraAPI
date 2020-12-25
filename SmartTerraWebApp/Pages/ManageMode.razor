@@ -165,7 +165,7 @@ else
         }
     }
 
-    public void ChangeIsOnMode()
+    public async Task ChangeIsOnMode()
     {
         IsOnValue = !IsOnValue;
         if (IsOnValue)
@@ -181,6 +181,7 @@ else
         modeIsOnDTO.IsOn = IsOnValue;
         PatchIsOnMode(modeIsOnDTO);
     }
+
     ManageModeService manageModeService = new ManageModeService();
     public int deviceId = choosenDevice.Id, modeDeviceId, modeId;
     private string responseMessageString = "", contentValue = "", reasonPhrase = "";
@@ -221,15 +222,13 @@ else
 
     }
 
-    // PATCH: api/IsOn/{modeId}
-    //switch
+    // PATCH/PUT: api/IsOn/{modeId}
     public async Task PatchIsOnMode(ModeIsOnDTO modeIsOnDTO)
     {
         await manageModeService.PatchIsOnFlag(modeId, modeIsOnDTO);
     }
 
     // POST: api/devices/{deviceId}/modes
-    //add mode
     public async Task AddMode()
     {
         responseMessage = await manageModeService.PostMode(deviceId, modeAddDTO);
