@@ -26,7 +26,7 @@
 }
 else
 {
-    <h4 style="color: indigo;">View properties for device: @choosenDevice.Name.</h4>
+    <h4 style="color: indigo;">View properties for device: @choosenDevice.Name</h4>
     <p></p>
     <button type="button" class="btn btn-outline-info btn-sm" @onclick="FetchData">Fetch Data</button>
     @if (latestDevProp != null)
@@ -153,14 +153,6 @@ else
                 </tr>
             </tbody>
         </table>
-    }
-    else if (reasonPhrase == "Error")
-    {
-        <br>
-        <br />
-        <div class="alert alert-danger" role="alert">
-            <p>Error, please enter a valid device ID.</p>
-        </div>
     }
 }
 @code {

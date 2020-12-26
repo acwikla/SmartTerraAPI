@@ -30,7 +30,7 @@
 }
 else
 {
-    <h4 style="color: indigo;">Manage mode for device: @choosenDevice.Name.</h4>
+    <h4 style="color: indigo;">Manage mode for device: @choosenDevice.Name</h4>
     <p></p>
     @if (modeDTO != null)
     {
@@ -85,7 +85,7 @@ else
     @if (isNewMode && responseMessageString == "Bad Request")
     {
         <div class="alert alert-secondary" role="alert">
-            <p>Sorry, there is no mode for device with given ID: @deviceId!</p>
+            <p>Sorry, there is no mode for device @choosenDevice.Name!</p>
         </div>
     }
     @if (isNewMode)
@@ -138,7 +138,7 @@ else
         {
             <div class="alert alert-danger" role="alert">
                 <p>Error occurred!</p>
-                <p>Please check if all data has been entered.</p>
+                <p>Please check if all data has been entered or mode is added for the device.</p>
             </div>
         }
         else if (reasonPhrase == "Created")
@@ -218,7 +218,7 @@ else
         {
             IsOnString = "Off";
         }
-
+        modeAdded = false;
     }
 
     // PATCH/PUT: api/IsOn/{modeId}
