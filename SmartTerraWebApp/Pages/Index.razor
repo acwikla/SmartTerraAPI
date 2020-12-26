@@ -2,7 +2,7 @@
 
 @using SmartTerraWebApp.Data
 @using SmartTerraAPI.DTO
-
+@using SmartTerra.Core.DTO;
 
 <style>
     tbody {
@@ -47,7 +47,7 @@
     {
         <div class="alert alert-danger" role="alert">
             <p>Error occurred!</p>
-            <p>There is no user with given email address: @email</p>
+            <p>Invalid email address or password!</p>
         </div>
     }
 }
@@ -129,7 +129,7 @@
                 }
                 else
                 {
-                <td>@choosenDevice.Name with ID: @choosenDevice.Id </td>
+                    <td>@choosenDevice.Name with ID: @choosenDevice.Id </td>
                 }
             </tr>
             <tr>
@@ -137,14 +137,14 @@
                 @if (reasonPhrase == "Bad Request")
                 {
                     <td>
-                            <p>Error occurred!</p>
-                            <p>Please check if all data has been entered.</p>
+                        <p>Error occurred!</p>
+                        <p>Please check if all data has been entered.</p>
                     </td>
                 }
                 else if (reasonPhrase == "Created")
                 {
                     <td>
-                            <p>Device has been successfully added!</p>
+                        <p>Device has been successfully added!</p>
                     </td>
                 }
                 else
@@ -179,19 +179,23 @@
     public static DeviceDTO choosenDevice = new DeviceDTO() { };
     HttpResponseMessage responseMessage;
     string contentValue = "", reasonPhrase = "";
+    UserToLogInDTO userToLogIn = new UserToLogInDTO() { };
 
     public async Task LogIn()
     {
         returnMessage = "";
 
-        if (email == null || email == "")
+        if (email == null || email == ""|| password == null || password == "")
         {
             returnMessage = "Error";
             return;
         }
 
-        user = await userService.GetUser(email);
-        if (user.Email == null)
+        userToLogIn.Email = email;
+        userToLogIn.Password = password;
+
+        user = await userService.LogIn(userToLogIn);
+        if (user== null)
         {
             returnMessage = "Bad Request";
             return;

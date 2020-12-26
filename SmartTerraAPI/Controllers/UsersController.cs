@@ -9,6 +9,7 @@ using SmartTerraAPI.DTO;
 using SmartTerraAPI.Models;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using SmartTerra.Core.DTO;
 
 namespace SmartTerraAPI.Controllers
 {
@@ -241,6 +242,23 @@ namespace SmartTerraAPI.Controllers
             return Ok("User successfully deleted.");
         }
 
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login (UserToLogInDTO userToLogin)
+        {
+            IActionResult response = Unauthorized();
+
+            var user = await _context.Users.Where(user => user.Email== userToLogin.Email).FirstOrDefaultAsync();
+
+            if (user != null)
+            {
+                if (userToLogin.Password == user.Password)
+                {
+                    response = Ok();
+                }
+            }
+            return response;
+        }
         private bool UserExists(int id)
         {
             return _context.Users.Any(e => e.Id == id);

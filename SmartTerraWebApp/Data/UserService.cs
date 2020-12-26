@@ -8,20 +8,50 @@ using SmartTerraWebApp.Data;
 using SmartTerraAPI.DTO;
 using System.Net.Http;
 using System.Net.Http.Json;
+using SmartTerra.Core.DTO;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SmartTerraWebApp.Data
 {
     public class UserService
     {
         //login
-        public async Task<UserDTO> GetUser(string emailAddress)
+        public async Task<UserDTO> LogIn(UserToLogInDTO userToLogInDTO)
+        {
+            string URL = $"http://localhost:5000/api/Users/login";
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(URL);
+            HttpResponseMessage responseMessage = new HttpResponseMessage();
+
+            try
+            {
+                responseMessage = await client.PostAsJsonAsync(URL, userToLogInDTO);
+            }
+            catch
+            {
+            }
+
+            UserDTO user = new UserDTO();
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                user = await GetUser(userToLogInDTO);
+            }
+
+            else
+            {
+                user = null;
+            }
+            return user;
+        }
+
+        public async Task<UserDTO> GetUser( UserToLogInDTO userToLogInDTO)
         {
             string URL = $"http://localhost:5000/api/Users";
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(URL);
 
             //get all users
-            UserDTO [] users = new UserDTO[0];
+            UserDTO[] users = new UserDTO[0];
             try
             {
                 users = await client.GetFromJsonAsync<UserDTO[]>(URL);
@@ -34,7 +64,7 @@ namespace SmartTerraWebApp.Data
             UserDTO user = new UserDTO();
             foreach (var u in users)
             {
-                if(u.Email.Equals(emailAddress))
+                if (u.Email.Equals(userToLogInDTO.Email))
                 {
                     user.Id = u.Id;
                     user.Login = u.Login;
