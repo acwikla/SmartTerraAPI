@@ -132,13 +132,13 @@ else
         <br />
         <br />
     }
-    @if (modeAdded)
+    @if (!isNewMode && modeAdded)
     {
         @if (reasonPhrase == "Bad Request"|| reasonPhrase == "Error")
         {
             <div class="alert alert-danger" role="alert">
                 <p>Error occurred!</p>
-                <p>Please check if all data has been entered or mode is added for the device.</p>
+                <p>Please check if all data has been entered.</p>
             </div>
         }
         else if (reasonPhrase == "Created")
