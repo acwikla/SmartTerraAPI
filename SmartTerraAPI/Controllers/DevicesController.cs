@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SmartTerraAPI.DTO;
 using SmartTerraAPI.Models;
+using SmartTerra.Core.DTO;
 
 namespace SmartTerraAPI.Controllers
 {
@@ -20,6 +21,26 @@ namespace SmartTerraAPI.Controllers
         public DevicesController(SmartTerraDbContext context)
         {
             _context = context;
+        }
+
+        // GET: api/Devices/{id}
+        [HttpGet("{id}")]
+        public async Task<ActionResult<DeviceDTO>> GetDevice(int id)
+        {
+            var device = await _context.Devices.FindAsync(id);
+
+            if (device == null)
+            {
+                return BadRequest($"There is no device for given id: {id}.");
+            }
+
+            var deviceDTO = new DeviceDTO()
+            {
+                Id = device.Id,
+                Name = device.Name,
+            };
+
+            return Ok(deviceDTO);
         }
 
         // GET: api/devices/{id}/modes
@@ -112,6 +133,38 @@ namespace SmartTerraAPI.Controllers
             return Ok(latestDevicePropertiesDTO);
         }
 
+        // POST: api/devices
+        [HttpPost]
+        public async Task<ActionResult<DeviceDTO>> PostDevice()
+        {
+            var newDevice = new Device() {};
+
+            await _context.Devices.AddAsync(newDevice);
+            await _context.SaveChangesAsync();
+
+            var deviceDTO = new DeviceDTO()
+            {
+                Id = newDevice.Id
+            };
+
+            var basicDeviceProperties = new DeviceProperties()
+            {
+                Device = newDevice,
+                DeviceId = newDevice.Id,
+                isLiquidLevelSufficient = false,
+                Temperature = 0,
+                Humidity = 0,
+                HeatIndex = 0,
+                SoilMoisturePercentage = 0,
+                LEDHexColor = "",
+                LEDBrightness = 0
+            };
+            await _context.DeviceProperties.AddAsync(basicDeviceProperties);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetDevice", new { id = deviceDTO.Id }, deviceDTO);
+        }
+
         // POST: api/devices/{id}/modes
         [HttpPost("{id}/modes")]
         public async Task<ActionResult<ModeDTO>> PostMode(int id, ModeAddDTO mode)
@@ -172,14 +225,68 @@ namespace SmartTerraAPI.Controllers
             return CreatedAtAction("GetAllDeviceProperties", new { id = device.Id }, device);
         }
 
-        // PUT: api/Devices/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutDevice(int id, DeviceDTO device)
+        // PUT: api/Devices/5/setUser/{userId}
+        [HttpPut("{id}/setUser/{userId}")]
+        public async Task<IActionResult> PutDevice(int id, int userId, DeviceAddDTO device)
         {
             /*if (id != device.Id)
             {
                 return BadRequest();
             }*/
+
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                return BadRequest($"There is no user for given id: {userId}.");
+            }
+
+            var deviceToUpdate = await _context.Devices.FindAsync(id);
+            if (deviceToUpdate == null)
+            {
+                return BadRequest($"There is no device for given id: {id}.");
+            }
+
+            deviceToUpdate.User = user;
+            deviceToUpdate.Name = device.Name;
+            //user.Devices.Add (deviceToUpdate);
+
+            _context.Entry(deviceToUpdate).State = EntityState.Modified;
+            _context.Entry(user).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!DeviceExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            DeviceDTO deviceDTO = new DeviceDTO()
+            {
+                Id = deviceToUpdate.Id,
+                Name = deviceToUpdate.Name
+            };
+
+            return CreatedAtAction("GetDevice", new { id = deviceDTO.Id }, deviceDTO);
+        }
+
+        // PUT: api/Devices/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutDeviceName(int id,  DeviceAddDTO device)
+        {
+            /*if (id != device.Id)
+            {
+                return BadRequest();
+            }*/
+
             var deviceToUpdate = await _context.Devices.FindAsync(id);
             if (deviceToUpdate == null)
             {

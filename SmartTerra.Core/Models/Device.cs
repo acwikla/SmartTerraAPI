@@ -10,10 +10,8 @@ namespace SmartTerraAPI.Models
     {
         public int Id { get; set; }
 
-        [Required]
         public string Name { get; set; }
 
-        [Required]
         public User User { get; set; }
 
         public ICollection<DeviceProperties> DeviceProperties { get; set; }

@@ -95,20 +95,20 @@ namespace SmartTerraWebApp.Data
             return devices;
         }
         //postdevice
-        public async Task<HttpResponseMessage> PostNewDevice(int userId, string name)
+        public async Task<HttpResponseMessage> PostNewDevice(int userId, DeviceDTO device)
         {
             // create DeviceJob object
-            var newDevice = new DeviceAddDTO { Name = name };
+            var newDevice = new DeviceAddDTO { Name = device.Name };
             // parse to json
             string newDevJSONString = Newtonsoft.Json.JsonConvert.SerializeObject(newDevice);
 
-            string URL = $"http://localhost:5000/api/users/{userId}/devices";
+            string URL = $"http://localhost:5000/api/Devices/{device.Id}/setUser/{userId}";
             var client = new HttpClient();
             client.BaseAddress = new Uri(URL);
 
             // post 
             //JObject.Parse(newDevJSONString)
-            HttpResponseMessage response = await client.PostAsJsonAsync(URL, newDevice);
+            HttpResponseMessage response = await client.PutAsJsonAsync(URL, newDevice);
 
             return response;
         }

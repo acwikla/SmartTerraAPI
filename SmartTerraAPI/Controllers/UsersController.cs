@@ -27,7 +27,7 @@ namespace SmartTerraAPI.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUser()
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers()
         {
             var users = await _context.Users.ToListAsync();
             List <UserDTO> usersDTO = new List<UserDTO>();
@@ -181,50 +181,6 @@ namespace SmartTerraAPI.Controllers
             };
 
             return CreatedAtAction("GetUser", new { id = insertedUser.Id }, insertedUser);
-        }
-
-        // POST: api/users/5/devices
-        [HttpPost("{id}/devices")]
-        public async Task<ActionResult<DeviceDTO>> PostDevice(int id, DeviceAddDTO device)
-        {
-            var user = await _context.Users.FindAsync(id);
-            if(user == null)
-            {
-                return BadRequest($"There is no user for given id: {id}.");
-            }
-
-            var newDevice = new Device()
-            {
-                Name = device.Name,
-                User = user
-            };
-
-            await _context.Devices.AddAsync(newDevice);
-            await _context.SaveChangesAsync();
-
-            var deviceDTO = new DeviceDTO()
-            {
-                Id = newDevice.Id,
-                Name = device.Name
-            };
-
-            var basicDeviceProperties = new DeviceProperties()
-            {
-                Device = newDevice,
-                DeviceId = newDevice.Id,
-                isLiquidLevelSufficient = false,//w sumie to nie wiem co tu ustawic
-                Temperature = 0,
-                Humidity = 0,
-                HeatIndex = 0,
-                SoilMoisturePercentage = 0,
-                LEDHexColor = "",
-                LEDBrightness = 0
-            };
-            //RedirectToAction("PostDeviceProperties", "DevicePropertiesController", new { basicDeviceProperties });
-            await _context.DeviceProperties.AddAsync(basicDeviceProperties);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetDevice", new { id = id, deviceId= deviceDTO.Id }, deviceDTO);
         }
 
         // DELETE: api/Users/5
