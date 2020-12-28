@@ -54,7 +54,8 @@
 @if (logInSuccess)
 {
     <h4 style="color: indigo;">Hello @user.Login!</h4><p></p>
-    if (devicesDTO.Length != 0)
+   
+    @if (devicesDTO !=null)
     {
         <h6>Choose your device,</h6>
         @if (!fetchDeviceFlag)
@@ -84,34 +85,13 @@
             <br />
         }
     }
-    else
-    {
-        <div class="alert alert-info" role="alert">
-            <p>You don't have any devices.</p>
-        </div>
-        <p>You can create new one now.</p>
-        <div class="input-group input-group-sm mb-3">
-            <div class="input-group-prepend">
-                <label class="input-group-text" for="inputGroupSelect01">Device ID</label>
-                <input value="@device.Id" type="text" @onchange="@((ChangeEventArgs __e) => device.Id = int.Parse(__e.Value.ToString()))" />
-            </div>
-        </div>
-        <div class="input-group input-group-sm mb-3">
-            <div class="input-group-prepend">
-                <label class="input-group-text" for="inputGroupSelect02">Name</label>
-                <input value="@device.Name" type="text" @onchange="@((ChangeEventArgs __e) => device.Name = __e.Value.ToString())" />
-            </div>
-        </div>
-        <button type="button" class="btn btn-outline-info btn-sm" @onclick="PostDevice">Add device</button><p></p>
-        <br />
-    }
 
     @if (addDeviceFlag)
     {
         <div class="input-group input-group-sm mb-3">
             <div class="input-group-prepend">
                 <label class="input-group-text" for="inputGroupSelect01">Device ID</label>
-                <input value="@device.Id" type="text" @onchange="@((ChangeEventArgs __e) => device.Id = int.Parse(__e.Value.ToString()))" />
+                <input value="@deviceIdString" type="text" @onchange="@((ChangeEventArgs __e) => deviceIdString = __e.Value.ToString())" />
             </div>
         </div>
         <div class="input-group input-group-sm mb-3">
@@ -179,10 +159,10 @@
 
 @code{
     static int deviceId;
-    string email, password;
+    string email, password, deviceIdString="";
     public static bool logInSuccess = false;
     DeviceDTO[] devicesDTO = new DeviceDTO[] { };
-    DeviceDTO device = new DeviceDTO() { };
+    static DeviceDTO device = new DeviceDTO() { };
     bool addDeviceFlag = false, fetchDeviceFlag = false;
     public static UserDTO user = new UserDTO() { };
     UserService userService = new UserService();
@@ -195,6 +175,7 @@
     public async Task LogIn()
     {
         returnMessage = "";
+        reasonPhrase = "";
 
         if (email == null || email == "" || password == null || password == "")
         {
@@ -212,6 +193,7 @@
             return;
         }
         logInSuccess = true;
+        addDeviceFlag = false;
         devicesDTO = await userService.GetDevices(user.Id);
         email = null; password = null;
     }
@@ -253,15 +235,18 @@
 
     public async Task PostDevice()
     {
-        if (device.Id == 0 || device.Name==null || device.Name=="")
+        if (deviceIdString == null || deviceIdString == "" || device.Name == null || device.Name == "")
         {
             reasonPhrase = "Bad Request";
+            return;
         }
+
+        device.Id = int.Parse(deviceIdString);
         responseMessage = await userService.PostNewDevice(user.Id, device);
         reasonPhrase = responseMessage.ReasonPhrase;
         contentValue = await responseMessage.Content.ReadAsStringAsync();
-        fetchDeviceFlag = true;
+        fetchDeviceFlag = false;
         newDeviceName = "";
-        await FetchDevice();
+        deviceIdString = null; device.Id = 0;  device.Name = null;
     }
 }

@@ -246,6 +246,11 @@ namespace SmartTerraAPI.Controllers
                 return BadRequest($"There is no device for given id: {id}.");
             }
 
+            /*if (deviceToUpdate.User != null)
+            {
+                return BadRequest($"Device with id: {id} already has a user!");
+            }*/
+
             deviceToUpdate.User = user;
             deviceToUpdate.Name = device.Name;
             //user.Devices.Add (deviceToUpdate);
