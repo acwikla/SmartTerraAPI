@@ -47,7 +47,7 @@ namespace SmartTerraAPI
                     Id = 3,
                     Name = "TurnOnWaterPump",
                     Type = "PUMP",
-                    Description = "Turn on the water pump for the set period of time."
+                    Description = "Turn on the water pump for given period of time."
             }
             );
 
