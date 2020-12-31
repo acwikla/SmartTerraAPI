@@ -62,6 +62,7 @@ namespace SmartTerraWebApp.Data
         {
             // create DeviceJob object
             var newDeviceJob = new DeviceJobAddDTO { ExecutionTime = ExecutionTime, Body = Body };
+            
             // parse to json
             string newDevJobJSONString = Newtonsoft.Json.JsonConvert.SerializeObject(newDeviceJob);
 
@@ -69,9 +70,8 @@ namespace SmartTerraWebApp.Data
             var client = new HttpClient();
             client.BaseAddress = new Uri(URL);
 
-            // post 
-            //JObject.Parse(newDevJobJSONString)
-            HttpResponseMessage response = await client.PostAsJsonAsync(URL, newDeviceJob);
+            // post
+            HttpResponseMessage response = await client.PostAsJsonAsync(URL, JObject.Parse(newDevJobJSONString));
 
             return response;
         }
