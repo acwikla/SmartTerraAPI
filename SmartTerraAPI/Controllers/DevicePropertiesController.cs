@@ -50,7 +50,7 @@ namespace SmartTerraAPI.Controllers
             return Ok(devicePropertiesDTO);
         }
 
-        [HttpPatch("{id}/LiquidLevel")]
+        [HttpPatch("{id}/liquid-level")]
         public async Task<IActionResult> UpdateLiquidLevelProperty(int id, DeviceLiquidLevelDTO deviceLquidLevelData)
         {
             var devicePropertiesToUpdate = await _context.DeviceProperties.Include(d => d.Device).Where(DeviceProperties => DeviceProperties.Id == id).FirstOrDefaultAsync();

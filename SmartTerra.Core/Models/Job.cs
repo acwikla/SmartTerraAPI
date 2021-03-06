@@ -15,9 +15,15 @@ namespace SmartTerraAPI.Models
         public string Name { get; set; }
 
         [Required]
+        public string DeviceType { get; set; }
+
+        [Required]
         public string Type { get; set; }                    // Type of the job (LED, PUMP, ...
         
         public string Description { get; set; }
+
+        [Required]
+        public string Properties { get; set; }
 
         public ICollection<DeviceJob> DeviceJobs { get; set; }
     }

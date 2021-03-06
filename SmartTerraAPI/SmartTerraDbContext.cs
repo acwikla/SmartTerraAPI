@@ -33,21 +33,28 @@ namespace SmartTerraAPI
                     Id = 1,
                     Name = "TurnOnLED",
                     Type = "LED",
-                    Description = "Turn on the LED strip and set color of the LEDs ."
+                    Description = "Turn on the LED strip and set color of the LEDs .",
+                    DeviceType= "Terrarium",
+                    Properties= "color"
+
             },
             new Job
                 {
                     Id = 2,
                     Name = "TurnOffLED",
                     Type = "LED",
-                    Description = "Turn off the LED strip."
-                },
+                    Description = "Turn off the LED strip.",
+                    DeviceType = "Terrarium",
+                    Properties = "none"
+            },
             new Job
                 {
                     Id = 3,
                     Name = "TurnOnWaterPump",
                     Type = "PUMP",
-                    Description = "Turn on the water pump for given period of time."
+                    Description = "Turn on the water pump for given period of time.",
+                    DeviceType = "Terrarium",
+                    Properties = "time"
             }
             );
 

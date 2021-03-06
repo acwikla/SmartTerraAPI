@@ -38,6 +38,7 @@ namespace SmartTerraAPI.Controllers
             {
                 Id = device.Id,
                 Name = device.Name,
+                DeviceType = device.DeviceType
             };
 
             return Ok(deviceDTO);
@@ -71,7 +72,7 @@ namespace SmartTerraAPI.Controllers
         }
 
         // GET: api/devices/{id}/deviceProperties
-        [HttpGet("{id}/deviceProperties")]
+        [HttpGet("{id}/device-properties")]
         public async Task<ActionResult<IEnumerable<DevicePropertiesDTO>>> GetAllDeviceProperties(int id)
         {
             var device = await _context.Devices.Include(d => d.DeviceProperties).Where(device => device.Id == id).FirstOrDefaultAsync();
@@ -106,7 +107,7 @@ namespace SmartTerraAPI.Controllers
         }
 
         // GET: api/devices/{id}/latestDeviceProperties
-        [HttpGet("{id}/latestDeviceProperties")]
+        [HttpGet("{id}/latest-device-properties")]
         public async Task<ActionResult<DevicePropertiesDTO>> GetLatestDeviceProperties(int id)
         {
             var device = await _context.Devices.Include(d => d.DeviceProperties).Where(device => device.Id == id).FirstOrDefaultAsync();
@@ -201,7 +202,7 @@ namespace SmartTerraAPI.Controllers
         }
 
         // PATCH: api/devices/{id}/deviceProperties
-        [HttpPatch("{id}/deviceProperties")]
+        [HttpPatch("{id}/device-properties")]
         public async Task<IActionResult> UpdateDeviceProperties(int id, DevicePropertiesDTO deviceProperties)
         {
             var device = await _context.Devices.FindAsync(id);
@@ -226,7 +227,7 @@ namespace SmartTerraAPI.Controllers
         }
 
         // PUT: api/Devices/5/setUser/{userId}
-        [HttpPut("{id}/setUser/{userId}")]
+        [HttpPut("{id}/set-user/{userId}")]
         public async Task<IActionResult> PutDevice(int id, int userId, DeviceAddDTO device)
         {
             /*if (id != device.Id)
@@ -277,7 +278,8 @@ namespace SmartTerraAPI.Controllers
             DeviceDTO deviceDTO = new DeviceDTO()
             {
                 Id = deviceToUpdate.Id,
-                Name = deviceToUpdate.Name
+                Name = deviceToUpdate.Name,
+                DeviceType = deviceToUpdate.DeviceType
             };
 
             return CreatedAtAction("GetDevice", new { id = deviceDTO.Id }, deviceDTO);
