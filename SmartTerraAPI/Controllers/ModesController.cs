@@ -21,7 +21,7 @@ namespace SmartTerraAPI.Controllers
             _context = context;
         }
 
-        [HttpPatch("{id}/IsOn")]
+        [HttpPatch("IsOn/{id}")]
         public async Task<IActionResult> UpdateIsOnProperty(int id, ModeIsOnDTO modeIsOn)
         {
             var modeToUpdate = await _context.Modes.Include(d => d.Device).Where(mode => mode.Id == id).FirstOrDefaultAsync();
