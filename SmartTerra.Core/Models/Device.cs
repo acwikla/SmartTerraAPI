@@ -12,8 +12,6 @@ namespace SmartTerraAPI.Models
 
         public string Name { get; set; }
 
-        public string DeviceType { get; set; }
-
         public User User { get; set; }
 
         public ICollection<DeviceProperties> DeviceProperties { get; set; }

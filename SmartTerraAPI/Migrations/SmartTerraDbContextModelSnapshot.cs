@@ -26,9 +26,6 @@ namespace SmartTerraAPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("DeviceType")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -129,15 +126,7 @@ namespace SmartTerraAPI.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DeviceType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Properties")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -154,27 +143,21 @@ namespace SmartTerraAPI.Migrations
                         {
                             Id = 1,
                             Description = "Turn on the LED strip and set color of the LEDs .",
-                            DeviceType = "Terrarium",
                             Name = "TurnOnLED",
-                            Properties = "color",
                             Type = "LED"
                         },
                         new
                         {
                             Id = 2,
                             Description = "Turn off the LED strip.",
-                            DeviceType = "Terrarium",
                             Name = "TurnOffLED",
-                            Properties = "none",
                             Type = "LED"
                         },
                         new
                         {
                             Id = 3,
                             Description = "Turn on the water pump for given period of time.",
-                            DeviceType = "Terrarium",
                             Name = "TurnOnWaterPump",
-                            Properties = "time",
                             Type = "PUMP"
                         });
                 });

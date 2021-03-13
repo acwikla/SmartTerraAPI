@@ -35,9 +35,7 @@ namespace SmartTerraAPI.Controllers
                     Id = j.Id,
                     Name = j.Name,
                     Type = j.Type,
-                    Description = j.Description,
-                    DeviceType = j.DeviceType,
-                    Properties = j.Properties
+                    Description = j.Description
                 };
                 jobsDTO.Add(jobDTO);
             }
@@ -61,9 +59,7 @@ namespace SmartTerraAPI.Controllers
                 Id = job.Id,
                 Name = job.Name,
                 Type = job.Type,
-                Description = job.Description,
-                DeviceType = job.DeviceType,
-                Properties = job.Properties
+                Description = job.Description
             };
             return Ok(jobDTO);
         }
@@ -86,8 +82,6 @@ namespace SmartTerraAPI.Controllers
             jobToUpdate.Name = job.Name;
             jobToUpdate.Type = job.Type;
             jobToUpdate.Description = job.Description;
-            jobToUpdate.DeviceType = job.DeviceType;
-            jobToUpdate.Properties = job.Properties;
 
             _context.Entry(jobToUpdate).State = EntityState.Modified;
 
@@ -118,9 +112,7 @@ namespace SmartTerraAPI.Controllers
             {
                 Name = job.Name,
                 Type = job.Type,
-                Description = job.Description,
-                DeviceType = job.DeviceType,
-                Properties = job.Properties
+                Description = job.Description
             };
 
             await _context.Jobs.AddAsync(newJob);
@@ -131,9 +123,7 @@ namespace SmartTerraAPI.Controllers
                 Id = newJob.Id,
                 Name = job.Name,
                 Type = job.Type,
-                Description = job.Description,
-                DeviceType = job.DeviceType,
-                Properties = job.Properties
+                Description = job.Description
             };
 
             return CreatedAtAction("GetJob", new { id = jobDTO.Id }, jobDTO);

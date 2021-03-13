@@ -13,7 +13,5 @@ namespace SmartTerraAPI.DTO
 
         [Required]
         public string Name { get; set; }
-
-        public string DeviceType { get; set; }
     }
 }
