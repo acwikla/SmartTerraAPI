@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SmartTerraAPI.Models;
+using SmartTerraAPI;
 
 namespace SmartTerraAPI.Migrations
 {
     [DbContext(typeof(SmartTerraDbContext))]
-    [Migration("20201203210259_ChangeIsOnFlagName")]
-    partial class ChangeIsOnFlagName
+    [Migration("20210313222614_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -29,10 +29,9 @@ namespace SmartTerraAPI.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -145,21 +144,21 @@ namespace SmartTerraAPI.Migrations
                         new
                         {
                             Id = 1,
-                            Description = "Turn on LED strip.",
+                            Description = "Turn on the LED strip and set color of the LEDs .",
                             Name = "TurnOnLED",
                             Type = "LED"
                         },
                         new
                         {
                             Id = 2,
-                            Description = "Turn off LED strip.",
+                            Description = "Turn off the LED strip.",
                             Name = "TurnOffLED",
                             Type = "LED"
                         },
                         new
                         {
                             Id = 3,
-                            Description = "Turn on the water pump.",
+                            Description = "Turn on the water pump for given period of time.",
                             Name = "TurnOnWaterPump",
                             Type = "PUMP"
                         });
@@ -232,9 +231,7 @@ namespace SmartTerraAPI.Migrations
                 {
                     b.HasOne("SmartTerraAPI.Models.User", "User")
                         .WithMany("Devices")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("SmartTerraAPI.Models.DeviceJob", b =>
