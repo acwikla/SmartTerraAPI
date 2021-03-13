@@ -41,7 +41,7 @@ namespace SmartTerraWebApp.Data
         // PATCH: api/IsOn/{modeId}
         public async Task PatchIsOnFlag(int id, ModeIsOnDTO modeIsOnDTO)
         {
-            string URL = $"http://localhost:5000/api/modes/IsOn/{id}";
+            string URL = $"http://localhost:5000/api/modes/{id}/IsOn";
 
             using (var client = new HttpClient())
             using (var request = new HttpRequestMessage(new HttpMethod("PATCH"), URL))

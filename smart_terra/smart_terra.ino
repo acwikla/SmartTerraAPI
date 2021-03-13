@@ -12,29 +12,30 @@
 #include <Time.h>
 
 #define DHT_TYPE DHT22
-#define DHT_PIN D8
+#define LED_COUNT 12
 #define SOIL_MOISTURE_SENSOR_PIN A0
-#define LED_PIN D6 
-#define LED_COUNT 46
-#define WATER_PUMP_PIN D5 
-#define LIQUID_LEVEL_SENSOR D7
-#define PROPELLER_PIN D2
+#define LAMP_PIN D7
+#define PROPELLER_PIN D5
+#define WATER_PUMP_PIN D8
+#define LED_PIN D6
+#define LIQUID_LEVEL_SENSOR D2
+#define DHT_PIN D1
 
 bool is_liquid_level_sufficient=true;
 bool is_job_done;
 //mode data:
-bool mode_is_on;
-float mode_humidity;
-float mode_temperature;
-const char* mode_twilight_hour;
-const char* mode_hour_of_dawn;
+bool mode_is_on=true;
+float mode_humidity=0;
+float mode_temperature=0;
+const char* mode_twilight_hour="09:00";
+const char* mode_hour_of_dawn="19:00"; 
 //real data:
-float heat_index_celsius=2;//dane do testow
-float soil_moisture_percentage=1;
-float humidity=3;
-float temperature=3;
+float heat_index_celsius;
+float soil_moisture_percentage;
+float humidity=0;
+float temperature=0;
 String LED_hex_color;
-float actual_LED_brightness;
+float actual_LED_brightness;//?
 float simulation_brightness=0;
 unsigned long period;
 unsigned long end_task_time;
@@ -42,18 +43,20 @@ unsigned long start_task_time;
 int actual_time_h;
 int actual_time_m;
 int previous_hour=0;
-int previous_minute=0;
+int previous_minute=0; 
 int counter=0;
 
 //192.168.43.186- tel
 //192.168.0.164- dom
-String IP="192.168.43.186";
-int device_id=1013;
+String IP="192.168.0.6";
+int device_id=1058;
 int dev_prop_id;
 /*const char* ssid = "UPCEA1369B";
 const char* password = "uckKvpbZfzu3";*/
-const char* ssid = "Redmi";
-const char* password = "12345678";
+const char* ssid = "Creative";
+const char* password = "Cre@tive";
+/*const char* ssid = "Redmi";
+const char* password = "12345678";*/
 
 DHT dht(DHT_PIN, DHT_TYPE);
 Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
@@ -67,8 +70,10 @@ void setup() {
   pinMode(LED_PIN, OUTPUT);         //sets the digital LED_PIN as output
   pinMode(WATER_PUMP_PIN, OUTPUT);  
   pinMode(PROPELLER_PIN, OUTPUT);   
+  pinMode(LAMP_PIN, OUTPUT); 
   pinMode(LIQUID_LEVEL_SENSOR,INPUT);
   pinMode(SOIL_MOISTURE_SENSOR_PIN,INPUT);
+
   WiFi.begin(ssid, password);
   
   delay(5000);
@@ -78,18 +83,30 @@ void setup() {
     Serial.println("Connecting...");
   }
   Serial.println("Connected");//->led on
+  set_LED_color("#ffffff");
 }
 
 
 void loop() {
-  set_LED_color("#ffffff");
+  if (WiFi.status() == WL_CONNECTED) 
+  {
+    get_mode_data();
+     
+    if(mode_is_on==1){
+      //fetch_terrarium_data();
+      simulate_day_night_mode();
+    }
+  }
+  
+      
   /*if (WiFi.status() == WL_CONNECTED) 
   { 
     get_mode_data();
-    
+     
     if(mode_is_on==1){
-      fetch_terrarium_data();
-      check_terrarium_data();
+      //fetch_terrarium_data();
+      simulate_day_night_mode();
+      //check_terrarium_data();
     }
     else{
       check_device_job_data();
@@ -99,30 +116,10 @@ void loop() {
       send_terrarium_data();
     }
     delay(5000);
-    counter++;
+    counter++; 
   }*/
 }
-//declarations of request functions:
-void send_liquid_level_sensor_data(bool sensor_data);
-void set_job_done_property(int dj_id, bool done_value);
-void get_latest_device_property_id();
-void get_actual_time();
-//declarations of functions controlling terrarium environment:
-void check_liquid_level();
-void fetch_dht22_sensor_data();
-void fetch_soil_moisture_sensor_data();
-//declarations of functions which manages the devices:
-void tunon_propeller();
-void turnoff_water_pump(unsigned long wait_time);
-void turnon_water_pump(unsigned long period, const unsigned long end_task_time, unsigned long start_task_time );
-void change_brightness(int period_h, float beginning_brightness, float final_brightness);
-void simulate_day_night_mode();
-//declarations of LED functions:
-void turnoff_LED();
-void get_LED_brightness();
-void set_LED_brightness(float brightness);
-//void set_LED_color(String hex_value);
-byte* color_converter(String hex_value);
+
 
 void get_mode_data(){
   //declare object of class HTTPClient
@@ -132,8 +129,8 @@ void get_mode_data(){
   //send the request
   int httpCode = http.GET();
   //print HTTP return code
-  //Serial.print("httpCode: ");
-  //Serial.println(httpCode);
+  Serial.print("httpCode: ");
+  Serial.println(httpCode);
   
   if (httpCode > 0) 
     {
@@ -150,71 +147,72 @@ void get_mode_data(){
       mode_humidity = doc["humidity"]; 
       mode_twilight_hour = doc["twilightHour"]; 
       mode_hour_of_dawn = doc["hourOfDawn"]; 
+      Serial.print("Mode has been successfully fetched. IsOn value:");
+      Serial.println(mode_is_on);
+      Serial.print("mode_twilight_hour: ");
+      Serial.println(mode_twilight_hour);
+      Serial.print("mode_hour_of_dawn: ");
+      Serial.println(mode_hour_of_dawn);
     }
   http.end(); //close connection
 }
 
 void fetch_terrarium_data(){
-  //check_liquid_level();
-  //fetch_dht22_sensor_data();//temp, humidity
-  //fetch_soil_moisture_sensor_data();//soil moisture percentage
-  //get_LED_brightness();
+  check_liquid_level();
+  Serial.print("Liquid level: ");
+  Serial.println(is_liquid_level_sufficient);
+  
+  fetch_dht22_sensor_data();//temp, humidity
+  Serial.print("Temperature: ");
+  Serial.println(temperature);
+
+  Serial.print("Humidity: ");
+  Serial.println(humidity);
+  
+  fetch_soil_moisture_sensor_data();//soil moisture percentage
+  Serial.print("Soil moisture percentage: ");
+  Serial.println(soil_moisture_percentage);
+
+  get_LED_brightness();
+  Serial.print("LED brightness: ");
+  Serial.println(actual_LED_brightness);
+  Serial.print("LED hex color: ");
+  Serial.println(LED_hex_color);
 }
 
 void check_terrarium_data(){
   
   if(humidity-3 < mode_humidity){
+    float start_water_pump = millis();
+    float working_time= 60000;
     
-    while(1){
-      float start_water_pump = millis();
-      float working_time= 50000;
-      //turn on water pump for 5 min
-      turnon_water_pump(working_time, start_water_pump+working_time, start_water_pump);
-      fetch_soil_moisture_sensor_data();
-      
-      if(humidity >= mode_humidity){
-        break;
-      }
-    }
+    //turn on water pump for 1 min
+    Serial.println("Water pump is working for 1 min.");
+    turnon_water_pump(working_time, start_water_pump+working_time, start_water_pump);
+    Serial.println("Water pump is off.");
+    
+    fetch_dht22_sensor_data();
   }
-        
   else if(humidity > mode_humidity+3){
-    
-    while(1){
-      //turn on the propeller for 5 sec
-      tunon_propeller();
-      
-      if(humidity >= mode_humidity){
-          break;
-        }
-    }
+    //turn on the propeller for 10 sec
+    Serial.println("Properller is working for 10 sec.");
+    tunon_propeller(10000);
   }
         
   if(temperature-3 < mode_temperature){
+    //turn on the lamp for 10 sec
+    Serial.println("Lamp is working for 10 sec.");
+    turnon_lamp(10000);
     
-    while(1){
-      /*turn on lamp for 5 min*/
-      fetch_dht22_sensor_data();
-      
-      if(temperature >= mode_temperature){
-        break;
-      }
-    }
+    fetch_dht22_sensor_data();
   }
-    
   else if(temperature > mode_temperature+3){
-    
-    while(1){
-    //turn on the propeller for 5 sec
-      tunon_propeller();
-      
-      if(temperature >= mode_temperature){
-          break;
-        }
-    }
+    //turn on the propeller for 10 sec
+    Serial.println("Properller is working for 10 sec.");
+    tunon_propeller(10000);
   }
 
-  simulate_day_night_mode();
+  //simulate_day_night_mode();
 }
 
 void check_device_job_data(){
@@ -241,13 +239,16 @@ void check_device_job_data(){
           LED_hex_color= (String)job_body;
           set_LED_color((String)job_body);
           
+          Serial.println("TurnOnLED job was executed with color: ."+ LED_hex_color);
+          
           is_job_done=true;
           set_job_done_property(device_job_id, is_job_done);
         }
         
         if((String)job_name=="TurnOffLED"){
           turnoff_LED();
-          
+          Serial.println("TurnOffLED job was executed.");
+
           is_job_done=true;
           set_job_done_property(device_job_id, is_job_done);
         }
@@ -258,12 +259,13 @@ void check_device_job_data(){
         if(is_liquid_level_sufficient==1){
           unsigned long job_body = doc["body"];//min
         
-          period = job_body * 60UL * 1000UL;//min->millis
+          period = job_body *1000UL;//min->millis
           
           end_task_time= millis()+period;
           start_task_time= millis();
           
           turnon_water_pump(period, end_task_time,start_task_time);
+          Serial.println("TurnOnWaterPump job was executed.");
           
           is_job_done=true;
           set_job_done_property(device_job_id, is_job_done);
@@ -278,7 +280,8 @@ void send_terrarium_data(){
   String data = "{\"isLiquidLevelSufficient\":" + String(is_liquid_level_sufficient) 
   + " ,\"temperature\": " + String(temperature) + ",\"humidity\": " + String(humidity) 
   + ",\"heatIndex\": " + String(heat_index_celsius) + ",\"soilMoisturePercentage\": " 
-  + String(soil_moisture_percentage) + ",\"ledHexColor\": \"" + String(LED_hex_color) + "\",\"ledBrightness\": " + String(actual_LED_brightness) + "}";
+  + String(soil_moisture_percentage) + ",\"ledHexColor\": \"" + String(LED_hex_color) 
+  + "\",\"ledBrightness\": " + String(actual_LED_brightness) + "}";
 
   HTTPClient http;    
   http.begin("http://"+ String(IP)+":5000/api/Devices/"+ String(device_id)+"/deviceProperties");
@@ -287,7 +290,10 @@ void send_terrarium_data(){
   
   int httpCode = http.PATCH(data);   
   String payload = http.getString(); 
-   
+
+  Serial.print("Fetch deviceProperties payload: ");
+  Serial.println(payload);
+
   http.end();
 }
 
@@ -332,6 +338,7 @@ void get_latest_device_property_id(){
   http.end();
 }
 
+int temp=0;
 void get_actual_time(){
   HTTPClient http;
   http.begin("http://worldclockapi.com/api/json/utc/now");
@@ -339,6 +346,10 @@ void get_actual_time(){
   
   if (httpCode > 0) 
     {
+      if(actual_time_h==24){
+        temp=0;
+      }
+      temp++;
        String payload = http.getString();
       const size_t bufferSize = 370;
       DynamicJsonDocument doc(bufferSize);
@@ -347,6 +358,7 @@ void get_actual_time(){
       int time_index= current_date_time.indexOf("T");
       actual_time_h= current_date_time.substring(time_index+1, time_index+3).toInt()+1;
       actual_time_m= current_date_time.substring(time_index+4, time_index+6).toInt();
+      actual_time_h=temp;
     }
 
    http.end();
@@ -354,20 +366,19 @@ void get_actual_time(){
 
 void check_liquid_level(){
   is_liquid_level_sufficient=digitalRead(LIQUID_LEVEL_SENSOR);
+  
   //while liquid level is not sufficient water pump will be disabled
-  while(is_liquid_level_sufficient==0){
-    
+  if(is_liquid_level_sufficient==0){
     digitalWrite(WATER_PUMP_PIN, HIGH);//OFF for NO pin
     send_liquid_level_sensor_data(false);
-
-    is_liquid_level_sufficient=digitalRead(LIQUID_LEVEL_SENSOR);
-    //when minimum liquid level will be appropriate send info and exit function
-    if(is_liquid_level_sufficient==1){
-      send_liquid_level_sensor_data(true);
-      break;
-    }
-    delay(1000);
   }
+  
+  is_liquid_level_sufficient=digitalRead(LIQUID_LEVEL_SENSOR);
+  //when minimum liquid level will be appropriate send info
+  if(is_liquid_level_sufficient==1){
+    send_liquid_level_sensor_data(true);
+  }
+  delay(1000);
 }
 
 void fetch_dht22_sensor_data(){
@@ -394,17 +405,23 @@ void fetch_soil_moisture_sensor_data() {
   soil_moisture_percentage = ( 100 - ( (sensor_analog / 1023.00) * 100 ) );
 }
 
-void tunon_propeller(){
+void tunon_propeller(unsigned long wait_time){
   digitalWrite(PROPELLER_PIN, HIGH);
-  delay(5000);
+  delay(wait_time);
   digitalWrite(PROPELLER_PIN, LOW);
   delay(1000);
 }
 
-void turnoff_water_pump(unsigned long wait_time){
-  digitalWrite(WATER_PUMP_PIN, HIGH); //OFF for NO pin
+void turnon_lamp(unsigned long wait_time){
+  digitalWrite(LAMP_PIN, HIGH);
   delay(wait_time);
-  digitalWrite(WATER_PUMP_PIN, LOW);  //ON for NO pin
+  digitalWrite(LAMP_PIN, LOW);
+  delay(1000);
+}
+
+void turnoff_water_pump(){
+  digitalWrite(WATER_PUMP_PIN, HIGH); //OFF for NO pin
+  delay(1000);
 }
 
 void turnon_water_pump(unsigned long period, const unsigned long end_task_time, unsigned long start_task_time ){
@@ -414,24 +431,34 @@ void turnon_water_pump(unsigned long period, const unsigned long end_task_time, 
     //test whether the period has elapsed
     while(start_task_time < end_task_time)  
     {
-      digitalWrite(WATER_PUMP_PIN, LOW);  //ON for NO pin, water pump is working
+      //digitalWrite(WATER_PUMP_PIN, HIGH);  //ON for NO pin, water pump is working
       check_liquid_level();
-      analogWrite(WATER_PUMP_PIN,225);
+      analogWrite(WATER_PUMP_PIN,160);
       
       check_liquid_level();
       start_task_time=millis();
       if(start_task_time>=end_task_time || is_liquid_level_sufficient==0){
         break;
       }
+      delay(1000);
     }
-    digitalWrite(WATER_PUMP_PIN, HIGH); //OFF for NO pin
+    digitalWrite(WATER_PUMP_PIN, LOW); //OFF for NO pin
+  }
+  else {
+    Serial.println("Liquid level is insufficient!");
+    return;
   }
 }
 
 void change_brightness(int period_h, float beginning_brightness, float final_brightness)
 {
-  
-  Serial.println("change brightness here!");
+  Serial.println("change_brightness here!");
+  Serial.print("actual_LED_brightness: ");
+  Serial.println(actual_LED_brightness);
+  Serial.print("beginning_brightness: ");
+  Serial.println(beginning_brightness);
+  Serial.print("final_brightness: ");
+  Serial.println(final_brightness);
   get_LED_brightness();
 
   if(actual_LED_brightness<=beginning_brightness){
@@ -447,15 +474,26 @@ void change_brightness(int period_h, float beginning_brightness, float final_bri
   int time_now_hours = (time_now/3600)%24;
   int interval = 1;
   
-  if (time_now_minutes - previous_minute >= interval && simulation_brightness <=final_brightness) {
+  if (time_now_minutes - previous_minute >= interval) {
     previous_minute = time_now_minutes;
     set_LED_brightness(simulation_brightness);
-    simulation_brightness+=diff;
+    if(beginning_brightness> final_brightness){
+      simulation_brightness-=diff;
+    }
+    if(beginning_brightness> final_brightness){
+      simulation_brightness+=diff;
+    }
     Serial.print("simulation_brightness:");
     Serial.println(simulation_brightness);
-    Serial.println("One minutes has passed");
     delay(5000);
   }
+}
+
+void change_brightness(float final_brightness){
+  set_LED_brightness(final_brightness);
+  Serial.print("final_brightness: ");
+  Serial.println(final_brightness);
+  delay(500);
 }
 
 void simulate_day_night_mode()
@@ -471,23 +509,31 @@ void simulate_day_night_mode()
   double night_hours_h= abs(24-twilight_hour_h+hour_of_dawn_h);
 
   int midday_h = hour_of_dawn_h +(day_hours_h/2);
-  int night_h = twilight_hour_h +(night_hours_h/2);;
+  Serial.print("midday_h: ");
+  Serial.println(midday_h);
   
   get_actual_time();
-  
-  if(actual_time_h>=hour_of_dawn_h && actual_time_h<midday_h){
-    int period_h= abs(midday_h-hour_of_dawn_h);
-    change_brightness(period_h, 0, 255);
-  }
-  
-  if(actual_time_h>=midday_h && actual_time_h<twilight_hour_h){
-    int period_h= abs(twilight_hour_h-midday_h);
-    change_brightness(period_h, 255, 127);
-  }
+  Serial.print("actual_time_h: ");
+  Serial.println(actual_time_h);
 
-  if(actual_time_h>=twilight_hour_h && actual_time_h<night_h){
-    int period_h= abs(night_h-twilight_hour_h);
-    change_brightness(period_h, 127, 0);
+  //Serial.print("actual_LED_brightness: ");
+  //Serial.println(actual_LED_brightness);
+  
+  if(actual_time_h>=hour_of_dawn_h && actual_time_h<=midday_h){
+    int brightness= map(actual_time_h, hour_of_dawn_h, midday_h, 0, 170);
+    change_brightness(brightness);
+    Serial.println("swit-poludnie");
+  }
+  
+  else if(actual_time_h>midday_h && actual_time_h<=twilight_hour_h){
+    int brightness= map(actual_time_h, midday_h, twilight_hour_h, 170, 0);
+    change_brightness(brightness);
+    Serial.println("poludnie-zmierzch");
+  }
+  
+  else{
+    change_brightness(0);
+    Serial.println("zmierzch-swit");
   }
 }
 
@@ -500,7 +546,9 @@ void turnoff_LED(){
 }
 
 void get_LED_brightness(){
-  actual_LED_brightness= strip.getBrightness();
+  for(int i=0; i<strip.numPixels(); i++) {
+    actual_LED_brightness= strip.getBrightness();
+  }
 }
 
 void set_LED_brightness(float brightness){
@@ -523,8 +571,8 @@ void set_LED_color(String hex_value){
     strip.show();
   }
   //default brightness:
-  strip.setBrightness(255);
-  actual_LED_brightness = 255;
+  strip.setBrightness(100);
+  actual_LED_brightness = 100;
 }
 
 byte* color_converter(String hex_value)
