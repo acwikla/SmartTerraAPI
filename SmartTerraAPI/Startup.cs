@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using MySql.Data.EntityFrameworkCore;
 
 namespace SmartTerraAPI
 {
@@ -39,7 +40,8 @@ namespace SmartTerraAPI
             services.AddControllers();
 
             //services.AddDbContext<SmartTerraDbContext>(opt => opt.UseInMemoryDatabase("smartApiDb"));
-            services.AddDbContext<SmartTerraDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("SmartTerraDB")));
+            //services.AddDbContext<SmartTerraDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("SmartTerraDB")));
+            services.AddDbContext<SmartTerraDbContext>(opt => opt.UseMySQL(Configuration.GetConnectionString("SmartTerraDB")));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
