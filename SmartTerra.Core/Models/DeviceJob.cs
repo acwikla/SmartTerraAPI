@@ -15,7 +15,8 @@ namespace SmartTerraAPI.Models
         [Required]
         public DateTime? ExecutionTime { get; set; }      // If date equal to null -> it means, job should be performed NOW (on the device).
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Computed)] // nie obslugiwane dla bazy MySQL
+        [Required]
         public DateTime CreatedDate{ get; set; }          // Date, when job was added to database
 
         [DefaultValue(false)]
