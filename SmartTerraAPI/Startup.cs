@@ -16,7 +16,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MySql.Data.EntityFrameworkCore;
 
 namespace SmartTerraAPI
 {
@@ -41,7 +40,8 @@ namespace SmartTerraAPI
 
             //services.AddDbContext<SmartTerraDbContext>(opt => opt.UseInMemoryDatabase("smartApiDb"));
             //services.AddDbContext<SmartTerraDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("SmartTerraDB")));
-            services.AddDbContext<SmartTerraDbContext>(opt => opt.UseMySQL(Configuration.GetConnectionString("SmartTerraDB")));
+            services.AddDbContext<SmartTerraDbContext>(opt => opt.UseMySql(Configuration.GetConnectionString("SmartTerraDB"),
+                options => options.EnableRetryOnFailure()));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -74,7 +74,7 @@ namespace SmartTerraAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, SmartTerraDbContext dbContext)
         {
-            // update database on startup
+            // run migrations on startup (database update)
             dbContext.Database.Migrate();
 
 

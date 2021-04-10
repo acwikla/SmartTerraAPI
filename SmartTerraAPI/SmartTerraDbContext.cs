@@ -23,9 +23,9 @@ namespace SmartTerraAPI
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<DeviceJob>()
+            /*builder.Entity<DeviceJob>()
             .Property(s => s.CreatedDate)
-            .HasDefaultValueSql("GETDATE()");
+            .HasDefaultValueSql("GETDATE()");*/      // not supported by MySQL
 
             builder.Entity<Job>().HasData(
             new Job
