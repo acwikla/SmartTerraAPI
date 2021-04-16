@@ -142,11 +142,8 @@ namespace SmartTerraAPI.Controllers
             await _context.Devices.AddAsync(newDevice);
             await _context.SaveChangesAsync();
 
-            var deviceDTO = new DeviceDTO()
-            {
-                Id = newDevice.Id
-            };
-
+            
+            // add properties
             var basicDeviceProperties = new DeviceProperties()
             {
                 Device = newDevice,
@@ -161,6 +158,26 @@ namespace SmartTerraAPI.Controllers
             };
             await _context.DeviceProperties.AddAsync(basicDeviceProperties);
             await _context.SaveChangesAsync();
+
+            // add mode
+            var mode = new Mode
+            {
+                Device = newDevice,
+                HourOfDawn = new TimeSpan(8, 0, 0),
+                TwilightHour = new TimeSpan(18, 0, 0),
+                Humidity = 20,
+                IsOn = false,
+                Name = "Mode 1",
+                Temperature = 25
+            };
+            await _context.Modes.AddAsync(mode);
+            await _context.SaveChangesAsync();
+
+            
+            var deviceDTO = new DeviceDTO()
+            {
+                Id = newDevice.Id
+            };
 
             return CreatedAtAction("GetDevice", new { id = deviceDTO.Id }, deviceDTO);
         }

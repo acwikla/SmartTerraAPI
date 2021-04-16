@@ -28,27 +28,34 @@ namespace SmartTerraAPI
             .HasDefaultValueSql("GETDATE()");*/      // not supported by MySQL
 
             builder.Entity<Job>().HasData(
-            new Job
-                {
-                    Id = 1,
-                    Name = "TurnOnLED",
-                    Type = "LED",
-                    Description = "Turn on the LED strip and set color of the LEDs ."
-            },
-            new Job
-                {
-                    Id = 2,
-                    Name = "TurnOffLED",
-                    Type = "LED",
-                    Description = "Turn off the LED strip."
+                new Job
+                    {
+                        Id = 1,
+                        Name = "TurnOnLED",
+                        Type = "LED",
+                        Description = "Turn on the LED strip and set color of the LEDs ."
                 },
-            new Job
+                new Job
+                    {
+                        Id = 2,
+                        Name = "TurnOffLED",
+                        Type = "LED",
+                        Description = "Turn off the LED strip."
+                    },
+                new Job
+                    {
+                        Id = 3,
+                        Name = "TurnOnWaterPump",
+                        Type = "PUMP",
+                        Description = "Turn on the water pump for given period of time."
+                },
+                new Job
                 {
-                    Id = 3,
-                    Name = "TurnOnWaterPump",
-                    Type = "PUMP",
-                    Description = "Turn on the water pump for given period of time."
-            }
+                    Id = 4,
+                    Name = "Rainbow",
+                    Type = "LED",
+                    Description = "Turn on rainbow."
+                }
             );
 
             base.OnModelCreating(builder);

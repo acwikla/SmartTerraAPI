@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SmartTerraAPI.Migrations
@@ -13,7 +12,7 @@ namespace SmartTerraAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(nullable: false),
                     Type = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: true)
@@ -28,7 +27,7 @@ namespace SmartTerraAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Sqlite:Autoincrement", true),
                     Login = table.Column<string>(maxLength: 30, nullable: false),
                     Password = table.Column<string>(nullable: false),
                     Email = table.Column<string>(nullable: false)
@@ -43,7 +42,7 @@ namespace SmartTerraAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(nullable: true),
                     UserId = table.Column<int>(nullable: true)
                 },
@@ -63,7 +62,7 @@ namespace SmartTerraAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Sqlite:Autoincrement", true),
                     ExecutionTime = table.Column<DateTime>(nullable: false),
                     CreatedDate = table.Column<DateTime>(nullable: false),
                     Done = table.Column<bool>(nullable: false),
@@ -93,7 +92,7 @@ namespace SmartTerraAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Sqlite:Autoincrement", true),
                     DeviceId = table.Column<int>(nullable: false),
                     isLiquidLevelSufficient = table.Column<bool>(nullable: false),
                     Temperature = table.Column<double>(nullable: false),
@@ -119,7 +118,7 @@ namespace SmartTerraAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(maxLength: 60, nullable: false),
                     IsOn = table.Column<bool>(nullable: false),
                     Temperature = table.Column<double>(nullable: false),
@@ -153,6 +152,11 @@ namespace SmartTerraAPI.Migrations
                 table: "Jobs",
                 columns: new[] { "Id", "Description", "Name", "Type" },
                 values: new object[] { 3, "Turn on the water pump for given period of time.", "TurnOnWaterPump", "PUMP" });
+
+            migrationBuilder.InsertData(
+                table: "Jobs",
+                columns: new[] { "Id", "Description", "Name", "Type" },
+                values: new object[] { 4, "Turn on rainbow.", "Rainbow", "LED" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_DeviceJobs_DeviceId",

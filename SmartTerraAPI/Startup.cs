@@ -40,8 +40,10 @@ namespace SmartTerraAPI
 
             //services.AddDbContext<SmartTerraDbContext>(opt => opt.UseInMemoryDatabase("smartApiDb"));
             //services.AddDbContext<SmartTerraDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("SmartTerraDB")));
-            services.AddDbContext<SmartTerraDbContext>(opt => opt.UseMySql(Configuration.GetConnectionString("SmartTerraDB"),
-                options => options.EnableRetryOnFailure()));
+            //services.AddDbContext<SmartTerraDbContext>(opt => opt.UseMySql(Configuration.GetConnectionString("SmartTerraDB"),
+            //    options => options.EnableRetryOnFailure()));
+            services.AddDbContext<SmartTerraDbContext>(opt => opt.UseSqlite("Data Source=SmartTerraDB.db"));
+
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
