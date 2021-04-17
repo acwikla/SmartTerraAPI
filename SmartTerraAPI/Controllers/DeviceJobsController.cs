@@ -68,6 +68,8 @@ namespace SmartTerraAPI.Controllers
         [HttpGet("deviceId={deviceId}/FalseDoneFlag")]
         public async Task<ActionResult<DeviceJobDTO>> GetDeviceJobFalseDoneFlag(int deviceId)
         {
+            Console.WriteLine(DateTime.Now.ToString() + $" [RestApi (GET)] api/devicejobs/deviceId={deviceId}/FalseDoneFlag.");
+
             List<DeviceJob> deviceJobs = await _context.DeviceJobs.Where(deviceJob => deviceJob.Done == false).Include(d => d.Device).Include(j => j.Job).Where(deviceJob => deviceJob.Device.Id == deviceId).ToListAsync();
 
             var deviceJob = deviceJobs.FirstOrDefault();

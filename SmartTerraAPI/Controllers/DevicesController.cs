@@ -48,7 +48,7 @@ namespace SmartTerraAPI.Controllers
         [HttpGet("{id}/modes")]
         public async Task<ActionResult<ModeDTO>> GetMode(int id)
         {
-            Console.WriteLine($"[RestApi (GET)] api/devices/{id}/modes.");
+            Console.WriteLine(DateTime.Now.ToString() + $"[RestApi (GET)] api/devices/{id}/modes.");
 
             var device = await _context.Devices.Include(d=> d.Mode).Where(device =>device.Id == id).FirstOrDefaultAsync();
 
@@ -224,8 +224,8 @@ namespace SmartTerraAPI.Controllers
         [HttpPatch("{id}/deviceProperties")]
         public async Task<IActionResult> UpdateDeviceProperties(int id, DevicePropertiesDTO deviceProperties)
         {
-            Console.WriteLine($"[RestApi (PATCH)] api/devices{id}/deviceProperties");
-            Console.WriteLine(String.Format("Sent DevicePropertiesDTO object: {0}", deviceProperties.ToJSON()));
+            Console.WriteLine(DateTime.Now.ToString() + $"[RestApi (PATCH)] api/devices{id}/deviceProperties.");
+            Console.WriteLine($"Sent DevicePropertiesDTO object: {deviceProperties.ToJSON()}");
 
             var device = await _context.Devices.FindAsync(id);
 
