@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SmartTerra.Core.Helpers;
 using SmartTerraAPI.DTO;
 using SmartTerraAPI.Models;
 
@@ -68,7 +69,7 @@ namespace SmartTerraAPI.Controllers
         [HttpGet("deviceId={deviceId}/FalseDoneFlag")]
         public async Task<ActionResult<DeviceJobDTO>> GetDeviceJobFalseDoneFlag(int deviceId)
         {
-            Console.WriteLine(DateTime.Now.ToString() + $" [RestApi (GET)] api/devicejobs/deviceId={deviceId}/FalseDoneFlag.");
+            Console.WriteLine(DateTime.Now.ToString() + $" [RestApi (GET)] api/devicejobs/deviceId={deviceId}/FalseDoneFlag");
 
             List<DeviceJob> deviceJobs = await _context.DeviceJobs.Where(deviceJob => deviceJob.Done == false).Include(d => d.Device).Include(j => j.Job).Where(deviceJob => deviceJob.Device.Id == deviceId).ToListAsync();
 
@@ -155,6 +156,9 @@ namespace SmartTerraAPI.Controllers
         [HttpPatch("{id}")]
         public async Task<IActionResult> UpdateDoneProperty(int id, JobDoneDTO jobDone)
         {
+            Console.WriteLine(DateTime.Now.ToString() + $" [RestApi (PATCH)] api/devices{id}/deviceProperties");
+            Console.WriteLine($"Sent JobDoneDTO object: {jobDone.ToJSON()}");
+
             var deviceJobToUpdate = await _context.DeviceJobs.Include(d => d.Device).Include(j => j.Job).Where(deviceJobs => deviceJobs.Id == id).FirstOrDefaultAsync();
             if (deviceJobToUpdate == null)
             {
