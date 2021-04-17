@@ -24,7 +24,7 @@
 bool is_liquid_level_sufficient=true;
 bool is_job_done;
 //mode data:
-bool mode_is_on=true;
+bool mode_is_on=false;  // false for start, because default mode parameters are not proper
 float mode_humidity=0;
 float mode_temperature=0;
 const char* mode_twilight_hour="09:00";
@@ -133,26 +133,35 @@ void loop() {
     turnon_water_pump(period, end_task_time, start_task_time );
   }*/
   
-    if (WiFi.status() == WL_CONNECTED) 
+    // always get sensors data
+    fetch_terrarium_data();               
+
+    // if online
+    if (WiFi.status() == WL_CONNECTED)    
     { 
-      get_mode_data();
-       
-      if(mode_is_on==1){
-        fetch_terrarium_data();
+      // update mode
+      get_mode_data();                    
+      //TODO: sprawdzic co sie stanie gdy nie bedzie mode w bazie
+
+      if(mode_is_on==1){        
         simulate_day_night_mode();
-        check_terrarium_data();
+        // try to obtain proper conditions based on mode
+        check_terrarium_data();           
       }
       else{
+        // get one job from rest api and next do the job 
         check_device_job_data();
       }
   
+      // send statistics to rest api (sensors values, LED color, ...)
       if(counter%10==0){
         send_terrarium_data();
       }
-      delay(1000);
-      counter++; 
+
+      counter++;
     }
   
+  delay(1000);
 }
 
 
@@ -219,10 +228,10 @@ void check_terrarium_data(){
   
   if(humidity-3 < mode_humidity){
     float start_water_pump = millis();
-    float working_time= 60000;
+    float working_time= 5 * 1000;   // 5 seconds
     
-    //turn on water pump for 1 min
-    Serial.println("Water pump is working for 1 min.");
+    //turn on water pump for 5 seconds
+    Serial.println("Water pump is working for 5 seconds.");
     turnon_water_pump(working_time, start_water_pump+working_time, start_water_pump);
     Serial.println("Water pump is off.");
     
