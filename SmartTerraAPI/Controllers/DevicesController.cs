@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using SmartTerraAPI.DTO;
 using SmartTerraAPI.Models;
 using SmartTerra.Core.DTO;
+using SmartTerra.Core.Helpers;
 
 namespace SmartTerraAPI.Controllers
 {
@@ -47,6 +48,8 @@ namespace SmartTerraAPI.Controllers
         [HttpGet("{id}/modes")]
         public async Task<ActionResult<ModeDTO>> GetMode(int id)
         {
+            Console.WriteLine($"[RestApi (GET)] api/devices/{id}/modes.");
+
             var device = await _context.Devices.Include(d=> d.Mode).Where(device =>device.Id == id).FirstOrDefaultAsync();
 
             if (device.Mode == null)
@@ -221,6 +224,9 @@ namespace SmartTerraAPI.Controllers
         [HttpPatch("{id}/deviceProperties")]
         public async Task<IActionResult> UpdateDeviceProperties(int id, DevicePropertiesDTO deviceProperties)
         {
+            Console.WriteLine($"[RestApi (PATCH)] api/devices{id}/deviceProperties");
+            Console.WriteLine(String.Format("Sent DevicePropertiesDTO object: {0}", deviceProperties.ToJSON()));
+
             var device = await _context.Devices.FindAsync(id);
 
             var newDeviceProperties = new DeviceProperties()
