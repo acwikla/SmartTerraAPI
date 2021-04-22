@@ -255,15 +255,13 @@ namespace SmartTerraAPI.Controllers
                 Job = job
             };
             
-            if(modeToTurnOff == null)
+            if(modeToTurnOff?.IsOn == true)
             {
-                return BadRequest($"There is no mode for device with given id: {deviceId}.");
+                modeToTurnOff.IsOn = false;
+                _context.Entry(modeToTurnOff).State = EntityState.Modified;
             }
 
-            modeToTurnOff.IsOn = false;
-
             _context.Entry(device).State = EntityState.Modified;
-            _context.Entry(modeToTurnOff).State = EntityState.Modified;
             _context.Entry(job).State = EntityState.Modified;
 
             await _context.DeviceJobs.AddAsync(newDeviceJob);

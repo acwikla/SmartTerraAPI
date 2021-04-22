@@ -161,7 +161,12 @@ namespace SmartTerraAPI.Migrations
             migrationBuilder.InsertData(
                 table: "Jobs",
                 columns: new[] { "Id", "Description", "Name", "Type" },
-                values: new object[] { 5, "Turn on right description.", "Turn on right", "Robotic arm" });
+                values: new object[] { 5, "Turn right description.", "TurnRight", "ROBOTIC_ARM" });
+
+            migrationBuilder.InsertData(
+                table: "Jobs",
+                columns: new[] { "Id", "Description", "Name", "Type" },
+                values: new object[] { 6, "Turn left description.", "TurnLeft", "ROBOTIC_ARM" });
 
             migrationBuilder.InsertData(
                 table: "Users",
@@ -181,7 +186,17 @@ namespace SmartTerraAPI.Migrations
             migrationBuilder.InsertData(
                 table: "DeviceJobs",
                 columns: new[] { "Id", "Body", "CreatedDate", "DeviceId", "Done", "ExecutionTime", "JobId" },
-                values: new object[] { 11, "{angle = 10}", new DateTime(2021, 4, 22, 13, 18, 7, 400, DateTimeKind.Local).AddTicks(3220), 101, false, new DateTime(2021, 4, 22, 13, 18, 7, 381, DateTimeKind.Local).AddTicks(9250), 5 });
+                values: new object[] { 11, "angle: 10, speed: 2", new DateTime(2021, 4, 17, 22, 49, 22, 106, DateTimeKind.Local).AddTicks(3670), 101, false, new DateTime(2021, 4, 17, 22, 49, 22, 86, DateTimeKind.Local).AddTicks(9180), 5 });
+
+            migrationBuilder.InsertData(
+                table: "DeviceJobs",
+                columns: new[] { "Id", "Body", "CreatedDate", "DeviceId", "Done", "ExecutionTime", "JobId" },
+                values: new object[] { 12, "angle: 50, speed: 3", new DateTime(2021, 4, 17, 22, 49, 22, 106, DateTimeKind.Local).AddTicks(6120), 101, false, new DateTime(2021, 4, 17, 22, 49, 22, 106, DateTimeKind.Local).AddTicks(5910), 6 });
+
+            migrationBuilder.InsertData(
+                table: "DeviceJobs",
+                columns: new[] { "Id", "Body", "CreatedDate", "DeviceId", "Done", "ExecutionTime", "JobId" },
+                values: new object[] { 13, "angle: 25, speed: 1", new DateTime(2021, 4, 17, 22, 49, 22, 106, DateTimeKind.Local).AddTicks(6280), 101, false, new DateTime(2021, 4, 17, 22, 49, 22, 106, DateTimeKind.Local).AddTicks(6270), 6 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_DeviceJobs_DeviceId",

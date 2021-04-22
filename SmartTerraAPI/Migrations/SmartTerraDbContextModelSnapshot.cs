@@ -81,12 +81,32 @@ namespace SmartTerraAPI.Migrations
                         new
                         {
                             Id = 11,
-                            Body = "{angle = 10}",
-                            CreatedDate = new DateTime(2021, 4, 22, 13, 18, 7, 400, DateTimeKind.Local).AddTicks(3220),
+                            Body = "angle: 10, speed: 2",
+                            CreatedDate = new DateTime(2021, 4, 17, 22, 49, 22, 106, DateTimeKind.Local).AddTicks(3670),
                             DeviceId = 101,
                             Done = false,
-                            ExecutionTime = new DateTime(2021, 4, 22, 13, 18, 7, 381, DateTimeKind.Local).AddTicks(9250),
+                            ExecutionTime = new DateTime(2021, 4, 17, 22, 49, 22, 86, DateTimeKind.Local).AddTicks(9180),
                             JobId = 5
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Body = "angle: 50, speed: 3",
+                            CreatedDate = new DateTime(2021, 4, 17, 22, 49, 22, 106, DateTimeKind.Local).AddTicks(6120),
+                            DeviceId = 101,
+                            Done = false,
+                            ExecutionTime = new DateTime(2021, 4, 17, 22, 49, 22, 106, DateTimeKind.Local).AddTicks(5910),
+                            JobId = 6
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Body = "angle: 25, speed: 1",
+                            CreatedDate = new DateTime(2021, 4, 17, 22, 49, 22, 106, DateTimeKind.Local).AddTicks(6280),
+                            DeviceId = 101,
+                            Done = false,
+                            ExecutionTime = new DateTime(2021, 4, 17, 22, 49, 22, 106, DateTimeKind.Local).AddTicks(6270),
+                            JobId = 6
                         });
                 });
 
@@ -181,9 +201,16 @@ namespace SmartTerraAPI.Migrations
                         new
                         {
                             Id = 5,
-                            Description = "Turn on right description.",
-                            Name = "Turn on right",
-                            Type = "Robotic arm"
+                            Description = "Turn right description.",
+                            Name = "TurnRight",
+                            Type = "ROBOTIC_ARM"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "Turn left description.",
+                            Name = "TurnLeft",
+                            Type = "ROBOTIC_ARM"
                         });
                 });
 

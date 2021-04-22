@@ -57,9 +57,16 @@ namespace SmartTerraAPI
                 new Job
                 {
                     Id = 5,
-                    Name = "Turn on right",
-                    Type = "Robotic arm",
-                    Description = "Turn on right description."
+                    Name = "TurnRight",
+                    Type = "ROBOTIC_ARM",
+                    Description = "Turn right description."
+                },
+                new Job
+                {
+                    Id = 6,
+                    Name = "TurnLeft",
+                    Type = "ROBOTIC_ARM",
+                    Description = "Turn left description."
                 }
             );
 
@@ -99,15 +106,32 @@ namespace SmartTerraAPI
             // device job
 
             builder.Entity<DeviceJob>().HasData(
-                new
-                {
+                new {
                     Id = 11,
                     DeviceId = 101,
                     Done = false,
                     JobId = 5,
-                    Body = "{angle = 10}",
-                    ExecutionTime = DateTime.Now,
-                    CreatedDate = DateTime.Now
+                    Body = "angle: 10, speed: 2",
+                    ExecutionTime = DateTime.Now - TimeSpan.FromDays(5),
+                    CreatedDate = DateTime.Now - TimeSpan.FromDays(5)
+                },
+                new {
+                    Id = 12,
+                    DeviceId = 101,
+                    Done = false,
+                    JobId = 6,
+                    Body = "angle: 50, speed: 3",
+                    ExecutionTime = DateTime.Now - TimeSpan.FromDays(5),
+                    CreatedDate = DateTime.Now - TimeSpan.FromDays(5)
+                },
+                new {
+                    Id = 13,
+                    DeviceId = 101,
+                    Done = false,
+                    JobId = 6,
+                    Body = "angle: 25, speed: 1",
+                    ExecutionTime = DateTime.Now - TimeSpan.FromDays(5),
+                    CreatedDate = DateTime.Now - TimeSpan.FromDays(5)
                 }
             );
 
