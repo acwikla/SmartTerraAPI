@@ -158,6 +158,31 @@ namespace SmartTerraAPI.Migrations
                 columns: new[] { "Id", "Description", "Name", "Type" },
                 values: new object[] { 4, "Turn on rainbow.", "Rainbow", "LED" });
 
+            migrationBuilder.InsertData(
+                table: "Jobs",
+                columns: new[] { "Id", "Description", "Name", "Type" },
+                values: new object[] { 5, "Turn on right description.", "Turn on right", "Robotic arm" });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "Email", "Login", "Password" },
+                values: new object[] { 1, "ola@email.com", "ola", "pass1" });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "Email", "Login", "Password" },
+                values: new object[] { 2, "robolab@email.com", "robolab", "pass1" });
+
+            migrationBuilder.InsertData(
+                table: "Devices",
+                columns: new[] { "Id", "Name", "UserId" },
+                values: new object[] { 101, "ROBOLab test device 1", 2 });
+
+            migrationBuilder.InsertData(
+                table: "DeviceJobs",
+                columns: new[] { "Id", "Body", "CreatedDate", "DeviceId", "Done", "ExecutionTime", "JobId" },
+                values: new object[] { 11, "{angle = 10}", new DateTime(2021, 4, 22, 13, 18, 7, 400, DateTimeKind.Local).AddTicks(3220), 101, false, new DateTime(2021, 4, 22, 13, 18, 7, 381, DateTimeKind.Local).AddTicks(9250), 5 });
+
             migrationBuilder.CreateIndex(
                 name: "IX_DeviceJobs_DeviceId",
                 table: "DeviceJobs",

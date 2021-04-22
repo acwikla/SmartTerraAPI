@@ -9,7 +9,7 @@ using SmartTerraAPI;
 namespace SmartTerraAPI.Migrations
 {
     [DbContext(typeof(SmartTerraDbContext))]
-    [Migration("20210416210303_InitialCreate")]
+    [Migration("20210422111807_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,6 +35,14 @@ namespace SmartTerraAPI.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Devices");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 101,
+                            Name = "ROBOLab test device 1",
+                            UserId = 2
+                        });
                 });
 
             modelBuilder.Entity("SmartTerraAPI.Models.DeviceJob", b =>
@@ -70,6 +78,18 @@ namespace SmartTerraAPI.Migrations
                     b.HasIndex("JobId");
 
                     b.ToTable("DeviceJobs");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 11,
+                            Body = "{angle = 10}",
+                            CreatedDate = new DateTime(2021, 4, 22, 13, 18, 7, 400, DateTimeKind.Local).AddTicks(3220),
+                            DeviceId = 101,
+                            Done = false,
+                            ExecutionTime = new DateTime(2021, 4, 22, 13, 18, 7, 381, DateTimeKind.Local).AddTicks(9250),
+                            JobId = 5
+                        });
                 });
 
             modelBuilder.Entity("SmartTerraAPI.Models.DeviceProperties", b =>
@@ -159,6 +179,13 @@ namespace SmartTerraAPI.Migrations
                             Description = "Turn on rainbow.",
                             Name = "Rainbow",
                             Type = "LED"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Turn on right description.",
+                            Name = "Turn on right",
+                            Type = "Robotic arm"
                         });
                 });
 
@@ -221,6 +248,22 @@ namespace SmartTerraAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Email = "ola@email.com",
+                            Login = "ola",
+                            Password = "pass1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Email = "robolab@email.com",
+                            Login = "robolab",
+                            Password = "pass1"
+                        });
                 });
 
             modelBuilder.Entity("SmartTerraAPI.Models.Device", b =>
