@@ -97,7 +97,7 @@ byte* color_converter(String hex_value)
 
 void setup() {
   Serial.begin(9600);
-  Serial.println("Arduino started.");
+  Serial.println("SmartTerra started.");
   dht.begin();                      //initialize DHT object
   strip.begin();                    //initialize NeoPixel strip object
   digitalWrite(WATER_PUMP_PIN, 0);
@@ -110,14 +110,14 @@ void setup() {
 
   WiFi.begin(ssid, password);
   
-  delay(5000);
+  delay(1000);
   while (WiFi.status() != WL_CONNECTED) 
   {
     delay(1000);
     Serial.println("Connecting...");
   }
   Serial.println("Connected");//->led on
-  set_LED_color("#ffffff");
+  //set_LED_color("#ffffff");
 }
 
 
@@ -134,11 +134,15 @@ void loop() {
   }*/
   
     // always get sensors data
+    Serial.println("[loop -> fetch_terrarium_data]");
     fetch_terrarium_data();               
 
     // if online
     if (WiFi.status() == WL_CONNECTED)    
     { 
+      Serial.println("[loop] WiFi.status() == WL_CONNECTED");
+
+      Serial.println("[loop -> get_mode_data]");
       // update mode
       get_mode_data();                    
       //TODO: sprawdzic co sie stanie gdy nie bedzie mode w bazie
@@ -149,12 +153,16 @@ void loop() {
         check_terrarium_data();           
       }
       else{
-        // get one job from rest api and next do the job 
+        // get one job from rest api and next do the job
+        Serial.println("[loop -> check_device_job_data]"); 
         check_device_job_data();
       }
   
       // send statistics to rest api (sensors values, LED color, ...)
-      if(counter%10==0){
+      if(counter%10==0
+        || true // send always
+      ){
+        Serial.println("[loop -> send_terrarium_data]");
         send_terrarium_data();
       }
 
@@ -166,6 +174,8 @@ void loop() {
 
 
 void get_mode_data(){
+  Serial.println("[get_mode_data]");
+  
   //declare object of class HTTPClient
   HTTPClient http;
   //specify request destination
@@ -197,6 +207,8 @@ void get_mode_data(){
       Serial.println(mode_twilight_hour);
       Serial.print("mode_hour_of_dawn: ");
       Serial.println(mode_hour_of_dawn);
+
+      Serial.print("[get_mode_data] mode_is_on: "); Serial.println(mode_is_on);
     }
   http.end(); //close connection
 }
@@ -205,23 +217,26 @@ void fetch_terrarium_data(){
   check_liquid_level();
   Serial.print("Liquid level: ");
   Serial.println(is_liquid_level_sufficient);
+  //delay(100);
   
   fetch_dht22_sensor_data();//temp, humidity
   Serial.print("Temperature: ");
   Serial.println(temperature);
-
   Serial.print("Humidity: ");
   Serial.println(humidity);
+  //delay(100);
   
   fetch_soil_moisture_sensor_data();//soil moisture percentage
   Serial.print("Soil moisture percentage: ");
   Serial.println(soil_moisture_percentage);
-
+  //delay(100);
+  
   get_LED_brightness();
   Serial.print("LED brightness: ");
   Serial.println(actual_LED_brightness);
   Serial.print("LED hex color: ");
   Serial.println(LED_hex_color);
+  //delay(100);
 }
 
 void check_terrarium_data(){
@@ -260,27 +275,36 @@ void check_terrarium_data(){
 }
 
 void check_device_job_data(){
+  Serial.println("[check_device_job_data]");
+  
   //API returns the first task with false done property, then changes its value to true.
   HTTPClient http;
   http.begin("http://"+ String(IP)+"/api/DeviceJobs/deviceId="+ String(device_id)+"/FalseDoneFlag");
   int httpCode = http.GET();
   String http_value= http.getString();
 
-
  Serial.println(httpCode);
   if (httpCode > 0)
-    {
-  
-      
+    {  
       const size_t bufferSize = JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(6) + 700;
       DynamicJsonDocument doc(bufferSize);
       deserializeJson(doc, http.getString());
 
+
+      Serial.println("[check_device_job_data] before parse data");
       int device_job_id= doc["id"];
       const char* job_type = doc["job"]["type"];
       const char* job_name = doc["job"]["name"];
+      Serial.println("[check_device_job_data] after parse data");
 
-Serial.println(job_type);
+      if(!doc.containsKey("job"))
+      {
+        Serial.println("There is no jobs to do from API.");
+        http.end();
+        return;
+      }
+
+      Serial.print("[check_device_job_data] job_type: "); Serial.println(job_type);
 
       if((String)job_type=="LED"){
         
@@ -325,7 +349,7 @@ Serial.println(job_type);
       }
     }
   http.end();
-  delay(1000);
+  //delay(1000);
 }
 
 void send_terrarium_data(){
@@ -350,6 +374,15 @@ void send_terrarium_data(){
 }
 
 void send_liquid_level_sensor_data(bool sensor_data){
+
+  return;
+
+  // nie w taki sposob, teraz arduino ma za duzo roboty, status wody powinien byc wysylany do API, 
+  // i to API powinno znalezx najnowszy device properties i go zaktualizowac
+
+  
+  /*Serial.print("[send_liquid_level_sensor_data] level sufficient: "); Serial.println(sensor_data);
+  
   get_latest_device_property_id();
   
   HTTPClient http;
@@ -358,7 +391,9 @@ void send_liquid_level_sensor_data(bool sensor_data){
   int httpCode = http.PATCH("{\"isLiquidLevelSufficient\": " + String(sensor_data) + "}");
   String payload = http.getString();
   
-  http.end(); 
+  http.end();
+  
+  Serial.println("[send_liquid_level_sensor_data -> FINISH]");*/
 }
 
 void set_job_done_property(int dj_id, bool done_value){
@@ -385,6 +420,7 @@ void get_latest_device_property_id(){
       
       deserializeJson(doc, http.getString());
       dev_prop_id = doc["id"];
+      Serial.print("[get_latest_device_property_id] dev_prop_id: "); Serial.println(dev_prop_id);
   }
   
   http.end();
