@@ -28,10 +28,11 @@ namespace SmartTerraAPI.Controllers
         public async Task<ActionResult<IEnumerable<DeviceJobDTO>>> GetDeviceJobs(int deviceId)
         {
             List<DeviceJob> deviceJobs = await _context.DeviceJobs.Include(d => d.Device).Include(j => j.Job).Where(deviceJob => deviceJob.Device.Id == deviceId).ToListAsync();
-            if (deviceJobs==null)
+            /*if (deviceJobs==null)
             {
                 return BadRequest($"There is no deviceJob for device with given id: {deviceId}.");
-            }
+            }*/
+
             List<DeviceJobDTO> deviceJobsDTO = new List<DeviceJobDTO>();
 
             foreach (DeviceJob d in deviceJobs)
@@ -76,7 +77,7 @@ namespace SmartTerraAPI.Controllers
             var deviceJob = deviceJobs.FirstOrDefault();
             if (deviceJob == null)
             {
-                return BadRequest($"There is no deviceJob for device with given id: {deviceId}.");
+                return null;
             }
 
             var deviceDTO = new DeviceAddDTO
