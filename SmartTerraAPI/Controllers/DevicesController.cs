@@ -112,9 +112,15 @@ namespace SmartTerraAPI.Controllers
         [HttpGet("{id}/latestDeviceProperties")]
         public async Task<ActionResult<DevicePropertiesDTO>> GetLatestDeviceProperties(int id)
         {
-            var device = await _context.Devices.Include(d => d.DeviceProperties).Where(device => device.Id == id).FirstOrDefaultAsync();
-            var latestDeviceProperties = device.DeviceProperties.LastOrDefault();
+            Console.WriteLine(DateTime.Now.ToString() + $" [RestApi (GET)] api/devices/{id}/latestDeviceProperties");
 
+            var device = await _context.Devices.Include(d => d.DeviceProperties).Where(device => device.Id == id).FirstOrDefaultAsync();
+            if (device == null)
+            {
+                return BadRequest($"There is no device for given id: {id}.");
+            }
+
+            var latestDeviceProperties = device.DeviceProperties.LastOrDefault();
             if (latestDeviceProperties == null)
             {
                 return BadRequest($"There is no device properties for device with given id: {id}.");
