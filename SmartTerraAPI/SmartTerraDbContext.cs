@@ -27,6 +27,7 @@ namespace SmartTerraAPI
             .Property(s => s.CreatedDate)
             .HasDefaultValueSql("GETDATE()");*/      // not supported by MySQL
 
+
             // jobs
 
             builder.Entity<Job>().HasData(
@@ -70,6 +71,7 @@ namespace SmartTerraAPI
                 }
             );
 
+
             // users
 
             var userOla = new User
@@ -93,15 +95,41 @@ namespace SmartTerraAPI
                 userROBOLab
             );
 
+
             // device
 
+            // SmartTerra
+            var smartTerraDev = new {
+                Id = 1,
+                Name = "SmartTerra v1",
+                UserId = userOla.Id
+            };
+
+            // RoboLAB
+            var roboLabDev = new {
+                Id = 101,
+                Name = "ROBOLab test device 1",
+                UserId = userROBOLab.Id
+            };
+
             builder.Entity<Device>().HasData(
-                new {
-                    Id = 101,
-                    Name = "ROBOLab test device 1",
-                    UserId = userROBOLab.Id
+                smartTerraDev,
+                roboLabDev
+            );
+
+
+            // mode
+
+            builder.Entity<Mode>().HasData(
+                new Mode {
+                    Id = 1,
+                    DeviceId = smartTerraDev.Id,
+                    IsOn = false,
+                    Name = "Terrarium mode 1",
+                    Temperature = 25,
                 }
             );
+
 
             // device job
 

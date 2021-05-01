@@ -50,7 +50,12 @@ namespace SmartTerraAPI.Controllers
         {
             Console.WriteLine(DateTime.Now.ToString() + $" [RestApi (GET)] api/devices/{id}/modes");
 
-            var device = await _context.Devices.Include(d=> d.Mode).Where(device =>device.Id == id).FirstOrDefaultAsync();
+            var device = await _context.Devices.Include(d=> d.Mode).Where(device => device.Id == id).FirstOrDefaultAsync();
+
+            if (device == null)
+            {
+                return BadRequest($"There is no device for given id: {id}.");
+            }
 
             if (device.Mode == null)
             {

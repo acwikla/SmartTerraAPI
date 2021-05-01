@@ -181,22 +181,32 @@ namespace SmartTerraAPI.Migrations
             migrationBuilder.InsertData(
                 table: "Devices",
                 columns: new[] { "Id", "Name", "UserId" },
+                values: new object[] { 1, "SmartTerra v1", 1 });
+
+            migrationBuilder.InsertData(
+                table: "Devices",
+                columns: new[] { "Id", "Name", "UserId" },
                 values: new object[] { 101, "ROBOLab test device 1", 2 });
 
             migrationBuilder.InsertData(
                 table: "DeviceJobs",
                 columns: new[] { "Id", "Body", "CreatedDate", "DeviceId", "Done", "ExecutionTime", "JobId" },
-                values: new object[] { 11, "angle: 10, speed: 2", new DateTime(2021, 4, 17, 22, 49, 22, 106, DateTimeKind.Local).AddTicks(3670), 101, false, new DateTime(2021, 4, 17, 22, 49, 22, 86, DateTimeKind.Local).AddTicks(9180), 5 });
+                values: new object[] { 11, "angle: 10, speed: 2", new DateTime(2021, 4, 26, 18, 40, 15, 139, DateTimeKind.Local).AddTicks(8040), 101, false, new DateTime(2021, 4, 26, 18, 40, 15, 121, DateTimeKind.Local).AddTicks(6340), 5 });
 
             migrationBuilder.InsertData(
                 table: "DeviceJobs",
                 columns: new[] { "Id", "Body", "CreatedDate", "DeviceId", "Done", "ExecutionTime", "JobId" },
-                values: new object[] { 12, "angle: 50, speed: 3", new DateTime(2021, 4, 17, 22, 49, 22, 106, DateTimeKind.Local).AddTicks(6120), 101, false, new DateTime(2021, 4, 17, 22, 49, 22, 106, DateTimeKind.Local).AddTicks(5910), 6 });
+                values: new object[] { 12, "angle: 50, speed: 3", new DateTime(2021, 4, 26, 18, 40, 15, 140, DateTimeKind.Local).AddTicks(420), 101, false, new DateTime(2021, 4, 26, 18, 40, 15, 140, DateTimeKind.Local).AddTicks(250), 6 });
 
             migrationBuilder.InsertData(
                 table: "DeviceJobs",
                 columns: new[] { "Id", "Body", "CreatedDate", "DeviceId", "Done", "ExecutionTime", "JobId" },
-                values: new object[] { 13, "angle: 25, speed: 1", new DateTime(2021, 4, 17, 22, 49, 22, 106, DateTimeKind.Local).AddTicks(6280), 101, false, new DateTime(2021, 4, 17, 22, 49, 22, 106, DateTimeKind.Local).AddTicks(6270), 6 });
+                values: new object[] { 13, "angle: 25, speed: 1", new DateTime(2021, 4, 26, 18, 40, 15, 140, DateTimeKind.Local).AddTicks(870), 101, false, new DateTime(2021, 4, 26, 18, 40, 15, 140, DateTimeKind.Local).AddTicks(860), 6 });
+
+            migrationBuilder.InsertData(
+                table: "Modes",
+                columns: new[] { "Id", "DeviceId", "HourOfDawn", "Humidity", "IsOn", "Name", "Temperature", "TwilightHour" },
+                values: new object[] { 1, 1, new TimeSpan(0, 0, 0, 0, 0), 0.0, false, "Terrarium mode 1", 25.0, new TimeSpan(0, 0, 0, 0, 0) });
 
             migrationBuilder.CreateIndex(
                 name: "IX_DeviceJobs_DeviceId",

@@ -37,6 +37,12 @@ namespace SmartTerraAPI.Migrations
                     b.HasData(
                         new
                         {
+                            Id = 1,
+                            Name = "SmartTerra v1",
+                            UserId = 1
+                        },
+                        new
+                        {
                             Id = 101,
                             Name = "ROBOLab test device 1",
                             UserId = 2
@@ -82,30 +88,30 @@ namespace SmartTerraAPI.Migrations
                         {
                             Id = 11,
                             Body = "angle: 10, speed: 2",
-                            CreatedDate = new DateTime(2021, 4, 17, 22, 49, 22, 106, DateTimeKind.Local).AddTicks(3670),
+                            CreatedDate = new DateTime(2021, 4, 26, 18, 40, 15, 139, DateTimeKind.Local).AddTicks(8040),
                             DeviceId = 101,
                             Done = false,
-                            ExecutionTime = new DateTime(2021, 4, 17, 22, 49, 22, 86, DateTimeKind.Local).AddTicks(9180),
+                            ExecutionTime = new DateTime(2021, 4, 26, 18, 40, 15, 121, DateTimeKind.Local).AddTicks(6340),
                             JobId = 5
                         },
                         new
                         {
                             Id = 12,
                             Body = "angle: 50, speed: 3",
-                            CreatedDate = new DateTime(2021, 4, 17, 22, 49, 22, 106, DateTimeKind.Local).AddTicks(6120),
+                            CreatedDate = new DateTime(2021, 4, 26, 18, 40, 15, 140, DateTimeKind.Local).AddTicks(420),
                             DeviceId = 101,
                             Done = false,
-                            ExecutionTime = new DateTime(2021, 4, 17, 22, 49, 22, 106, DateTimeKind.Local).AddTicks(5910),
+                            ExecutionTime = new DateTime(2021, 4, 26, 18, 40, 15, 140, DateTimeKind.Local).AddTicks(250),
                             JobId = 6
                         },
                         new
                         {
                             Id = 13,
                             Body = "angle: 25, speed: 1",
-                            CreatedDate = new DateTime(2021, 4, 17, 22, 49, 22, 106, DateTimeKind.Local).AddTicks(6280),
+                            CreatedDate = new DateTime(2021, 4, 26, 18, 40, 15, 140, DateTimeKind.Local).AddTicks(870),
                             DeviceId = 101,
                             Done = false,
-                            ExecutionTime = new DateTime(2021, 4, 17, 22, 49, 22, 106, DateTimeKind.Local).AddTicks(6270),
+                            ExecutionTime = new DateTime(2021, 4, 26, 18, 40, 15, 140, DateTimeKind.Local).AddTicks(860),
                             JobId = 6
                         });
                 });
@@ -249,6 +255,19 @@ namespace SmartTerraAPI.Migrations
                         .IsUnique();
 
                     b.ToTable("Modes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DeviceId = 1,
+                            HourOfDawn = new TimeSpan(0, 0, 0, 0, 0),
+                            Humidity = 0.0,
+                            IsOn = false,
+                            Name = "Terrarium mode 1",
+                            Temperature = 25.0,
+                            TwilightHour = new TimeSpan(0, 0, 0, 0, 0)
+                        });
                 });
 
             modelBuilder.Entity("SmartTerraAPI.Models.User", b =>
