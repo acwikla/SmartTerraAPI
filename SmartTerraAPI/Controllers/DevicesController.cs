@@ -225,12 +225,12 @@ namespace SmartTerraAPI.Controllers
 
             return CreatedAtAction("GetMode", new { id = modeDTO.Id }, modeDTO);
         }
-
+        
         // PATCH: api/devices/{id}/deviceProperties
         [HttpPatch("{id}/deviceProperties")]
         public async Task<IActionResult> UpdateDeviceProperties(int id, DevicePropertiesDTO deviceProperties)
         {
-            Console.WriteLine(DateTime.Now.ToString() + $" [RestApi (PATCH)] api/devices{id}/deviceProperties");
+            Console.WriteLine(DateTime.Now.ToString() + $" [RestApi (PATCH)] api/devices/{id}/deviceProperties");
             Console.WriteLine($"Sent DevicePropertiesDTO object: {deviceProperties.ToJSON()}");
 
             var device = await _context.Devices.FindAsync(id);
