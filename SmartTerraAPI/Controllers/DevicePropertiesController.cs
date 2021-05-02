@@ -75,12 +75,16 @@ namespace SmartTerraAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<DeviceProperties>> PostDeviceProperties(DeviceProperties deviceProperties)
         {
+            // set time to now
+            deviceProperties.Date = DateTime.Now;
+
             await _context.DeviceProperties.AddAsync(deviceProperties);
             await _context.SaveChangesAsync();
 
             var newDevicePropertiesDTO = new DevicePropertiesDTO()
             {
                 Id = deviceProperties.Id,
+                Date = deviceProperties.Date,
                 isLiquidLevelSufficient = deviceProperties.isLiquidLevelSufficient,
                 Temperature = deviceProperties.Temperature,
                 Humidity = deviceProperties.Humidity,

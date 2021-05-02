@@ -11,6 +11,9 @@ namespace SmartTerraAPI.Models
         public int Id { get; set; }
 
         [Required]
+        public DateTime Date { get; set; }
+
+        [Required]
         public Device Device { get; set; }
 
         [Required]
@@ -39,7 +42,5 @@ namespace SmartTerraAPI.Models
 
         [Required]
         public double LEDBrightness { get; set; }
-
-
     }
 }

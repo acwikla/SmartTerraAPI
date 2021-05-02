@@ -113,6 +113,95 @@ namespace SmartTerraAPI.Controllers
             return Ok(allDevicePropertiesDTO);
         }
 
+        // GET: api/devices/{id}/deviceProperties-lastHour
+        [HttpGet("{id}/deviceProperties-lastHour")]
+        public async Task<ActionResult<IEnumerable<DevicePropertiesDTO>>> GetLastHourDeviceProperties(int id)
+        {
+            var device = await _context.Devices
+                .Where(device => device.Id == id)
+                .FirstOrDefaultAsync();
+
+            if(device == null)
+            {
+                return BadRequest($"There is no device for given id: {id}.");
+            }
+
+            DateTime dateFrom = DateTime.Now.Date.AddHours(-1);
+
+            var allDeviceProperties = await _context.DeviceProperties
+                .Where(prop => prop.DeviceId == id)
+                .Where(prop => prop.Date >= dateFrom)
+                .OrderBy(prop => prop.Date)
+                .ToListAsync();
+
+            var allDevicePropertiesDTO = new List<DevicePropertiesDTO>();
+            DevicePropertiesDTO devicePropertiesDTO;
+
+            foreach (DeviceProperties d in allDeviceProperties)
+            {
+                devicePropertiesDTO = new DevicePropertiesDTO()
+                {
+                    Id = d.Id,
+                    isLiquidLevelSufficient = d.isLiquidLevelSufficient,
+                    Temperature = d.Temperature,
+                    Humidity = d.Humidity,
+                    HeatIndex = d.HeatIndex,
+                    SoilMoisturePercentage = d.SoilMoisturePercentage,
+                    LEDHexColor = d.LEDHexColor,
+                    LEDBrightness = d.LEDBrightness
+                };
+                allDevicePropertiesDTO.Add(devicePropertiesDTO);
+            }
+
+
+            return Ok(allDevicePropertiesDTO);
+        }
+
+        // GET: api/devices/{id}/deviceProperties-lastDay
+        [HttpGet("{id}/deviceProperties-lastDay")]
+        public async Task<ActionResult<IEnumerable<DevicePropertiesDTO>>> GetLastDayDeviceProperties(int id)
+        {
+            var device = await _context.Devices
+                .Where(device => device.Id == id)
+                .FirstOrDefaultAsync();
+
+            if (device == null)
+            {
+                return BadRequest($"There is no device for given id: {id}.");
+            }
+
+            DateTime dateFrom = DateTime.Now.Date.AddDays(-1);
+
+            var allDeviceProperties = await _context.DeviceProperties
+                .Where(prop => prop.DeviceId == id)
+                .Where(prop => prop.Date >= dateFrom)
+                .Where(prop => prop.Id % 50 == 0)
+                .OrderBy(prop => prop.Date)
+                .ToListAsync();
+
+            var allDevicePropertiesDTO = new List<DevicePropertiesDTO>();
+            DevicePropertiesDTO devicePropertiesDTO;
+
+            foreach (DeviceProperties d in allDeviceProperties)
+            {
+                devicePropertiesDTO = new DevicePropertiesDTO()
+                {
+                    Id = d.Id,
+                    isLiquidLevelSufficient = d.isLiquidLevelSufficient,
+                    Temperature = d.Temperature,
+                    Humidity = d.Humidity,
+                    HeatIndex = d.HeatIndex,
+                    SoilMoisturePercentage = d.SoilMoisturePercentage,
+                    LEDHexColor = d.LEDHexColor,
+                    LEDBrightness = d.LEDBrightness
+                };
+                allDevicePropertiesDTO.Add(devicePropertiesDTO);
+            }
+
+
+            return Ok(allDevicePropertiesDTO);
+        }
+
         // GET: api/devices/{id}/latestDeviceProperties
         [HttpGet("{id}/latestDeviceProperties")]
         public async Task<ActionResult<DevicePropertiesDTO>> GetLatestDeviceProperties(int id)
