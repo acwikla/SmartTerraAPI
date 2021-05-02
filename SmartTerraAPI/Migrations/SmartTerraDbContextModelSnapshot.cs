@@ -88,30 +88,30 @@ namespace SmartTerraAPI.Migrations
                         {
                             Id = 11,
                             Body = "angle: 10, speed: 2",
-                            CreatedDate = new DateTime(2021, 4, 26, 18, 40, 15, 139, DateTimeKind.Local).AddTicks(8040),
+                            CreatedDate = new DateTime(2021, 4, 27, 22, 44, 50, 994, DateTimeKind.Local).AddTicks(290),
                             DeviceId = 101,
                             Done = false,
-                            ExecutionTime = new DateTime(2021, 4, 26, 18, 40, 15, 121, DateTimeKind.Local).AddTicks(6340),
+                            ExecutionTime = new DateTime(2021, 4, 27, 22, 44, 50, 975, DateTimeKind.Local).AddTicks(6640),
                             JobId = 5
                         },
                         new
                         {
                             Id = 12,
                             Body = "angle: 50, speed: 3",
-                            CreatedDate = new DateTime(2021, 4, 26, 18, 40, 15, 140, DateTimeKind.Local).AddTicks(420),
+                            CreatedDate = new DateTime(2021, 4, 27, 22, 44, 50, 994, DateTimeKind.Local).AddTicks(2670),
                             DeviceId = 101,
                             Done = false,
-                            ExecutionTime = new DateTime(2021, 4, 26, 18, 40, 15, 140, DateTimeKind.Local).AddTicks(250),
+                            ExecutionTime = new DateTime(2021, 4, 27, 22, 44, 50, 994, DateTimeKind.Local).AddTicks(2480),
                             JobId = 6
                         },
                         new
                         {
                             Id = 13,
                             Body = "angle: 25, speed: 1",
-                            CreatedDate = new DateTime(2021, 4, 26, 18, 40, 15, 140, DateTimeKind.Local).AddTicks(870),
+                            CreatedDate = new DateTime(2021, 4, 27, 22, 44, 50, 994, DateTimeKind.Local).AddTicks(2820),
                             DeviceId = 101,
                             Done = false,
-                            ExecutionTime = new DateTime(2021, 4, 26, 18, 40, 15, 140, DateTimeKind.Local).AddTicks(860),
+                            ExecutionTime = new DateTime(2021, 4, 27, 22, 44, 50, 994, DateTimeKind.Local).AddTicks(2810),
                             JobId = 6
                         });
                 });
@@ -121,6 +121,9 @@ namespace SmartTerraAPI.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("DeviceId")
                         .HasColumnType("INTEGER");

@@ -93,6 +93,7 @@ namespace SmartTerraAPI.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    Date = table.Column<DateTime>(nullable: false),
                     DeviceId = table.Column<int>(nullable: false),
                     isLiquidLevelSufficient = table.Column<bool>(nullable: false),
                     Temperature = table.Column<double>(nullable: false),
@@ -191,17 +192,17 @@ namespace SmartTerraAPI.Migrations
             migrationBuilder.InsertData(
                 table: "DeviceJobs",
                 columns: new[] { "Id", "Body", "CreatedDate", "DeviceId", "Done", "ExecutionTime", "JobId" },
-                values: new object[] { 11, "angle: 10, speed: 2", new DateTime(2021, 4, 26, 18, 40, 15, 139, DateTimeKind.Local).AddTicks(8040), 101, false, new DateTime(2021, 4, 26, 18, 40, 15, 121, DateTimeKind.Local).AddTicks(6340), 5 });
+                values: new object[] { 11, "angle: 10, speed: 2", new DateTime(2021, 4, 27, 22, 44, 50, 994, DateTimeKind.Local).AddTicks(290), 101, false, new DateTime(2021, 4, 27, 22, 44, 50, 975, DateTimeKind.Local).AddTicks(6640), 5 });
 
             migrationBuilder.InsertData(
                 table: "DeviceJobs",
                 columns: new[] { "Id", "Body", "CreatedDate", "DeviceId", "Done", "ExecutionTime", "JobId" },
-                values: new object[] { 12, "angle: 50, speed: 3", new DateTime(2021, 4, 26, 18, 40, 15, 140, DateTimeKind.Local).AddTicks(420), 101, false, new DateTime(2021, 4, 26, 18, 40, 15, 140, DateTimeKind.Local).AddTicks(250), 6 });
+                values: new object[] { 12, "angle: 50, speed: 3", new DateTime(2021, 4, 27, 22, 44, 50, 994, DateTimeKind.Local).AddTicks(2670), 101, false, new DateTime(2021, 4, 27, 22, 44, 50, 994, DateTimeKind.Local).AddTicks(2480), 6 });
 
             migrationBuilder.InsertData(
                 table: "DeviceJobs",
                 columns: new[] { "Id", "Body", "CreatedDate", "DeviceId", "Done", "ExecutionTime", "JobId" },
-                values: new object[] { 13, "angle: 25, speed: 1", new DateTime(2021, 4, 26, 18, 40, 15, 140, DateTimeKind.Local).AddTicks(870), 101, false, new DateTime(2021, 4, 26, 18, 40, 15, 140, DateTimeKind.Local).AddTicks(860), 6 });
+                values: new object[] { 13, "angle: 25, speed: 1", new DateTime(2021, 4, 27, 22, 44, 50, 994, DateTimeKind.Local).AddTicks(2820), 101, false, new DateTime(2021, 4, 27, 22, 44, 50, 994, DateTimeKind.Local).AddTicks(2810), 6 });
 
             migrationBuilder.InsertData(
                 table: "Modes",
