@@ -66,49 +66,6 @@ namespace SmartTerraAPI.Controllers
             return Ok(deviceJobsDTO);
         }
 
-        // GET: api/DeviceJobs/deviceId={deviceId}/lastHour
-        [HttpGet("deviceId={deviceId}/lastHour")]
-        public async Task<ActionResult<IEnumerable<DeviceJobDTO>>> GetDeviceJobsForLastHour(int deviceId)
-        {
-            List<DeviceJob> deviceJobs = await _context.DeviceJobs
-                .Include(d => d.Device)
-                .Include(j => j.Job)
-                .Where(deviceJob => deviceJob.Device.Id == deviceId)
-                .ToListAsync();
-
-            List<DeviceJobDTO> deviceJobsDTO = new List<DeviceJobDTO>();
-
-            foreach (DeviceJob d in deviceJobs)
-            {
-                var deviceDTO = new DeviceAddDTO
-                {
-                    Name = d.Device.Name
-                };
-
-                var jobDTO = new JobDTO()
-                {
-                    Id = d.Job.Id,
-                    Name = d.Job.Name,
-                    Type = d.Job.Type,
-                    Description = d.Job.Description
-                };
-
-                var deviceJobDTO = new DeviceJobDTO()
-                {
-                    Id = d.Id,
-                    ExecutionTime = d.ExecutionTime,
-                    CreatedDate = d.CreatedDate,
-                    Done = d.Done,
-                    Body = d.Body,
-                    Device = deviceDTO,
-                    Job = jobDTO
-                };
-                deviceJobsDTO.Add(deviceJobDTO);
-            }
-
-            return Ok(deviceJobsDTO);
-        }
-
         // GET: api/DeviceJobs/deviceId={deviceId}/FalseDoneFlag
         [HttpGet("deviceId={deviceId}/FalseDoneFlag")]
         public async Task<ActionResult<DeviceJobDTO>> GetDeviceJobFalseDoneFlag(int deviceId)

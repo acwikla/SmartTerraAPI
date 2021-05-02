@@ -226,6 +226,7 @@ namespace SmartTerraAPI.Controllers
             latestDevicePropertiesDTO = new DevicePropertiesDTO()
             {
                 Id = latestDeviceProperties.Id,
+                Date = latestDeviceProperties.Date,
                 isLiquidLevelSufficient = latestDeviceProperties.isLiquidLevelSufficient,
                 Temperature = latestDeviceProperties.Temperature,
                 Humidity = latestDeviceProperties.Humidity,
@@ -333,6 +334,7 @@ namespace SmartTerraAPI.Controllers
 
             var newDeviceProperties = new DeviceProperties()
             {
+                Date = DateTime.Now,
                 isLiquidLevelSufficient = deviceProperties.isLiquidLevelSufficient,
                 Temperature = deviceProperties.Temperature,
                 Humidity = deviceProperties.Humidity,
