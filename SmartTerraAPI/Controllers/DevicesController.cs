@@ -79,7 +79,7 @@ namespace SmartTerraAPI.Controllers
         }
 
         // GET: api/devices/{id}/deviceProperties
-        [HttpGet("{id}/deviceProperties")]
+        /*[HttpGet("{id}/deviceProperties")]
         public async Task<ActionResult<IEnumerable<DevicePropertiesDTO>>> GetAllDeviceProperties(int id)
         {
             var device = await _context.Devices.Include(d => d.DeviceProperties).Where(device => device.Id == id).FirstOrDefaultAsync();
@@ -111,7 +111,7 @@ namespace SmartTerraAPI.Controllers
             
 
             return Ok(allDevicePropertiesDTO);
-        }
+        }*/
 
         // GET: api/devices/{id}/deviceProperties-lastHour
         [HttpGet("{id}/deviceProperties-lastHour")]
@@ -131,6 +131,7 @@ namespace SmartTerraAPI.Controllers
             var allDeviceProperties = await _context.DeviceProperties
                 .Where(prop => prop.DeviceId == id)
                 .Where(prop => prop.Date >= dateFrom)
+                .Where(prop => prop.Id % 10 == 0)
                 .OrderBy(prop => prop.Date)
                 .ToListAsync();
 
@@ -176,7 +177,7 @@ namespace SmartTerraAPI.Controllers
             var allDeviceProperties = await _context.DeviceProperties
                 .Where(prop => prop.DeviceId == id)
                 .Where(prop => prop.Date >= dateFrom)
-                .Where(prop => prop.Id % 50 == 0)
+                .Where(prop => prop.Id % 100 == 0)
                 .OrderBy(prop => prop.Date)
                 .ToListAsync();
 
